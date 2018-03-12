@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -24,10 +24,11 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText fullname,email , password ,phone , city , street , nid ;
-    private String  day  , month , year ;
+    DatePicker datePicker;
+    String  day  , month , year ;
     private Button mRegBtn , mLoginPageBtn;
     private ProgressBar mregisterprogressbar;
-
+    String Myname , myemail , myPassword , Myphone ,MyCity ,MyStreet ,MyNID ;
     private FirebaseAuth mAuth ;
     private FirebaseFirestore mFirestore;
     @Override
@@ -38,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
 
-
+        datePicker = (DatePicker) findViewById(R.id.DOB);
         fullname = (EditText) findViewById(R.id.fullname);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
@@ -46,11 +47,10 @@ public class RegisterActivity extends AppCompatActivity {
         city= (EditText) findViewById(R.id.city);
         street= (EditText) findViewById(R.id.street);
         nid= (EditText) findViewById(R.id.NID);
+
         mRegBtn = (Button) findViewById(R.id.btnRegister);
         mLoginPageBtn = (Button) findViewById(R.id.btnLinkToLoginScreen);
         mregisterprogressbar = (ProgressBar) findViewById(R.id.registerprogressbar);
-
-
 
         mLoginPageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,11 +62,18 @@ public class RegisterActivity extends AppCompatActivity {
         mRegBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String Myname = fullname.getText().toString();
-                String myemail = email.getText().toString();
-                String myPassword = password.getText().toString();
-                final String Myphone = phone.getText().toString();
-                if(!TextUtils.isEmpty(Myname) && !TextUtils.isEmpty(myemail) && !TextUtils.isEmpty(myPassword)){
+                 Myname = fullname.getText().toString();
+                 myemail = email.getText().toString();
+                 myPassword = password.getText().toString();
+                 Myphone = phone.getText().toString();
+                 MyCity = city.getText().toString();
+                 MyStreet = city.getText().toString();
+                 MyNID = nid.getText().toString();
+                 day = String.valueOf(datePicker.getDayOfMonth());
+                 month =String.valueOf(datePicker.getMonth() + 1);
+                 year =String.valueOf(datePicker.getYear());
+
+                if(ValidateData()){
                     mAuth.createUserWithEmailAndPassword(myemail,myPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -75,7 +82,14 @@ public class RegisterActivity extends AppCompatActivity {
                                 String User_id = mAuth.getCurrentUser().getUid();
                                 Map<String,Object> userMap= new HashMap<>();
                                 userMap.put("name",Myname);
+                                userMap.put("email",myemail);
                                 userMap.put("phone",Myphone);
+                                userMap.put("city",MyCity);
+                                userMap.put("street",MyStreet);
+                                userMap.put("nid",MyNID);
+                                userMap.put("day",day);
+                                userMap.put("month",month);
+                                userMap.put("year",year);
                                 mFirestore.collection("Users").document(User_id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -97,7 +111,27 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-        private void SendToMain() {
+    private boolean ValidateData() {
+            if(Myname == ""){
+                Toast.makeText(RegisterActivity.this,"Error : You Must Enter a Name ",Toast.LENGTH_SHORT).show();
+                return false;
+            }else if (myemail == ""){
+                Toast.makeText(RegisterActivity.this,"Error : You Must Enter an Email ",Toast.LENGTH_SHORT).show();
+                return false;
+            }else if(myPassword == ""){
+                Toast.makeText(RegisterActivity.this,"Error : You Must Enter a Password ",Toast.LENGTH_SHORT).show();
+                return false;
+            }else if(MyNID == ""){
+                Toast.makeText(RegisterActivity.this,"Error : You Must Enter Your National ID ",Toast.LENGTH_SHORT).show();
+                return false;
+            }else if(day == "" && month == "" && year==""){
+                Toast.makeText(RegisterActivity.this,"Error : You Must Enter Your Date of Birth ",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        return true;
+    }
+
+    private void SendToMain() {
             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
