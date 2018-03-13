@@ -1,9 +1,9 @@
 package abass.com.firebasepushnotifications;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         mpagerViewAdapter = new PagerViewAdapter(getSupportFragmentManager());
         mMainPager.setAdapter(mpagerViewAdapter);
+        mMainPager.setOffscreenPageLimit(2);
 
         mProfileLabel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,36 +97,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void changeTabs(int position) {
         if(position ==0){
-            mProfileLabel.setTextColor(getColor(R.color.textTabBright));
+            mProfileLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabBright));
             mProfileLabel.setTextSize(22);
 
-            mNotificationsLabel.setTextColor(getColor(R.color.textTabLight));
+            mNotificationsLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
             mNotificationsLabel.setTextSize(16);
 
-            mUsersLabel.setTextColor(getColor(R.color.textTabLight));
+            mUsersLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
             mUsersLabel.setTextSize(16);
         }
         if(position ==2){
-            mProfileLabel.setTextColor(getColor(R.color.textTabLight));
+            mProfileLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
             mProfileLabel.setTextSize(16);
 
-            mNotificationsLabel.setTextColor(getColor(R.color.textTabBright));
+            mNotificationsLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabBright));
             mNotificationsLabel.setTextSize(22);
 
-            mUsersLabel.setTextColor(getColor(R.color.textTabLight));
+            mUsersLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
             mUsersLabel.setTextSize(16);
         }
         if(position ==1){
-            mProfileLabel.setTextColor(getColor(R.color.textTabLight));
+            mProfileLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
             mProfileLabel.setTextSize(16);
 
-            mNotificationsLabel.setTextColor(getColor(R.color.textTabLight));
+            mNotificationsLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
             mNotificationsLabel.setTextSize(16);
 
-            mUsersLabel.setTextColor(getColor(R.color.textTabBright));
+            mUsersLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabBright));
             mUsersLabel.setTextSize(22);
         }
     }
