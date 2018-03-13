@@ -19,13 +19,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.Year;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText fullname,email , password ,phone , city , street , nid ;
     DatePicker datePicker;
-    String  day  , month , year ;
+    int  day  , month , year ;
     private Button mRegBtn , mLoginPageBtn;
     private ProgressBar mregisterprogressbar;
     String Myname , myemail , myPassword , Myphone ,MyCity ,MyStreet ,MyNID ;
@@ -69,9 +70,9 @@ public class RegisterActivity extends AppCompatActivity {
                  MyCity = city.getText().toString();
                  MyStreet = city.getText().toString();
                  MyNID = nid.getText().toString();
-                 day = String.valueOf(datePicker.getDayOfMonth());
-                 month =String.valueOf(datePicker.getMonth() + 1);
-                 year =String.valueOf(datePicker.getYear());
+                 day = datePicker.getDayOfMonth();
+                 month =(datePicker.getMonth() + 1);
+                 year =(datePicker.getYear());
 
                 if(ValidateData()){
                     mAuth.createUserWithEmailAndPassword(myemail,myPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -112,22 +113,41 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean ValidateData() {
-            if(Myname == ""){
+            if(Myname.equals("")){
                 Toast.makeText(RegisterActivity.this,"Error : You Must Enter a Name ",Toast.LENGTH_SHORT).show();
                 return false;
-            }else if (myemail == ""){
+            }else if (myemail.equals("")){
                 Toast.makeText(RegisterActivity.this,"Error : You Must Enter an Email ",Toast.LENGTH_SHORT).show();
                 return false;
-            }else if(myPassword == ""){
+            }else if(myPassword.equals("")){
                 Toast.makeText(RegisterActivity.this,"Error : You Must Enter a Password ",Toast.LENGTH_SHORT).show();
                 return false;
-            }else if(MyNID == ""){
+            }else if(MyNID.equals("")){
                 Toast.makeText(RegisterActivity.this,"Error : You Must Enter Your National ID ",Toast.LENGTH_SHORT).show();
                 return false;
-            }else if(day == "" && month == "" && year==""){
-                Toast.makeText(RegisterActivity.this,"Error : You Must Enter Your Date of Birth ",Toast.LENGTH_SHORT).show();
+            }else if((MyNID.length() != 14)){
+                Toast.makeText(RegisterActivity.this,"Error : You Must Enter A Valid National ID ",Toast.LENGTH_SHORT).show();
                 return false;
             }
+            int NIDYear  =  Integer.parseInt(MyNID.substring(0,1));
+            int NIDBYear =  Integer.parseInt(MyNID.substring(1,3));
+            int NIDMonth =  Integer.parseInt(MyNID.substring(3,5));
+            int NIDDay   =  Integer.parseInt(MyNID.substring(5,7));
+            int City     =  Integer.parseInt(MyNID.substring(7,9));
+            if(NIDBYear>=50){
+                NIDBYear+=1900;
+            }else{
+                NIDBYear+=2000;
+            }
+            if((year>=2000 && NIDYear != 3)  || (year<2000 && NIDYear != 2)  || (year != NIDBYear) || (month != NIDMonth)|| (day != NIDDay) || (City >35 && City != 88) ){
+                Toast.makeText(RegisterActivity.this,"Error : Invalid National ID ",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (year>2001){
+               Toast.makeText(RegisterActivity.this,"Error : You Are to young to Register ",Toast.LENGTH_SHORT).show();
+            return false;
+            }
+
         return true;
     }
 
