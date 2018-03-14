@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.time.Year;
 import java.util.HashMap;
@@ -86,39 +87,32 @@ public class RegisterActivity extends AppCompatActivity {
                                 ProgressDialog.show(RegisterActivity.this, "Registering", "Please Wait until Registering completes ");
                                 mregisterprogressbar.setVisibility(View.VISIBLE);
 
-                                mAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                                String User_id = mAuth.getCurrentUser().getUid();
+                                String Token_id = FirebaseInstanceId.getInstance().getToken();
+
+                                Map<String,Object> userMap= new HashMap<>();
+                                userMap.put("name",Myname);
+                                userMap.put("email",myemail);
+                                userMap.put("phone",Myphone);
+                                userMap.put("city",MyCity);
+                                userMap.put("street",MyStreet);
+                                userMap.put("nid",MyNID);
+                                userMap.put("day",day);
+                                userMap.put("month",month);
+                                userMap.put("year",year);
+                                userMap.put("token_id",Token_id);
+
+                                mFirestore.collection("Users").document(User_id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
-                                    public void onSuccess(GetTokenResult getTokenResult) {
-                                        String User_id = mAuth.getCurrentUser().getUid();
-                                        String Token_id = getTokenResult.getToken();
-
-                                        Map<String,Object> userMap= new HashMap<>();
-                                        userMap.put("name",Myname);
-                                        userMap.put("email",myemail);
-                                        userMap.put("phone",Myphone);
-                                        userMap.put("city",MyCity);
-                                        userMap.put("street",MyStreet);
-                                        userMap.put("nid",MyNID);
-                                        userMap.put("day",day);
-                                        userMap.put("month",month);
-                                        userMap.put("year",year);
-                                        userMap.put("token_id",Token_id);
-
-                                        mFirestore.collection("Users").document(User_id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                SendToMain();
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(RegisterActivity.this,"Error : "+e.getMessage(),Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                    public void onSuccess(Void aVoid) {
+                                        SendToMain();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(RegisterActivity.this,"Error : "+e.getMessage(),Toast.LENGTH_SHORT).show();
                                     }
                                 });
-
-
                             }else{
                                 mregisterprogressbar.setVisibility(View.INVISIBLE);
                                 Toast.makeText(RegisterActivity.this,"Error : "+task.getException().getMessage(),Toast.LENGTH_SHORT).show();

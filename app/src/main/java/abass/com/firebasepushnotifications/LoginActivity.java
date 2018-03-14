@@ -17,6 +17,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,27 +68,19 @@ public class  LoginActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
 
-                                    mAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                                    String token_Id = FirebaseInstanceId.getInstance().getToken();
+                                    String current_Id = mAuth.getCurrentUser().getUid();
+
+                                    Map<String, Object> tokenMap = new HashMap<>();
+                                    tokenMap.put("token_id",token_Id);
+
+
+                                    mFirestore.collection("Users").document(current_Id).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
-                                        public void onSuccess(GetTokenResult getTokenResult) {
-                                            String token_Id =  getTokenResult.getToken();
-                                            String current_Id = mAuth.getCurrentUser().getUid();
-
-                                            Map<String, Object> tokenMap = new HashMap<>();
-                                            tokenMap.put("token_id",token_Id);
-
-
-                                            mFirestore.collection("Users").document(current_Id).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    SendToMain();
-                                                }
-                                            });
-
+                                        public void onSuccess(Void aVoid) {
+                                            SendToMain();
                                         }
                                     });
-
-
 
                                 } else {
                                     // If sign in fails, display a message to the user.
