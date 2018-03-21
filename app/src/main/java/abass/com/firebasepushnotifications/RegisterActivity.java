@@ -69,15 +69,15 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                  Myname = fullname.getText().toString();
-                 myemail = email.getText().toString();
-                 myPassword = password.getText().toString();
-                 Myphone = phone.getText().toString();
-                 MyCity = city.getText().toString();
-                 MyStreet = city.getText().toString();
-                 MyNID = nid.getText().toString();
-                 day = datePicker.getDayOfMonth();
-                 month =(datePicker.getMonth() + 1);
-                 year =(datePicker.getYear());
+                myemail = email.getText().toString();
+                myPassword = password.getText().toString();
+                Myphone = phone.getText().toString();
+                MyCity = city.getText().toString();
+                MyStreet = city.getText().toString();
+                MyNID = nid.getText().toString();
+                day = datePicker.getDayOfMonth();
+                month =(datePicker.getMonth() + 1);
+                year =(datePicker.getYear());
 
                 if(ValidateData()){
                     mAuth.createUserWithEmailAndPassword(myemail,myPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

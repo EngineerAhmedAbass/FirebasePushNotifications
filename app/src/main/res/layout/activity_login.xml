@@ -11,7 +11,15 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
+        android:focusableInTouchMode="true"
         android:padding="10dp">
+
+        <ProgressBar
+            android:id="@+id/login_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
 
         <ImageView
             android:layout_width="196dp"
