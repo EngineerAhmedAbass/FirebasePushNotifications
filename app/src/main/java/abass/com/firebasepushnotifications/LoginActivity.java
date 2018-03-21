@@ -101,7 +101,7 @@ public class  LoginActivity extends AppCompatActivity {
 
     private void SendToMain() {
         loginProgBar.setVisibility(View.INVISIBLE);
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, HelpRequest.class);
         startActivity(intent);
         finish();
     }

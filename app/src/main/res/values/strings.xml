@@ -1,7 +1,14 @@
 <resources>
-    <string name="app_name">FirebasePushNotifications</string>
+    <string name="app_name">Es3fny</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="default_notification_channel_id">Tvac_CH_01</string>
+    <string-array name="planets_array">
+        <item>قلب</item>
+        <item>حرق</item>
+        <item>ضغط وسكر</item>
+        <item>غيبوبة</item>
+        <item>اسعافات اولية</item>
+    </string-array>
 </resources>
