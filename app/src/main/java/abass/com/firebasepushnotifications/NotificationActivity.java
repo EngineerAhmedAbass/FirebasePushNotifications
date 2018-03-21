@@ -19,7 +19,7 @@ public class NotificationActivity extends AppCompatActivity {
         String dataFrom = getIntent().getStringExtra("from_user_id");
         String longtitude = getIntent().getStringExtra("longtitude");
         String latitude = getIntent().getStringExtra("latitude");
-        String Domain = getIntent().getStringExtra("Domain");
+        String Domain = getIntent().getStringExtra("domain");
 
         String LocationUEL = "http://maps.google.com/maps?q="+latitude+","+longtitude;
 

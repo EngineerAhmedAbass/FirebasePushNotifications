@@ -41,7 +41,7 @@ public class HelpRequest extends AppCompatActivity {
     private String Message;
     private String Domain;
 
-    private double longtitude, latitude;
+    private String longtitude, latitude;
 
     private String mCurrentID;
     private String mCurrentName;
@@ -110,8 +110,8 @@ public class HelpRequest extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
                         if(location != null){
-                            longtitude = location.getLongitude();
-                            latitude = location.getLatitude();
+                            longtitude = ""+location.getLongitude();
+                            latitude = ""+location.getLatitude();
                         }
                     }
                 });
