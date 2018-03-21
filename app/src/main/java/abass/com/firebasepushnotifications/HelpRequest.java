@@ -39,6 +39,9 @@ public class HelpRequest extends AppCompatActivity {
     private EditText requestText;
     private Button SendRequestBtn;
     private String Message;
+    private String Domain;
+
+    private double longtitude, latitude;
 
     private String mCurrentID;
     private String mCurrentName;
@@ -96,7 +99,9 @@ public class HelpRequest extends AppCompatActivity {
                         mCurrentName = documentSnapshot.get("name").toString();
                     }
                 });
+
                 Message = requestText.getText().toString();
+                Domain = spinner.getSelectedItem().toString();
 
                 if (ActivityCompat.checkSelfPermission( HelpRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
@@ -105,7 +110,8 @@ public class HelpRequest extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
                         if(location != null){
-                            Message+= " /n " + location.getLatitude()+" | "+location.getLongitude();
+                            longtitude = location.getLongitude();
+                            latitude = location.getLatitude();
                         }
                     }
                 });
@@ -124,6 +130,9 @@ public class HelpRequest extends AppCompatActivity {
                                 notificationMessage.put("message", Message);
                                 notificationMessage.put("from", mCurrentID);
                                 notificationMessage.put("user_name", mCurrentName);
+                                notificationMessage.put("domain", Domain);
+                                notificationMessage.put("longtitude",longtitude);
+                                notificationMessage.put("latitude",latitude);
 
                                 mfirestore.collection("Users/"+user_id+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override

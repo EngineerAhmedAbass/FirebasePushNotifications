@@ -40,7 +40,6 @@
                     android:layout_toLeftOf="@+id/text1"
                     />
 
-
             </RelativeLayout>
 
             <TextView

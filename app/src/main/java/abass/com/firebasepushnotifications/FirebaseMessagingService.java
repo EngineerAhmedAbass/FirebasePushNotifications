@@ -22,6 +22,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String click_action = remoteMessage.getNotification().getClickAction();
         String dataMessage = remoteMessage.getData().get("message");
         String dataFrom = remoteMessage.getData().get("from_user_id");
+        String latitude = remoteMessage.getData().get("latitude");
+        String longtitude = remoteMessage.getData().get("longtitude");
+        String Domain = remoteMessage.getData().get("Domain");
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
                 .setSmallIcon(R.mipmap.lunch)
@@ -33,6 +36,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         Intent intent = new Intent(click_action);
         intent.putExtra("message",dataMessage);
         intent.putExtra("from_user_id",dataFrom);
+        intent.putExtra("latitude",latitude);
+        intent.putExtra("longtitude",longtitude);
+        intent.putExtra("Domain",Domain);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
