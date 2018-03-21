@@ -166,7 +166,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void SendToMain() {
-            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+            Intent intent = new Intent(RegisterActivity.this, HelpRequest.class);
             startActivity(intent);
             finish();
     }

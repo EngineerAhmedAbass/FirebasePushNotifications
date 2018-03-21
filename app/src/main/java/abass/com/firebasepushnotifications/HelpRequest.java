@@ -1,6 +1,6 @@
 package abass.com.firebasepushnotifications;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -19,8 +19,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -50,6 +49,15 @@ public class HelpRequest extends AppCompatActivity {
     private FusedLocationProviderClient client;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser CurrentUser = mAuth.getCurrentUser();
+        if(CurrentUser == null ){
+            sendToLogin();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_request);
@@ -69,24 +77,25 @@ public class HelpRequest extends AppCompatActivity {
         requestText = (EditText) findViewById(R.id.text_help);
         SendRequestBtn=(Button) findViewById(R.id.sendrequest);
 
-        client = LocationServices.getFusedLocationProviderClient(this);
+        client = LocationServices.getFusedLocationProviderClient(HelpRequest.this);
 
         requestPermission();
 
         mAuth = FirebaseAuth.getInstance();
-        mfirestore = FirebaseFirestore.getInstance();
-        mCurrentID = mAuth.getUid();
-
-        mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                mCurrentName = documentSnapshot.get("name").toString();
-            }
-        });
 
         SendRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                mfirestore = FirebaseFirestore.getInstance();
+                mCurrentID = mAuth.getUid();
+
+                mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        mCurrentName = documentSnapshot.get("name").toString();
+                    }
+                });
                 Message = requestText.getText().toString();
 
                 if (ActivityCompat.checkSelfPermission( HelpRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -138,6 +147,11 @@ public class HelpRequest extends AppCompatActivity {
         });
 
 
+    }
+    private void sendToLogin() {
+        Intent intent = new Intent(HelpRequest.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
     private void requestPermission(){
         ActivityCompat.requestPermissions(HelpRequest.this,new String[]{ACCESS_FINE_LOCATION},1);
