@@ -157,7 +157,11 @@ public class HelpRequest extends AppCompatActivity {
         Message = requestText.getText().toString();
         Domain = spinner.getSelectedItem().toString();
 
-
+        if(Message == null || mCurrentID == null || mCurrentName == null || Domain== null || longtitude == null || latitude == null)
+        {
+            Toast.makeText(HelpRequest.this,"Something Went Wrong Please Try Again...",Toast.LENGTH_LONG).show();
+            return;
+        }
 
         mfirestore.collection("Users").addSnapshotListener(HelpRequest.this,new EventListener<QuerySnapshot>() {
             @Override
@@ -168,7 +172,6 @@ public class HelpRequest extends AppCompatActivity {
                         if(user_id.equals(mCurrentID)){
                             continue;
                         }
-
                         Map<String , Object> notificationMessage = new HashMap<>();
                         notificationMessage.put("message", Message);
                         notificationMessage.put("from", mCurrentID);
