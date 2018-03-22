@@ -157,7 +157,12 @@ public class HelpRequest extends AppCompatActivity {
         Message = requestText.getText().toString();
         Domain = spinner.getSelectedItem().toString();
 
-        if(Message == null || mCurrentID == null || mCurrentName == null || Domain== null || longtitude == null || latitude == null)
+        if (Message == null){
+            Toast.makeText(HelpRequest.this,"من فضلك ادخل معلومات عن طلب المساعدة",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(mCurrentID == null || mCurrentName == null || Domain== null || longtitude == null || latitude == null)
         {
             Toast.makeText(HelpRequest.this,"Something Went Wrong Please Try Again...",Toast.LENGTH_LONG).show();
             return;
