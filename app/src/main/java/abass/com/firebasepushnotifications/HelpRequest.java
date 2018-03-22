@@ -129,7 +129,7 @@ public class HelpRequest extends AppCompatActivity {
                                 }
                             }
                         });
-
+                        SendNotifications();
                     }else{
                         Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
                     }
@@ -137,62 +137,63 @@ public class HelpRequest extends AppCompatActivity {
                     Toast.makeText(HelpRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
                     showSettingDialog();
                 }
-                mfirestore = FirebaseFirestore.getInstance();
-                mCurrentID = mAuth.getUid();
-
-                mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        mCurrentName = documentSnapshot.get("name").toString();
-                    }
-                });
-
-                Message = requestText.getText().toString();
-                Domain = spinner.getSelectedItem().toString();
-
-
-
-                mfirestore.collection("Users").addSnapshotListener(HelpRequest.this,new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                        for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
-                            if(doc.getType()== DocumentChange.Type.ADDED){
-                                String user_id = doc.getDocument().getId();
-
-                                if(user_id.equals(mCurrentID)){
-                                    continue;
-                                }
-
-                                Map<String , Object> notificationMessage = new HashMap<>();
-                                notificationMessage.put("message", Message);
-                                notificationMessage.put("from", mCurrentID);
-                                notificationMessage.put("user_name", mCurrentName);
-                                notificationMessage.put("domain", Domain);
-                                notificationMessage.put("longtitude",longtitude);
-                                notificationMessage.put("latitude",latitude);
-
-                                mfirestore.collection("Users/"+user_id+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(HelpRequest.this,"Error :  "+ e.getMessage(),Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
-
-                        }
-                        Toast.makeText(HelpRequest.this,"The Help Request Sent ",Toast.LENGTH_LONG).show();
-                    }
-                });
 
             }
         });
 
 
+    }
+    void SendNotifications(){
+        mfirestore = FirebaseFirestore.getInstance();
+        mCurrentID = mAuth.getUid();
+
+        mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                mCurrentName = documentSnapshot.get("name").toString();
+            }
+        });
+
+        Message = requestText.getText().toString();
+        Domain = spinner.getSelectedItem().toString();
+
+
+
+        mfirestore.collection("Users").addSnapshotListener(HelpRequest.this,new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
+                    if(doc.getType()== DocumentChange.Type.ADDED){
+                        String user_id = doc.getDocument().getId();
+                        if(user_id.equals(mCurrentID)){
+                            continue;
+                        }
+
+                        Map<String , Object> notificationMessage = new HashMap<>();
+                        notificationMessage.put("message", Message);
+                        notificationMessage.put("from", mCurrentID);
+                        notificationMessage.put("user_name", mCurrentName);
+                        notificationMessage.put("domain", Domain);
+                        notificationMessage.put("longtitude",longtitude);
+                        notificationMessage.put("latitude",latitude);
+
+                        mfirestore.collection("Users/"+user_id+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(HelpRequest.this,"Error :  "+ e.getMessage(),Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                }
+                Toast.makeText(HelpRequest.this,"The Help Request Sent ",Toast.LENGTH_LONG).show();
+            }
+        });
     }
     private void sendToLogin() {
         Intent intent = new Intent(HelpRequest.this, LoginActivity.class);
@@ -267,6 +268,7 @@ public class HelpRequest extends AppCompatActivity {
                                     }
                                 }
                             });
+                            SendNotifications();
                         }else{
                             Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
