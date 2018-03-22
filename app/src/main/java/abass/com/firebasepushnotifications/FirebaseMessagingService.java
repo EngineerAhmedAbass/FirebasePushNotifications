@@ -28,6 +28,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
                 .setSmallIcon(R.mipmap.lunch)
+                .setAutoCancel(true)
                 .setContentTitle(MessageTitle)
                 .setContentText(MessageBody)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
