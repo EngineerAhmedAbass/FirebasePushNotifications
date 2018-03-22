@@ -5,13 +5,16 @@ package abass.com.firebasepushnotifications;
  */
 
 public class User {
-    String name;    String email;    String phone;    String nid;    String city;    String street ;
+    String name;    String email;    String phone;    String nid;    String city;    String street ; String token_id;
     int year , month , day ;
 
     public User() {
 
     }
 
+    public String getToken_id() {
+        return token_id;
+    }
     public String getName() {
         return name;
     }
@@ -48,5 +51,43 @@ public class User {
         return day;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public void setToken_id(String token_id) {
+        this.token_id = token_id;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
 }

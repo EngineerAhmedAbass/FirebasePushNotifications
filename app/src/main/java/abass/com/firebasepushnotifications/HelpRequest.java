@@ -174,7 +174,9 @@ public class HelpRequest extends AppCompatActivity {
                 for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
                     if(doc.getType()== DocumentChange.Type.ADDED){
                         String user_id = doc.getDocument().getId();
-                        if(user_id.equals(mCurrentID)){
+                        User temp_user = doc.getDocument().toObject(User.class);
+
+                        if(temp_user.getToken_id() == null || user_id.equals(mCurrentID)){
                             continue;
                         }
                         Map<String , Object> notificationMessage = new HashMap<>();
