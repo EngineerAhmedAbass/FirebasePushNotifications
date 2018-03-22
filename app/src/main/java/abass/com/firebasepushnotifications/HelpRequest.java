@@ -1,12 +1,19 @@
 package abass.com.firebasepushnotifications;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,8 +21,17 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,7 +65,10 @@ public class HelpRequest extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
 
+    LocationManager locationManager;
     private FusedLocationProviderClient client;
+    private static GoogleApiClient mGoogleApiClient;
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     @Override
     protected void onStart() {
@@ -81,6 +100,12 @@ public class HelpRequest extends AppCompatActivity {
         SendRequestBtn=(Button) findViewById(R.id.sendrequest);
 
         client = LocationServices.getFusedLocationProviderClient(HelpRequest.this);
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(HelpRequest.this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
 
         requestPermission();
 
@@ -89,7 +114,29 @@ public class HelpRequest extends AppCompatActivity {
         SendRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(isLocationServiceEnabled()){
+                    if(isNetworkAvailable()){
+                        if (ActivityCompat.checkSelfPermission( HelpRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(HelpRequest.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        client.getLastLocation().addOnSuccessListener( HelpRequest.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if(location != null){
+                                    longtitude = ""+location.getLongitude();
+                                    latitude = ""+location.getLatitude();
+                                }
+                            }
+                        });
 
+                    }else{
+                        Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(HelpRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+                    showSettingDialog();
+                }
                 mfirestore = FirebaseFirestore.getInstance();
                 mCurrentID = mAuth.getUid();
 
@@ -103,18 +150,8 @@ public class HelpRequest extends AppCompatActivity {
                 Message = requestText.getText().toString();
                 Domain = spinner.getSelectedItem().toString();
 
-                if (ActivityCompat.checkSelfPermission( HelpRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                client.getLastLocation().addOnSuccessListener( HelpRequest.this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if(location != null){
-                            longtitude = ""+location.getLongitude();
-                            latitude = ""+location.getLatitude();
-                        }
-                    }
-                });
+
+
                 mfirestore.collection("Users").addSnapshotListener(HelpRequest.this,new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -165,4 +202,100 @@ public class HelpRequest extends AppCompatActivity {
     private void requestPermission(){
         ActivityCompat.requestPermissions(HelpRequest.this,new String[]{ACCESS_FINE_LOCATION},1);
     }
+
+    private void showSettingDialog() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);//Setting priotity of Location request to high
+        locationRequest.setInterval(30 * 1000);
+        locationRequest.setFastestInterval(5 * 1000);//5 sec Time interval for location update
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true); //this is the key ingredient to show dialog always when GPS is off
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates state = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // All location settings are satisfied. The client can initialize location
+                        // requests here.
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(HelpRequest.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            // Check for the integer request code originally supplied to startResolutionForResult().
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case RESULT_OK:
+                        Log.e("Settings", "Result OK");
+                        if(isNetworkAvailable()){
+                            if (ActivityCompat.checkSelfPermission( HelpRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                Toast.makeText(HelpRequest.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            client.getLastLocation().addOnSuccessListener( HelpRequest.this, new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    if(location != null){
+                                        longtitude = ""+location.getLongitude();
+                                        latitude = ""+location.getLatitude();
+                                    }
+                                }
+                            });
+                        }else{
+                            Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case RESULT_CANCELED:
+                        Toast.makeText(HelpRequest.this, "No...", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                break;
+        }
+    }
+    public boolean isLocationServiceEnabled(){
+        boolean gps_enabled= false;
+
+        if(locationManager ==null)
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        try{
+            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        }catch(Exception ex){
+            //do nothing...
+        }
+
+        return gps_enabled ;
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
 }
