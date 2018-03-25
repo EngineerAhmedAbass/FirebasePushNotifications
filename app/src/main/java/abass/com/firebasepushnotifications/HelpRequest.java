@@ -78,6 +78,9 @@ public class HelpRequest extends AppCompatActivity {
         FirebaseUser CurrentUser = mAuth.getCurrentUser();
         if(CurrentUser == null ){
             sendToLogin();
+        }else{
+            mfirestore = FirebaseFirestore.getInstance();
+            mCurrentID = mAuth.getUid();
         }
     }
 
@@ -113,8 +116,6 @@ public class HelpRequest extends AppCompatActivity {
         requestPermission();
 
         mAuth = FirebaseAuth.getInstance();
-
-        mCurrentID = mAuth.getUid();
 
         mLogOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +168,7 @@ public class HelpRequest extends AppCompatActivity {
     }
     void SendNotifications(){
         mfirestore = FirebaseFirestore.getInstance();
+        mCurrentID = mAuth.getUid();
 
         mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
