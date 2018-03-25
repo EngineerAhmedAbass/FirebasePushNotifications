@@ -202,6 +202,11 @@ public class HelpRequest extends AppCompatActivity {
                         if(temp_user.getToken_id() == null || user_id.equals(mCurrentID)){
                             continue;
                         }
+                        double Dist = distance(Double.parseDouble(latitude),Double.parseDouble(longtitude),Double.parseDouble(temp_user.getLatitude()),Double.parseDouble(temp_user.getLongtitude()));
+                        Toast.makeText(HelpRequest.this,"Distance is :  "+ Dist,Toast.LENGTH_LONG).show();
+                        if(Dist > 10){
+                            continue;
+                        }
                         Map<String , Object> notificationMessage = new HashMap<>();
                         notificationMessage.put("message", Message);
                         notificationMessage.put("from", mCurrentID);
@@ -330,6 +335,25 @@ public class HelpRequest extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        // haversine great circle distance approximation, returns meters
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60; // 60 nautical miles per degree of seperation
+        dist = dist * 1852; // 1852 meters per nautical mile
+        dist = dist / 1000;
+        return (dist);
+    }
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
     }
 
 }

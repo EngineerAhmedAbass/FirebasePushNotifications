@@ -6,10 +6,27 @@ package abass.com.firebasepushnotifications;
 
 public class User {
     String name;    String email;    String phone;    String nid;    String city;    String street ; String token_id;
+    String longtitude , latitude ;
     int year , month , day ;
 
     public User() {
 
+    }
+
+    public String getLongtitude() {
+        return longtitude;
+    }
+
+    public void setLongtitude(String longtitude) {
+        this.longtitude = longtitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
     public String getToken_id() {
