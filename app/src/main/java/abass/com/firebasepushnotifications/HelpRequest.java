@@ -40,6 +40,7 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -54,6 +55,7 @@ public class HelpRequest extends AppCompatActivity {
     private Spinner spinner;
     private EditText requestText;
     private Button SendRequestBtn;
+    private Button mLogOutBtn;
     private String Message;
     private String Domain;
 
@@ -98,6 +100,7 @@ public class HelpRequest extends AppCompatActivity {
 
         requestText = (EditText) findViewById(R.id.text_help);
         SendRequestBtn=(Button) findViewById(R.id.sendrequest);
+        mLogOutBtn = (Button) findViewById(R.id.logOutBtn);
 
         client = LocationServices.getFusedLocationProviderClient(HelpRequest.this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -110,6 +113,26 @@ public class HelpRequest extends AppCompatActivity {
         requestPermission();
 
         mAuth = FirebaseAuth.getInstance();
+
+        mCurrentID = mAuth.getUid();
+
+        mLogOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Map<String, Object> tokenMapRemove = new HashMap<>();
+                tokenMapRemove.put("token_id", FieldValue.delete());
+
+                mfirestore.collection("Users").document(mCurrentID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mAuth.signOut();
+                        Intent LoginIntent = new Intent(HelpRequest.this, LoginActivity.class);
+                        startActivity(LoginIntent);
+                    }
+                });
+
+            }
+        });
 
         SendRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +167,6 @@ public class HelpRequest extends AppCompatActivity {
     }
     void SendNotifications(){
         mfirestore = FirebaseFirestore.getInstance();
-        mCurrentID = mAuth.getUid();
 
         mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
