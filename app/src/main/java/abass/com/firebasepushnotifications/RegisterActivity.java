@@ -108,6 +108,19 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(isLocationServiceEnabled()){
                     if(isNetworkAvailable()){
+                        if (ActivityCompat.checkSelfPermission( RegisterActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(RegisterActivity.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        client.getLastLocation().addOnSuccessListener( RegisterActivity.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if(location != null){
+                                    longtitude = ""+location.getLongitude();
+                                    latitude = ""+location.getLatitude();
+                                }
+                            }
+                        });
                         Register();
                     }else{
                         Toast.makeText(RegisterActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
@@ -122,23 +135,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void Register(){
-        if (ActivityCompat.checkSelfPermission( RegisterActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(RegisterActivity.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        client.getLastLocation().addOnSuccessListener( RegisterActivity.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location != null){
-                    longtitude = ""+location.getLongitude();
-                    latitude = ""+location.getLatitude();
-                }
-            }
-        });
         if(longtitude == null || latitude == null)
         {
             Toast.makeText(RegisterActivity.this,"Something Went Wrong Please Try Again...",Toast.LENGTH_LONG).show();
-            Register();
+            return;
         }
         Myname = fullname.getText().toString();
         myemail = email.getText().toString();
