@@ -203,7 +203,6 @@ public class HelpRequest extends AppCompatActivity {
                             continue;
                         }
                         double Dist = distance(Double.parseDouble(latitude),Double.parseDouble(longtitude),Double.parseDouble(temp_user.getLatitude()),Double.parseDouble(temp_user.getLongtitude()));
-                        Toast.makeText(HelpRequest.this,"Distance is :  "+ Dist,Toast.LENGTH_LONG).show();
                         if(Dist > 10){
                             continue;
                         }
