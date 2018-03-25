@@ -141,7 +141,6 @@ public class HelpRequest extends AppCompatActivity {
             }
         });
 
-
     }
     void SendNotifications(){
         mfirestore = FirebaseFirestore.getInstance();
@@ -255,7 +254,6 @@ public class HelpRequest extends AppCompatActivity {
             }
         });
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
