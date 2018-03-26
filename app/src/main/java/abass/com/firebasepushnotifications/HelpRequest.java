@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -45,8 +46,33 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -58,7 +84,7 @@ public class HelpRequest extends AppCompatActivity {
     private Button mLogOutBtn;
     private String Message;
     private String Domain;
-
+    private int RequestID;
     private String longtitude, latitude;
 
     private String mCurrentID;
@@ -71,6 +97,8 @@ public class HelpRequest extends AppCompatActivity {
     private FusedLocationProviderClient client;
     private static GoogleApiClient mGoogleApiClient;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
+
+    private Vector<String> SentUsers = new Vector<>();
 
     @Override
     protected void onStart() {
@@ -181,13 +209,13 @@ public class HelpRequest extends AppCompatActivity {
         Domain = spinner.getSelectedItem().toString();
 
         if (Message == null){
-            Toast.makeText(HelpRequest.this,"من فضلك ادخل معلومات عن طلب المساعدة",Toast.LENGTH_LONG).show();
+            Toast.makeText(HelpRequest.this,"من فضلك ادخل معلومات عن طلب المساعدة",Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(mCurrentID == null || mCurrentName == null || Domain== null || longtitude == null || latitude == null)
         {
-            Toast.makeText(HelpRequest.this,"Something Went Wrong Please Try Again...",Toast.LENGTH_LONG).show();
+            Toast.makeText(HelpRequest.this,"Something Went Wrong Please Try Again...",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -206,32 +234,67 @@ public class HelpRequest extends AppCompatActivity {
                         if(Dist > 10){
                             continue;
                         }
-                        Map<String , Object> notificationMessage = new HashMap<>();
-                        notificationMessage.put("message", Message);
-                        notificationMessage.put("from", mCurrentID);
-                        notificationMessage.put("user_name", mCurrentName);
-                        notificationMessage.put("domain", Domain);
-                        notificationMessage.put("longtitude",longtitude);
-                        notificationMessage.put("latitude",latitude);
-
-                        mfirestore.collection("Users/"+user_id+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(HelpRequest.this,"Error :  "+ e.getMessage(),Toast.LENGTH_LONG).show();
-                            }
-                        });
+                        SentUsers.add(user_id);
                     }
 
                 }
-                Toast.makeText(HelpRequest.this,"The Help Request Sent ",Toast.LENGTH_LONG).show();
             }
         });
+        new GetRequestID().execute(SentUsers);
+        Toast.makeText(HelpRequest.this,"The Help Request Sent ",Toast.LENGTH_SHORT).show();
     }
+    class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
+        Vector<String> user_ids ;
+        protected String doInBackground(Vector<String>... strings) {
+            String url = "http://refadatours.com/android/addRequest.php?message="+Message;
+            user_ids=strings[0];
+            HttpEntity httpEntity = null;
+            try
+            {
+                DefaultHttpClient httpClient = new DefaultHttpClient();  // Default HttpClient
+                HttpGet httpGet = new HttpGet(url);
+                HttpResponse httpResponse = httpClient.execute(httpGet);
+                httpEntity = httpResponse.getEntity();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String entityResponse = null;
+            try {
+                entityResponse = EntityUtils.toString(httpEntity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return  entityResponse ;
+        }
+
+        protected void onPostExecute(String feed) {
+            RequestID =Integer.parseInt(feed);
+            for(int i=0 ; i < user_ids.size();i++){
+                Map<String , Object> notificationMessage = new HashMap<>();
+                notificationMessage.put("message", Message);
+                notificationMessage.put("from", mCurrentID);
+                notificationMessage.put("user_name", mCurrentName);
+                notificationMessage.put("domain", Domain);
+                notificationMessage.put("longtitude",longtitude);
+                notificationMessage.put("latitude",latitude);
+                notificationMessage.put("requestID",RequestID);
+
+                mfirestore.collection("Users/"+user_ids.elementAt(i)+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(HelpRequest.this,"Error :  "+ e.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
+    }
+
     private void sendToLogin() {
         Intent intent = new Intent(HelpRequest.this, LoginActivity.class);
         startActivity(intent);
