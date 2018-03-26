@@ -2,12 +2,30 @@ package abass.com.firebasepushnotifications;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NotificationActivity extends AppCompatActivity {
 
@@ -15,6 +33,7 @@ public class NotificationActivity extends AppCompatActivity {
     private TextView DomainTxt;
     private TextView MessageTxt;
     private TextView placeTxt ;
+    private TextView Status ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +44,8 @@ public class NotificationActivity extends AppCompatActivity {
         final String longtitude = getIntent().getStringExtra("longtitude");
         final String latitude = getIntent().getStringExtra("latitude");
         String Domain = getIntent().getStringExtra("domain");
+        String request_id =getIntent().getStringExtra("request_id");
+
 
         String LocationUEL = "http://maps.google.com/maps?q="+latitude+","+longtitude;
 
@@ -32,6 +53,10 @@ public class NotificationActivity extends AppCompatActivity {
         DomainTxt = (TextView) findViewById(R.id.domain_txt);
         MessageTxt = (TextView) findViewById(R.id.message);
         placeTxt = (TextView) findViewById(R.id.place);
+        Status = (TextView) findViewById(R.id.status);
+
+        new GetStatus().execute(Integer.parseInt(request_id));
+
         placeTxt.setClickable(true);
         placeTxt.setMovementMethod(LinkMovementMethod.getInstance());
         placeTxt.setOnClickListener(new View.OnClickListener() {
@@ -56,5 +81,34 @@ public class NotificationActivity extends AppCompatActivity {
         MessageTxt.setText(dataMessage);
         placeTxt.setText(LocationUEL);
 
+    }
+    class GetStatus extends AsyncTask<Integer ,Void,String>{
+
+        @Override
+        protected String doInBackground(Integer... integers) {
+            String url = "http://refadatours.com/android/getStatus.php?id="+integers[0];
+            HttpEntity httpEntity = null;
+            try
+            {
+                DefaultHttpClient httpClient = new DefaultHttpClient();  // Default HttpClient
+                HttpGet httpGet = new HttpGet(url);
+                HttpResponse httpResponse = httpClient.execute(httpGet);
+                httpEntity = httpResponse.getEntity();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String entityResponse = null;
+            try {
+                entityResponse = EntityUtils.toString(httpEntity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return  entityResponse ;
+        }
+        protected void onPostExecute(String feed) {
+            Status.setText(feed);
+        }
     }
 }
