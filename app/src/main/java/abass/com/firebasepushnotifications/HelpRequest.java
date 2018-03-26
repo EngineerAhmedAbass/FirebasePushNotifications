@@ -269,8 +269,7 @@ public class HelpRequest extends AppCompatActivity {
             return  entityResponse ;
         }
 
-        protected void onPostExecute(String feed) {
-            RequestID =Integer.parseInt(feed);
+        protected void onPostExecute(String RequestID) {
             for(int i=0 ; i < user_ids.size();i++){
                 Map<String , Object> notificationMessage = new HashMap<>();
                 notificationMessage.put("message", Message);
