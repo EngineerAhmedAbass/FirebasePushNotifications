@@ -9,13 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="15dp"
-        android:background="@drawable/fragment_background"
-        >
+        android:background="@drawable/fragment_background">
 
-        <TextView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/notifications_l"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
     </RelativeLayout>
 
 </FrameLayout>

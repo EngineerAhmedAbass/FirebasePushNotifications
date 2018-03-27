@@ -82,6 +82,8 @@ public class HelpRequest extends AppCompatActivity {
     private EditText requestText;
     private Button SendRequestBtn;
     private Button mLogOutBtn;
+    private Button mMainBtn;
+
     private String Message;
     private String Domain;
     private int RequestID;
@@ -132,6 +134,7 @@ public class HelpRequest extends AppCompatActivity {
         requestText = (EditText) findViewById(R.id.text_help);
         SendRequestBtn=(Button) findViewById(R.id.sendrequest);
         mLogOutBtn = (Button) findViewById(R.id.logOutBtn);
+        mMainBtn = (Button)findViewById(R.id.goToMainBtn);
 
         client = LocationServices.getFusedLocationProviderClient(HelpRequest.this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -162,7 +165,13 @@ public class HelpRequest extends AppCompatActivity {
 
             }
         });
-
+        mMainBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent MainIntnet = new Intent(HelpRequest.this, MainActivity.class);
+                startActivity(MainIntnet);
+            }
+        });
         SendRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
