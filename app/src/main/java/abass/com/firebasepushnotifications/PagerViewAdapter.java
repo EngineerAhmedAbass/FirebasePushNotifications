@@ -21,9 +21,6 @@ class PagerViewAdapter extends FragmentPagerAdapter {
                 ProfileFragment profileFragment = new ProfileFragment();
                 return profileFragment;
             case 1:
-                UserFragment userFragment = new UserFragment();
-                return userFragment;
-            case 2:
                 NotificationsFragment notificationsFragment = new NotificationsFragment();
                 return notificationsFragment;
             default:
@@ -33,6 +30,6 @@ class PagerViewAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 }

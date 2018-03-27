@@ -130,49 +130,14 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
                         }
                     }
                 });
-
             }
         });
 
         mSendNotificationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String Message = "Help Me Please !!!!";
-                mfirestore.collection("Users").addSnapshotListener(getActivity(),new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                        for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
-                            if(doc.getType()== DocumentChange.Type.ADDED){
-                                String user_id = doc.getDocument().getId();
-                                User temp_user = doc.getDocument().toObject(User.class);
-
-                                if(user_id.equals(mCurrentID)){
-                                    continue;
-                                }
-
-                                Map<String , Object> notificationMessage = new HashMap<>();
-                                notificationMessage.put("message", Message);
-                                notificationMessage.put("from", mCurrentID);
-                                notificationMessage.put("user_name", mCurrentName);
-
-                                mfirestore.collection("Users/"+user_id+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(container.getContext(),"Error :  "+ e.getMessage(),Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
-
-                        }
-                        Toast.makeText(container.getContext(),"The Help Request Sent ",Toast.LENGTH_LONG).show();
-                    }
-                });
-
+                Intent GoToHelp = new Intent(mContext , HelpRequest.class);
+                startActivity(GoToHelp);
             }
         });
         return view;

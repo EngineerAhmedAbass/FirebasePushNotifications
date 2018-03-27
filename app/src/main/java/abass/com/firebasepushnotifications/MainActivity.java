@@ -13,7 +13,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private TextView mProfileLabel;
-    private TextView mUsersLabel;
     private TextView mNotificationsLabel;
 
     private ViewPager mMainPager;
@@ -45,24 +44,23 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mProfileLabel = (TextView) findViewById(R.id.profileLabel);
         mNotificationsLabel=(TextView) findViewById(R.id.notificationsLabel);
-        mUsersLabel = (TextView) findViewById(R.id.usersLabel);
         mMainPager = (ViewPager) findViewById(R.id.mainPager);
 
         mpagerViewAdapter = new PagerViewAdapter(getSupportFragmentManager());
         mMainPager.setAdapter(mpagerViewAdapter);
-        mMainPager.setOffscreenPageLimit(2);
+        mMainPager.setOffscreenPageLimit(1);
+
+        mProfileLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabBright));
+        mProfileLabel.setTextSize(22);
+
+        mNotificationsLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
+        mNotificationsLabel.setTextSize(16);
+
 
         mProfileLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mMainPager.setCurrentItem(0);
-            }
-        });
-
-        mUsersLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mMainPager.setCurrentItem(1);
             }
         });
 
@@ -101,29 +99,13 @@ public class MainActivity extends AppCompatActivity {
 
             mNotificationsLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
             mNotificationsLabel.setTextSize(16);
-
-            mUsersLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
-            mUsersLabel.setTextSize(16);
-        }
-        if(position ==2){
-            mProfileLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
-            mProfileLabel.setTextSize(16);
-
-            mNotificationsLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabBright));
-            mNotificationsLabel.setTextSize(22);
-
-            mUsersLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
-            mUsersLabel.setTextSize(16);
         }
         if(position ==1){
             mProfileLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
             mProfileLabel.setTextSize(16);
 
-            mNotificationsLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabLight));
-            mNotificationsLabel.setTextSize(16);
-
-            mUsersLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabBright));
-            mUsersLabel.setTextSize(22);
+            mNotificationsLabel.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.textTabBright));
+            mNotificationsLabel.setTextSize(22);
         }
     }
 }

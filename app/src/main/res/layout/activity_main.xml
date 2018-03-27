@@ -28,18 +28,6 @@
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/usersLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="57dp"
-            android:layout_weight="1"
-            android:background="@color/colorAccent"
-            android:fontFamily="@font/nunito_semibold"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="All Users"
-            android:textColor="@color/textTabBright"
-            android:textSize="24sp" />
-
-        <TextView
             android:id="@+id/notificationsLabel"
             android:layout_width="wrap_content"
             android:layout_height="57dp"
