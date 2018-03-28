@@ -114,29 +114,6 @@ public class HelpRequest extends AppCompatActivity {
     private Vector<String> SentUsers = new Vector<>();
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser CurrentUser = mAuth.getCurrentUser();
-        if (CurrentUser == null) {
-            sendToLogin();
-        } else {
-            mfirestore = FirebaseFirestore.getInstance();
-            mCurrentID = mAuth.getUid();
-            mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    mCurrentName = documentSnapshot.get("name").toString();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(HelpRequest.this, "Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_request);
@@ -158,12 +135,8 @@ public class HelpRequest extends AppCompatActivity {
         SendRequestBtn = (Button) findViewById(R.id.sendrequest);
         mLogOutBtn = (Button) findViewById(R.id.logOutBtn);
         mMainBtn = (Button) findViewById(R.id.goToMainBtn);
-
+        mAuth = FirebaseAuth.getInstance();
         client = getFusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(HelpRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(HelpRequest.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
-            return;
-        }
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         mGoogleApiClient = new GoogleApiClient.Builder(HelpRequest.this)
@@ -171,7 +144,7 @@ public class HelpRequest extends AppCompatActivity {
                 .build();
         mGoogleApiClient.connect();
 
-        mAuth = FirebaseAuth.getInstance();
+
 
         if (isLocationServiceEnabled()) {
             if (isNetworkAvailable()) {
@@ -183,7 +156,6 @@ public class HelpRequest extends AppCompatActivity {
             Toast.makeText(HelpRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
             showSettingDialog();
         }
-
 
         mLogOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,7 +198,28 @@ public class HelpRequest extends AppCompatActivity {
             }
         });
     }
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser CurrentUser = mAuth.getCurrentUser();
+        if (CurrentUser == null) {
+            sendToLogin();
+        } else {
+            mfirestore = FirebaseFirestore.getInstance();
+            mCurrentID = mAuth.getUid();
+            mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    mCurrentName = documentSnapshot.get("name").toString();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(HelpRequest.this, "Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
     void SendNotifications() {
         mfirestore = FirebaseFirestore.getInstance();
 

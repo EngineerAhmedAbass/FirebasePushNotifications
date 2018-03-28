@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,12 +27,16 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,6 +53,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText fullname,email , password ,phone , city , street , nid ;
@@ -58,6 +64,11 @@ public class RegisterActivity extends AppCompatActivity {
     String Myname , myemail , myPassword , Myphone ,MyCity ,MyStreet ,MyNID , longtitude,latitude ;
     private FirebaseAuth mAuth ;
     private FirebaseFirestore mFirestore;
+
+    private LocationRequest mLocationRequest;
+
+    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 2000; /* 2 sec */
 
 
     LocationManager locationManager;
@@ -84,13 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
         nid= (EditText) findViewById(R.id.NID);
 
 
-        client = LocationServices.getFusedLocationProviderClient(RegisterActivity.this);
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        mGoogleApiClient = new GoogleApiClient.Builder(RegisterActivity.this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiClient.connect();
+        startLocationUpdates();
 
         mRegBtn = (Button) findViewById(R.id.btnRegister);
         mLoginPageBtn = (Button) findViewById(R.id.btnLinkToLoginScreen);
@@ -108,19 +113,6 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(isLocationServiceEnabled()){
                     if(isNetworkAvailable()){
-                        if (ActivityCompat.checkSelfPermission( RegisterActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(RegisterActivity.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        client.getLastLocation().addOnSuccessListener( RegisterActivity.this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if(location != null){
-                                    longtitude = ""+location.getLongitude();
-                                    latitude = ""+location.getLatitude();
-                                }
-                            }
-                        });
                         Register();
                     }else{
                         Toast.makeText(RegisterActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
@@ -137,7 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void Register(){
         if(longtitude == null || latitude == null)
         {
-            Toast.makeText(RegisterActivity.this,"Something Went Wrong Please Try Again...",Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this,"Something Went Wrong with your location Please Try Again...",Toast.LENGTH_LONG).show();
             return;
         }
         Myname = fullname.getText().toString();
@@ -234,7 +226,52 @@ public class RegisterActivity extends AppCompatActivity {
 
         return true;
     }
+    protected void startLocationUpdates() {
 
+        // Create the location request to start receiving updates
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+        // Create LocationSettingsRequest object using location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        LocationSettingsRequest locationSettingsRequest = builder.build();
+
+        // Check whether location settings are satisfied
+        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
+        settingsClient.checkLocationSettings(locationSettingsRequest);
+
+        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        // do work here
+                        onLocationChanged(locationResult.getLastLocation());
+                    }
+                },
+                Looper.myLooper());
+    }
+
+    public void onLocationChanged(Location location) {
+        // New location has now been determined
+        longtitude = Double.toString(location.getLongitude());
+        latitude = Double.toString(location.getLatitude());
+        // You can now create a LatLng Object for use with maps
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+    }
     private void SendToMain() {
             Intent intent = new Intent(RegisterActivity.this, HelpRequest.class);
             startActivity(intent);
