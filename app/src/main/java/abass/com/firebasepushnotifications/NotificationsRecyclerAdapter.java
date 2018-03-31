@@ -80,6 +80,7 @@ public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<Notificat
                         intent.putExtra("longtitude",notification.getLongtitude());
                         intent.putExtra("domain",notification.getDomain());
                         intent.putExtra("request_id",notification.getRequestID());
+                        intent.putExtra("type",notification.getType());
                         context.startActivity(intent);
                     }
                 });

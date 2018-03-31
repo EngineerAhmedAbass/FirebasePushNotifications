@@ -5,13 +5,21 @@ package abass.com.firebasepushnotifications;
  */
 
 public class MyNotification extends NotificationId{
-    private String domain , from , latitude ,longtitude , message , requestID , user_name ;
+    private String domain , from , latitude ,longtitude , message , requestID , user_name , type;
 
     public MyNotification() {
     }
 
     public String getDomain() {
         return domain;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setDomain(String domain) {
