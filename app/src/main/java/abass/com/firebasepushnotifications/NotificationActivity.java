@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -27,15 +28,20 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -57,6 +63,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class NotificationActivity extends AppCompatActivity {
 
@@ -68,6 +75,11 @@ public class NotificationActivity extends AppCompatActivity {
     private Button sendRespond;
     private String Message;
     private String longt, lati;
+
+    private LocationRequest mLocationRequest;
+
+    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 2000; /* 2 sec */
 
     private String mCurrentID;
     private String mCurrentName;
@@ -153,45 +165,46 @@ public class NotificationActivity extends AppCompatActivity {
         sendRespond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isLocationServiceEnabled()){
-                    if(isNetworkAvailable()){
-                        if (ActivityCompat.checkSelfPermission( NotificationActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(NotificationActivity.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
-                            return;
+
+                    if (isLocationServiceEnabled()) {
+                        if (isNetworkAvailable()) {
+                            startLocationUpdates();
+                            SendNotificationsRespond();
+                        } else {
+                            Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
-                        client.getLastLocation().addOnSuccessListener( NotificationActivity.this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if(location != null){
-                                    longt = ""+location.getLongitude();
-                                    lati = ""+location.getLatitude();
-                                }
-                            }
-                        });
-                        SendNotificationsRespond();
-                    }else{
-                        Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(NotificationActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+                        showSettingDialog();
                     }
-                }else {
-                    Toast.makeText(NotificationActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
-                    showSettingDialog();
                 }
-                new changeState().execute(Integer.parseInt(request_id));
-            }
         });
 
+    }
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser CurrentUser = mAuth.getCurrentUser();
+        if (CurrentUser == null) {
+            sendToLogin();
+        } else {
+            mfirestore = FirebaseFirestore.getInstance();
+            mCurrentID = mAuth.getUid();
+            mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    mCurrentName = documentSnapshot.get("name").toString();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(NotificationActivity.this, "Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void SendNotificationsRespond() {
         mfirestore = FirebaseFirestore.getInstance();
-        mCurrentID = mAuth.getUid();
-
-        mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                mCurrentName = documentSnapshot.get("name").toString();
-            }
-        });
 
         Message = "I'm willing to help";
 
@@ -200,9 +213,9 @@ public class NotificationActivity extends AppCompatActivity {
             return;
         }
 
-        if(mCurrentID == null || mCurrentName == null || Domain== null || longtitude == null || latitude == null)
+        if(longt == null || lati == null)
         {
-            Toast.makeText(NotificationActivity.this,"Something Went Wrong Please With Sending Respond Try Again...",Toast.LENGTH_SHORT).show();
+            Toast.makeText(NotificationActivity.this,"Can't Retrieve your location try again...",Toast.LENGTH_SHORT).show();
             return;
         }
         new changeState().execute(Integer.parseInt(request_id));
@@ -269,24 +282,7 @@ public class NotificationActivity extends AppCompatActivity {
             sendRespond.setVisibility(View.INVISIBLE);
             Status.setText("closed");
 
-            mfirestore.collection("Users").addSnapshotListener(NotificationActivity.this,new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                    for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
-                        if(doc.getType()== DocumentChange.Type.ADDED){
-                            String user_id = doc.getDocument().getId();
-                            User temp_user = doc.getDocument().toObject(User.class);
 
-                            if(user_id.equals(feed)) {
-                                SentUsers.add(user_id);
-                            }
-                        }
-
-                    }
-                }
-            });
-
-            for(int i=0 ; i < SentUsers.size();i++){
                 Map<String , Object> notificationMessage = new HashMap<>();
                 notificationMessage.put("message", Message);
                 notificationMessage.put("from", mCurrentID);
@@ -295,8 +291,9 @@ public class NotificationActivity extends AppCompatActivity {
                 notificationMessage.put("longtitude",longt);
                 notificationMessage.put("latitude",lati);
                 notificationMessage.put("requestID",null);
+                notificationMessage.put("type","responce");
 
-                mfirestore.collection("Users/"+SentUsers.elementAt(i)+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                mfirestore.collection("Users/"+feed+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                     }
@@ -306,7 +303,6 @@ public class NotificationActivity extends AppCompatActivity {
                         Toast.makeText(NotificationActivity.this,"Error :  "+ e.getMessage(),Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
 
             Toast.makeText(NotificationActivity.this,"Respond Message Sent ",Toast.LENGTH_SHORT).show();
         }
@@ -407,5 +403,56 @@ public class NotificationActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+    protected void startLocationUpdates() {
+
+        // Create the location request to start receiving updates
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+        // Create LocationSettingsRequest object using location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        LocationSettingsRequest locationSettingsRequest = builder.build();
+
+        // Check whether location settings are satisfied
+        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
+        settingsClient.checkLocationSettings(locationSettingsRequest);
+
+        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        // do work here
+                        onLocationChanged(locationResult.getLastLocation());
+                    }
+                },
+                Looper.myLooper());
+    }
+
+    public void onLocationChanged(Location location) {
+        // New location has now been determined
+        longt = Double.toString(location.getLongitude());
+        lati = Double.toString(location.getLatitude());
+        // You can now create a LatLng Object for use with maps
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+    }
+    private void sendToLogin() {
+        Intent intent = new Intent(NotificationActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

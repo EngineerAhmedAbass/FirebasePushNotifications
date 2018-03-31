@@ -232,7 +232,7 @@ public class HelpRequest extends AppCompatActivity {
         }
 
         if (longtitude == null || latitude == null) {
-            Toast.makeText(HelpRequest.this, "Something Went Wrong Please Try Again...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(HelpRequest.this, "Can not Retrieve your location Please Try Again...", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -265,7 +265,7 @@ public class HelpRequest extends AppCompatActivity {
         Vector<String> user_ids;
 
         protected String doInBackground(Vector<String>... strings) {
-            String url = "http://refadatours.com/android/addRequest.php?message=" + Message;
+            String url = "http://refadatours.com/android/addRequest.php?message=" + Message+"&senderID="+mCurrentID;
             user_ids = strings[0];
             HttpEntity httpEntity = null;
             try {
