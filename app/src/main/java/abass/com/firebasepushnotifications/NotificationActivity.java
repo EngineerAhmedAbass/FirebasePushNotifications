@@ -136,7 +136,6 @@ public class NotificationActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        new GetStatus().execute(Integer.parseInt(request_id));
 
         placeTxt.setClickable(true);
         placeTxt.setMovementMethod(LinkMovementMethod.getInstance());
@@ -162,9 +161,22 @@ public class NotificationActivity extends AppCompatActivity {
         MessageTxt.setText(dataMessage);
         placeTxt.setText(LocationUEL);
 
-        sendRespond.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if(!type.equals("responce")) {
+            if (isLocationServiceEnabled()) {
+                if (isNetworkAvailable()) {
+                    startLocationUpdates();
+                } else {
+                    Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(NotificationActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+                showSettingDialog();
+            }
+
+            new GetStatus().execute(Integer.parseInt(request_id));
+            sendRespond.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
                     if (isLocationServiceEnabled()) {
                         if (isNetworkAvailable()) {
@@ -178,8 +190,10 @@ public class NotificationActivity extends AppCompatActivity {
                         showSettingDialog();
                     }
                 }
-        });
-
+            });
+        }else {
+            Status.setText("Responce");
+        }
     }
     protected void onStart() {
         super.onStart();
@@ -321,7 +335,7 @@ public class NotificationActivity extends AppCompatActivity {
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
             @Override
             public void onResult(LocationSettingsResult result) {
-                final com.google.android.gms.common.api.Status status = result.getStatus();
+                final Status status = result.getStatus();
                 final LocationSettingsStates state = result.getLocationSettingsStates();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
@@ -361,16 +375,7 @@ public class NotificationActivity extends AppCompatActivity {
                                 Toast.makeText(NotificationActivity.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            client.getLastLocation().addOnSuccessListener( NotificationActivity.this, new OnSuccessListener<Location>() {
-                                @Override
-                                public void onSuccess(Location location) {
-                                    if(location != null){
-                                        longt = ""+location.getLongitude();
-                                        lati = ""+location.getLatitude();
-                                    }
-                                }
-                            });
-                            SendNotificationsRespond();
+                            startLocationUpdates();
                         }else{
                             Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
