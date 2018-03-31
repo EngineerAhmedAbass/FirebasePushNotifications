@@ -297,6 +297,7 @@ public class HelpRequest extends AppCompatActivity {
                 notificationMessage.put("longtitude", longtitude);
                 notificationMessage.put("latitude", latitude);
                 notificationMessage.put("requestID", RequestID);
+                notificationMessage.put("type", "Request");
 
                 mfirestore.collection("Users/" + user_ids.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override

@@ -26,6 +26,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String longtitude = remoteMessage.getData().get("longtitude");
         String Domain = remoteMessage.getData().get("domain");
         String RequestID = remoteMessage.getData().get("request_id");
+        String type = remoteMessage.getData().get("type");
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
                 .setSmallIcon(R.mipmap.lunch)
@@ -42,6 +43,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         intent.putExtra("longtitude",longtitude);
         intent.putExtra("domain",Domain);
         intent.putExtra("request_id",RequestID);
+        intent.putExtra("type",type);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
