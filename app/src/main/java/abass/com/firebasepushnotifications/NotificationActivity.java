@@ -304,7 +304,7 @@ public class NotificationActivity extends AppCompatActivity {
                 notificationMessage.put("domain", Domain);
                 notificationMessage.put("longtitude",longt);
                 notificationMessage.put("latitude",lati);
-                notificationMessage.put("requestID",null);
+                notificationMessage.put("requestID",request_id);
                 notificationMessage.put("type","responce");
 
                 mfirestore.collection("Users/"+feed+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
