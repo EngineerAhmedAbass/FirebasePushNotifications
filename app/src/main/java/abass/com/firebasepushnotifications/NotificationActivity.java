@@ -161,7 +161,7 @@ public class NotificationActivity extends AppCompatActivity {
         MessageTxt.setText(dataMessage);
         placeTxt.setText(LocationUEL);
 
-        if(!type.equals("responce")) {
+        if(!type.equals("response")) {
             if (isLocationServiceEnabled()) {
                 if (isNetworkAvailable()) {
                     startLocationUpdates();
@@ -192,7 +192,7 @@ public class NotificationActivity extends AppCompatActivity {
                 }
             });
         }else {
-            Status.setText("Responce");
+            Status.setText("response");
         }
     }
     protected void onStart() {
@@ -305,7 +305,7 @@ public class NotificationActivity extends AppCompatActivity {
                 notificationMessage.put("longtitude",longt);
                 notificationMessage.put("latitude",lati);
                 notificationMessage.put("requestID",request_id);
-                notificationMessage.put("type","responce");
+                notificationMessage.put("type","response");
 
                 mfirestore.collection("Users/"+feed+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
