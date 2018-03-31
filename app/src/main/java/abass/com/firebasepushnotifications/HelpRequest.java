@@ -6,10 +6,12 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +29,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -217,7 +220,7 @@ public class HelpRequest extends AppCompatActivity {
         Message = requestText.getText().toString();
         Domain = spinner.getSelectedItem().toString();
 
-        if (Message == null){
+        if (Message.equals("")){
             Toast.makeText(HelpRequest.this,"من فضلك ادخل معلومات عن طلب المساعدة",Toast.LENGTH_SHORT).show();
             return;
         }
@@ -255,7 +258,7 @@ public class HelpRequest extends AppCompatActivity {
     class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
         Vector<String> user_ids ;
         protected String doInBackground(Vector<String>... strings) {
-            String url = "http://refadatours.com/android/addRequest.php?message="+Message;
+            String url = "http://refadatours.com/android/addRequest.php?message="+Message+"&senderID="+mCurrentID;
             user_ids=strings[0];
             HttpEntity httpEntity = null;
             try
