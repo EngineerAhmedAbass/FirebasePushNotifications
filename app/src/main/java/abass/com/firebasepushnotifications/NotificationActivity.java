@@ -88,6 +88,7 @@ public class NotificationActivity extends AppCompatActivity {
     String latitude = null ;
     String Domain;
     String request_id= null;
+    String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class NotificationActivity extends AppCompatActivity {
         latitude = getIntent().getStringExtra("latitude");
         Domain = getIntent().getStringExtra("domain");
         request_id =getIntent().getStringExtra("request_id");
+        type =getIntent().getStringExtra("type");
 
         String LocationUEL = "http://maps.google.com/maps?q="+latitude+","+longtitude;
 
