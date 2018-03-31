@@ -200,11 +200,11 @@ public class NotificationActivity extends AppCompatActivity {
 
         if(mCurrentID == null || mCurrentName == null || Domain== null || longtitude == null || latitude == null)
         {
-            Toast.makeText(NotificationActivity.this,"Something Went Wrong Please Try Again...",Toast.LENGTH_SHORT).show();
+            Toast.makeText(NotificationActivity.this,"Something Went Wrong Please With Sending Respond Try Again...",Toast.LENGTH_SHORT).show();
             return;
         }
         new changeState().execute(Integer.parseInt(request_id));
-        Toast.makeText(NotificationActivity.this,"The Help Request Sent ",Toast.LENGTH_SHORT).show();
+        Toast.makeText(NotificationActivity.this,"The Respond Sent ",Toast.LENGTH_SHORT).show();
     }
 
     class GetStatus extends AsyncTask<Integer ,Void,String>{
