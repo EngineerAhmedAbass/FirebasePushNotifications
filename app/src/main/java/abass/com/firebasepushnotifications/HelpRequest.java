@@ -10,7 +10,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -28,16 +27,12 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -80,7 +75,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class HelpRequest extends AppCompatActivity {
 
@@ -89,11 +83,6 @@ public class HelpRequest extends AppCompatActivity {
     private Button SendRequestBtn;
     private Button mLogOutBtn;
     private Button mMainBtn;
-
-    private LocationRequest mLocationRequest;
-
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
 
     private String Message;
     private String Domain;
@@ -114,11 +103,22 @@ public class HelpRequest extends AppCompatActivity {
     private Vector<String> SentUsers = new Vector<>();
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser CurrentUser = mAuth.getCurrentUser();
+        if(CurrentUser == null ){
+            sendToLogin();
+        }else{
+            mfirestore = FirebaseFirestore.getInstance();
+            mCurrentID = mAuth.getUid();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_request);
 
-        requestPermission();
         /*  Start Spinner Code */
         spinner = (Spinner) findViewById(R.id.planets_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -132,11 +132,11 @@ public class HelpRequest extends AppCompatActivity {
         /*  End Spinner Code */
 
         requestText = (EditText) findViewById(R.id.text_help);
-        SendRequestBtn = (Button) findViewById(R.id.sendrequest);
+        SendRequestBtn=(Button) findViewById(R.id.sendrequest);
         mLogOutBtn = (Button) findViewById(R.id.logOutBtn);
-        mMainBtn = (Button) findViewById(R.id.goToMainBtn);
-        mAuth = FirebaseAuth.getInstance();
-        client = getFusedLocationProviderClient(this);
+        mMainBtn = (Button)findViewById(R.id.goToMainBtn);
+
+        client = LocationServices.getFusedLocationProviderClient(HelpRequest.this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         mGoogleApiClient = new GoogleApiClient.Builder(HelpRequest.this)
@@ -144,18 +144,9 @@ public class HelpRequest extends AppCompatActivity {
                 .build();
         mGoogleApiClient.connect();
 
+        requestPermission();
 
-
-        if (isLocationServiceEnabled()) {
-            if (isNetworkAvailable()) {
-                startLocationUpdates();
-            } else {
-                Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(HelpRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
-            showSettingDialog();
-        }
+        mAuth = FirebaseAuth.getInstance();
 
         mLogOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,71 +175,72 @@ public class HelpRequest extends AppCompatActivity {
         SendRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isLocationServiceEnabled()) {
-                    if (isNetworkAvailable()) {
-                        startLocationUpdates();
+                if(isLocationServiceEnabled()){
+                    if(isNetworkAvailable()){
+                        if (ActivityCompat.checkSelfPermission( HelpRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(HelpRequest.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        client.getLastLocation().addOnSuccessListener( HelpRequest.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if(location != null){
+                                    longtitude = ""+location.getLongitude();
+                                    latitude = ""+location.getLatitude();
+                                }
+                            }
+                        });
                         SendNotifications();
-                    } else {
+                    }else{
                         Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
                     }
-                } else {
+                }else {
                     Toast.makeText(HelpRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
                     showSettingDialog();
                 }
+
             }
         });
+
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser CurrentUser = mAuth.getCurrentUser();
-        if (CurrentUser == null) {
-            sendToLogin();
-        } else {
-            mfirestore = FirebaseFirestore.getInstance();
-            mCurrentID = mAuth.getUid();
-            mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    mCurrentName = documentSnapshot.get("name").toString();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(HelpRequest.this, "Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-    void SendNotifications() {
+    void SendNotifications(){
         mfirestore = FirebaseFirestore.getInstance();
+        mCurrentID = mAuth.getUid();
+
+        mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                mCurrentName = documentSnapshot.get("name").toString();
+            }
+        });
 
         Message = requestText.getText().toString();
         Domain = spinner.getSelectedItem().toString();
 
-        if (Message == null) {
-            Toast.makeText(HelpRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
+        if (Message == null){
+            Toast.makeText(HelpRequest.this,"من فضلك ادخل معلومات عن طلب المساعدة",Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (longtitude == null || latitude == null) {
-            Toast.makeText(HelpRequest.this, "Something Went Wrong Please Try Again...", Toast.LENGTH_SHORT).show();
+        if(mCurrentID == null || mCurrentName == null || Domain== null || longtitude == null || latitude == null)
+        {
+            Toast.makeText(HelpRequest.this,"Something Went Wrong Please Try Again...",Toast.LENGTH_SHORT).show();
             return;
         }
 
-        mfirestore.collection("Users").addSnapshotListener(HelpRequest.this, new EventListener<QuerySnapshot>() {
+        mfirestore.collection("Users").addSnapshotListener(HelpRequest.this,new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-                    if (doc.getType() == DocumentChange.Type.ADDED) {
+                for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
+                    if(doc.getType()== DocumentChange.Type.ADDED){
                         String user_id = doc.getDocument().getId();
                         User temp_user = doc.getDocument().toObject(User.class);
 
-                        if (temp_user.getToken_id() == null || user_id.equals(mCurrentID)) {
+                        if(temp_user.getToken_id() == null || user_id.equals(mCurrentID)){
                             continue;
                         }
-                        double Dist = distance(Double.parseDouble(latitude), Double.parseDouble(longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
-                        if (Dist > 10) {
+                        double Dist = distance(Double.parseDouble(latitude),Double.parseDouble(longtitude),Double.parseDouble(temp_user.getLatitude()),Double.parseDouble(temp_user.getLongtitude()));
+                        if(Dist > 10){
                             continue;
                         }
                         SentUsers.add(user_id);
@@ -258,17 +250,16 @@ public class HelpRequest extends AppCompatActivity {
             }
         });
         new GetRequestID().execute(SentUsers);
-        Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(HelpRequest.this,"The Help Request Sent ",Toast.LENGTH_SHORT).show();
     }
-
     class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
-        Vector<String> user_ids;
-
+        Vector<String> user_ids ;
         protected String doInBackground(Vector<String>... strings) {
-            String url = "http://refadatours.com/android/addRequest.php?message=" + Message;
-            user_ids = strings[0];
+            String url = "http://refadatours.com/android/addRequest.php?message="+Message;
+            user_ids=strings[0];
             HttpEntity httpEntity = null;
-            try {
+            try
+            {
                 DefaultHttpClient httpClient = new DefaultHttpClient();  // Default HttpClient
                 HttpGet httpGet = new HttpGet(url);
                 HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -284,113 +275,34 @@ public class HelpRequest extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return entityResponse;
+            return  entityResponse ;
         }
 
         protected void onPostExecute(String RequestID) {
-            for (int i = 0; i < user_ids.size(); i++) {
-                Map<String, Object> notificationMessage = new HashMap<>();
+            for(int i=0 ; i < user_ids.size();i++){
+                Map<String , Object> notificationMessage = new HashMap<>();
                 notificationMessage.put("message", Message);
                 notificationMessage.put("from", mCurrentID);
                 notificationMessage.put("user_name", mCurrentName);
                 notificationMessage.put("domain", Domain);
-                notificationMessage.put("longtitude", longtitude);
-                notificationMessage.put("latitude", latitude);
-                notificationMessage.put("requestID", RequestID);
+                notificationMessage.put("longtitude",longtitude);
+                notificationMessage.put("latitude",latitude);
+                notificationMessage.put("requestID",RequestID);
 
-                mfirestore.collection("Users/" + user_ids.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                mfirestore.collection("Users/"+user_ids.elementAt(i)+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HelpRequest.this,"Error :  "+ e.getMessage(),Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         }
     }
 
-    protected void startLocationUpdates() {
-
-        // Create the location request to start receiving updates
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-        // Create LocationSettingsRequest object using location request
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-        LocationSettingsRequest locationSettingsRequest = builder.build();
-
-        // Check whether location settings are satisfied
-        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
-        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-        settingsClient.checkLocationSettings(locationSettingsRequest);
-
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        // do work here
-                        onLocationChanged(locationResult.getLastLocation());
-                    }
-                },
-                Looper.myLooper());
-    }
-
-    public void onLocationChanged(Location location) {
-        // New location has now been determined
-        longtitude = Double.toString(location.getLongitude());
-        latitude = Double.toString(location.getLatitude());
-        // You can now create a LatLng Object for use with maps
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-    }
-
-    public void getLastLocation() {
-        // Get last known recent location using new Google Play Services SDK (v11+)
-        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationClient.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // GPS location can be null if GPS is switched off
-                        if (location != null) {
-                            onLocationChanged(location);
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("MapDemoActivity", "Error trying to get last GPS location");
-                        e.printStackTrace();
-                    }
-                });
-    }
     private void sendToLogin() {
         Intent intent = new Intent(HelpRequest.this, LoginActivity.class);
         startActivity(intent);
@@ -454,7 +366,16 @@ public class HelpRequest extends AppCompatActivity {
                                 Toast.makeText(HelpRequest.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            startLocationUpdates();
+                            client.getLastLocation().addOnSuccessListener( HelpRequest.this, new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    if(location != null){
+                                        longtitude = ""+location.getLongitude();
+                                        latitude = ""+location.getLatitude();
+                                    }
+                                }
+                            });
+                            SendNotifications();
                         }else{
                             Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
