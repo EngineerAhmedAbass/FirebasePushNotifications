@@ -54,6 +54,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
     private Button mLogOutBtn;
     private Button mSendNotificationBtn;
     private Button mLocationBtn;
+    private Button MapsBtn;
     private String mCurrentID;
     private String mCurrentName;
 
@@ -92,7 +93,15 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
         mLogOutBtn = (Button) view.findViewById(R.id.logOutBtn);
         mSendNotificationBtn = (Button) view.findViewById(R.id.sendNotifications);
         mLocationBtn = (Button) view.findViewById(R.id.locationBtn);
+        MapsBtn = (Button) view.findViewById(R.id.GoToMaps) ;
 
+        MapsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent GoToMaps = new Intent(mContext , MainMap.class);
+                startActivity(GoToMaps);
+            }
+        });
         mLogOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

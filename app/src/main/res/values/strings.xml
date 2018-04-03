@@ -4,6 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="default_notification_channel_id">Tvac_CH_01</string>
+    <string name="title_activity_maps">Map</string>
     <string-array name="planets_array">
         <item>قلب</item>
         <item>حرق</item>
@@ -11,4 +12,8 @@
         <item>غيبوبة</item>
         <item>اسعافات اولية</item>
     </string-array>
+    <string name="title_activity_splash">Splash</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>

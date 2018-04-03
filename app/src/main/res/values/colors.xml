@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background_color">#009688</color>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#ff4d00</color>
     <color name="textTabLight">#FFB08B</color>
     <color name="textTabBright">#ffffff</color>
     <color name="bg_login">#26ae90</color>
@@ -23,4 +20,8 @@
     <color name="primaryLightColor">#6ab7ff</color>
     <color name="primaryDarkColor">#005cb2</color>
     <color name="primaryTextColor">#000000</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="black_overlay">#66000000</color>
 </resources>
