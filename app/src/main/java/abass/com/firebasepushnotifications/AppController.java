@@ -1,6 +1,7 @@
 package abass.com.firebasepushnotifications;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -9,7 +10,7 @@ import com.android.volley.toolbox.Volley;
 
 import static abass.com.firebasepushnotifications.AppConfig.TAG;
 
-public class AppController extends Application {
+public class AppController extends MultiDexApplication {
 
     private RequestQueue mRequestQueue;
     private static AppController mInstance;
