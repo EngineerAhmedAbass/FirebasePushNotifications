@@ -1,13 +1,9 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Maps;
 
-import android.app.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,6 +15,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import abass.com.firebasepushnotifications.R;
+
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 

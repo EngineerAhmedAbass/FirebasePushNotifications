@@ -14,7 +14,7 @@
 
     android:fitsSystemWindows="true"
 
-    tools:context=".MapsActivity">
+    tools:context=".Maps.MapsActivity">
 
     <fragment
 

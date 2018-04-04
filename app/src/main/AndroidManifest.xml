@@ -14,7 +14,7 @@
         android:required="true" />
 
     <application
-        android:name=".AppController"
+        android:name=".Maps.AppController"
         android:allowBackup="true"
         android:icon="@mipmap/lunch"
         android:label="@string/app_name"
@@ -59,11 +59,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MapsActivity"
+            android:name=".Maps.MapsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_maps"
             android:theme="@style/FullscreenTheme"/>
-        <activity android:name=".MainMap"></activity>
+        <activity android:name=".Maps.MainMap"></activity>
     </application>
 
 </manifest>
