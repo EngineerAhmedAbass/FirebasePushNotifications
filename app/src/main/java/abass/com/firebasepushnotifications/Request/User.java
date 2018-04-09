@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Request;
 
 /**
  * Created by ahmed on 14-Mar-18.

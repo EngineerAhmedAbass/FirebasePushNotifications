@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Maps;
 
 /** * Created by sydney on 6/26/2016. */
 

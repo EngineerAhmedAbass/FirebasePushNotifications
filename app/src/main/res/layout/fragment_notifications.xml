@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="0dp"
-    tools:context="abass.com.firebasepushnotifications.NotificationsFragment">
+    tools:context="abass.com.firebasepushnotifications.Request.NotificationsFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

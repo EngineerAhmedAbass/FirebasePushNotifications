@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FirebasePushNotifications.iml" filepath="$PROJECT_DIR$/FirebasePushNotifications.iml" />
+      <module fileurl="file://E:\Ahmed Abass\1-Study\4th Year\GP\FirebasePushNotifications\FirebasePushNotifications.iml" filepath="E:\Ahmed Abass\1-Study\4th Year\GP\FirebasePushNotifications\FirebasePushNotifications.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://E:\Ahmed Abass\1-Study\4th Year\GP\FirebasePushNotifications\app\app.iml" filepath="E:\Ahmed Abass\1-Study\4th Year\GP\FirebasePushNotifications\app\app.iml" />
     </modules>
   </component>
 </project>

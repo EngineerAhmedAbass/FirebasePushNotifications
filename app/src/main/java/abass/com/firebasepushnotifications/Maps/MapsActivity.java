@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Maps;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -34,9 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static abass.com.firebasepushnotifications.AppConfig.*;
+import abass.com.firebasepushnotifications.R;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
 
@@ -135,9 +133,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location != null) {
             onLocationChanged(location);
         }
-        locationManager.requestLocationUpdates(bestProvider, MIN_TIME_BW_UPDATES,
+        locationManager.requestLocationUpdates(bestProvider, AppConfig.MIN_TIME_BW_UPDATES,
 
-                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                AppConfig.MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
     }
 
     private void loadNearByPlaces(double latitude, double longitude) {
@@ -151,7 +149,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         googlePlacesUrl.append("&radius=").append(Dist);
         googlePlacesUrl.append("&types=").append(type);
         googlePlacesUrl.append("&sensor=true");
-        googlePlacesUrl.append("&key=" + GOOGLE_BROWSER_API_KEY);
+        googlePlacesUrl.append("&key=" + AppConfig.GOOGLE_BROWSER_API_KEY);
 
         JsonObjectRequest request = new JsonObjectRequest(googlePlacesUrl.toString(),
 
@@ -160,14 +158,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     public void onResponse(JSONObject result) {
 
-                        Log.i(TAG, "onResponse: Result= " + result.toString());
+                        Log.i(AppConfig.TAG, "onResponse: Result= " + result.toString());
                         parseLocationResult(result);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override                    public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG, "onErrorResponse: Error= " + error);
-                        Log.e(TAG, "onErrorResponse: Error= " + error.getMessage());
+                        Log.e(AppConfig.TAG, "onErrorResponse: Error= " + error);
+                        Log.e(AppConfig.TAG, "onErrorResponse: Error= " + error.getMessage());
                     }
                 });
 
@@ -182,29 +180,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             JSONArray jsonArray = result.getJSONArray("results");
 
-            if (result.getString(STATUS).equalsIgnoreCase(OK)) {
+            if (result.getString(AppConfig.STATUS).equalsIgnoreCase(AppConfig.OK)) {
 
                 mMap.clear();
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject place = jsonArray.getJSONObject(i);
 
-                    id = place.getString(SUPERMARKET_ID);
-                    place_id = place.getString(PLACE_ID);
-                    if (!place.isNull(NAME)) {
-                        placeName = place.getString(NAME);
+                    id = place.getString(AppConfig.SUPERMARKET_ID);
+                    place_id = place.getString(AppConfig.PLACE_ID);
+                    if (!place.isNull(AppConfig.NAME)) {
+                        placeName = place.getString(AppConfig.NAME);
                     }
-                    if (!place.isNull(VICINITY)) {
-                        vicinity = place.getString(VICINITY);
+                    if (!place.isNull(AppConfig.VICINITY)) {
+                        vicinity = place.getString(AppConfig.VICINITY);
                     }
-                    latitude = place.getJSONObject(GEOMETRY).getJSONObject(LOCATION)
+                    latitude = place.getJSONObject(AppConfig.GEOMETRY).getJSONObject(AppConfig.LOCATION)
 
-                            .getDouble(LATITUDE);
-                    longitude = place.getJSONObject(GEOMETRY).getJSONObject(LOCATION)
+                            .getDouble(AppConfig.LATITUDE);
+                    longitude = place.getJSONObject(AppConfig.GEOMETRY).getJSONObject(AppConfig.LOCATION)
 
-                            .getDouble(LONGITUDE);
-                    reference = place.getString(REFERENCE);
-                    icon = place.getString(ICON);
+                            .getDouble(AppConfig.LONGITUDE);
+                    reference = place.getString(AppConfig.REFERENCE);
+                    icon = place.getString(AppConfig.ICON);
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     LatLng latLng = new LatLng(latitude, longitude);
@@ -217,7 +215,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(getBaseContext(), jsonArray.length() + " " + data + " found!",
 
                         Toast.LENGTH_LONG).show();
-            } else if (result.getString(STATUS).equalsIgnoreCase(ZERO_RESULTS)) {
+            } else if (result.getString(AppConfig.STATUS).equalsIgnoreCase(AppConfig.ZERO_RESULTS)) {
                 Toast.makeText(getBaseContext(), "No " + data + " found in 5KM radius!!!",
 
                         Toast.LENGTH_LONG).show();
@@ -226,7 +224,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (JSONException e) {
 
             e.printStackTrace();
-            Log.e(TAG, "parseLocationResult: Error=" + e.getMessage());
+            Log.e(AppConfig.TAG, "parseLocationResult: Error=" + e.getMessage());
         }
     }
 
@@ -264,9 +262,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                apiAvailability.getErrorDialog(this, resultCode, AppConfig.PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Log.i(TAG, "This device is not supported.");
+                Log.i(AppConfig.TAG, "This device is not supported.");
                 finish();
             }
             return false;

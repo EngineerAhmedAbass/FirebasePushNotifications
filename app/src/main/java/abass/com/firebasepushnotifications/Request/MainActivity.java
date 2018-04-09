@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Request;
 
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import abass.com.firebasepushnotifications.R;
 
 public class MainActivity extends AppCompatActivity {
     private TextView mProfileLabel;

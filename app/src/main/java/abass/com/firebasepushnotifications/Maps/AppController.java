@@ -1,14 +1,11 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Maps;
 
-import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-
-import static abass.com.firebasepushnotifications.AppConfig.TAG;
 
 public class AppController extends MultiDexApplication {
 
@@ -35,12 +32,12 @@ public class AppController extends MultiDexApplication {
     }
 
     public <T> void addToRequestQueue(Request<T> req, String tag) {
-        req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
+        req.setTag(TextUtils.isEmpty(tag) ? AppConfig.TAG : tag);
         getRequestQueue().add(req);
     }
 
     public <T> void addToRequestQueue(Request<T> req) {
-        req.setTag(TAG);
+        req.setTag(AppConfig.TAG);
         getRequestQueue().add(req);
     }
 

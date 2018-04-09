@@ -1,6 +1,5 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Request;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +15,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
+
+import abass.com.firebasepushnotifications.R;
 
 /**
  * Created by ahmed on 27-Mar-18.

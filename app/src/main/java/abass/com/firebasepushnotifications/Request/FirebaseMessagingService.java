@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Request;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.RemoteMessage;
+
+import abass.com.firebasepushnotifications.R;
 
 /**
  * Created by ahmed on 14-Mar-18.
