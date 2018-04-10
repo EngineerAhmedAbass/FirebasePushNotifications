@@ -51,19 +51,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Request.HelpRequest">
+        <activity android:name=".Request.HelpRequest"/>
+        <activity
+            android:name=".Maps.MapsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_maps"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".Maps.MainMap" />
+        <activity android:name=".Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Maps.MapsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_maps"
-            android:theme="@style/FullscreenTheme"/>
-        <activity android:name=".Maps.MainMap"></activity>
     </application>
 
 </manifest>
