@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Request;
 
 
 import android.app.Activity;
@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import abass.com.firebasepushnotifications.Maps.MainMap;
+import abass.com.firebasepushnotifications.R;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 

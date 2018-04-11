@@ -25,16 +25,16 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Request.MainActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".Request.LoginActivity" />
+        <activity android:name=".Request.RegisterActivity" />
 
-        <service android:name=".FirebaseMessagingService">
+        <service android:name=".Request.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -44,26 +44,27 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name=".NotificationActivity">
+        <activity android:name=".Request.NotificationActivity">
             <intent-filter>
                 <action android:name="abass.com.firebasepushnotifications.TARGETNOTIFICATION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".HelpRequest">
+        <activity android:name=".Request.HelpRequest"/>
+        <activity
+            android:name=".Maps.MapsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_maps"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".Maps.MainMap" />
+        <activity android:name=".Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Maps.MapsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_maps"
-            android:theme="@style/FullscreenTheme"/>
-        <activity android:name=".Maps.MainMap"></activity>
     </application>
 
 </manifest>
