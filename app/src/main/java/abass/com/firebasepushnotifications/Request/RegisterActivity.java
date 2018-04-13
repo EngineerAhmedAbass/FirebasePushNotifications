@@ -68,8 +68,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private LocationRequest mLocationRequest;
 
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
+    private long UPDATE_INTERVAL = 5 * 1000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 1000; /* 2 sec */
 
 
     LocationManager locationManager;
@@ -110,7 +110,6 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
             showSettingDialog();
         }
-
 
         mRegBtn = (Button) findViewById(R.id.btnRegister);
         mLoginPageBtn = (Button) findViewById(R.id.btnLinkToLoginScreen);
