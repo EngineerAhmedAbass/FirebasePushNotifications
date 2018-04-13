@@ -66,10 +66,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".MyIntentService"
-            android:exported="false" />
-
         <receiver
             android:name=".ConnectivityReceiver"
             android:enabled="true">

@@ -21,7 +21,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import abass.com.firebasepushnotifications.Maps.AppController;
 
@@ -39,6 +44,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
 
     static public String mCurrentID;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
 
 
     Handler handler = new Handler();
@@ -84,13 +90,32 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
             }
         }, 1*20*1000);
     }
+
     public void changeLocation(){
         if(isNetworkAvailable()){
             Log.e(TAG, longtitude+" "+latitude);
+            UpdateCurrentLocation();
         }else{
+            Log.e(TAG, "Location Had To Be Updated");
             Updated = false;
         }
     }
+
+    private void UpdateCurrentLocation() {
+        if(mCurrentID != null){
+            mFirestore = FirebaseFirestore.getInstance();
+            Map<String, Object> UpdatedLocation = new HashMap<>();
+            UpdatedLocation.put("latitude",latitude);
+            UpdatedLocation.put("longtitude",longtitude);
+            mFirestore.collection("Users").document(mCurrentID).update(UpdatedLocation).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Updated = true;
+                }
+            });
+        }
+    }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -115,6 +140,10 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         Log.e(TAG, "Connection Changed.....");
+        if(isConnected && Updated==false){
+            Log.e(TAG, "Location Updated In DataBase.....");
+            UpdateCurrentLocation();
+        }
     }
 
     protected void startLocationUpdates() {

@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import abass.com.firebasepushnotifications.Home;
+import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -94,8 +95,22 @@ public class RegisterActivity extends AppCompatActivity {
         street= (EditText) findViewById(R.id.street);
         nid= (EditText) findViewById(R.id.NID);
 
+        mGoogleApiClient = new GoogleApiClient.Builder(RegisterActivity.this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
 
-        startLocationUpdates();
+        if(isLocationServiceEnabled()){
+            if(isNetworkAvailable()){
+                startLocationUpdates();
+            }else{
+                Toast.makeText(RegisterActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Toast.makeText(RegisterActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+            showSettingDialog();
+        }
+
 
         mRegBtn = (Button) findViewById(R.id.btnRegister);
         mLoginPageBtn = (Button) findViewById(R.id.btnLinkToLoginScreen);
@@ -152,6 +167,8 @@ public class RegisterActivity extends AppCompatActivity {
                         mregisterprogressbar.setVisibility(View.VISIBLE);
 
                         String User_id = mAuth.getCurrentUser().getUid();
+                        MyBackgroundService myBackgroundService=new MyBackgroundService();
+                        myBackgroundService.mCurrentID=User_id;
                         String Token_id = FirebaseInstanceId.getInstance().getToken();
 
                         Map<String,Object> userMap= new HashMap<>();
@@ -336,7 +353,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 return;
                             }
                             startLocationUpdates();
-                            Register();
                         }else{
                             Toast.makeText(RegisterActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
