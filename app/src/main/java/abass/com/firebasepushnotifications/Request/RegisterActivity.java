@@ -49,6 +49,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.HashMap;
 import java.util.Map;
 
+import abass.com.firebasepushnotifications.Home;
+import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -93,8 +95,22 @@ public class RegisterActivity extends AppCompatActivity {
         street= (EditText) findViewById(R.id.street);
         nid= (EditText) findViewById(R.id.NID);
 
+        mGoogleApiClient = new GoogleApiClient.Builder(RegisterActivity.this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
 
-        startLocationUpdates();
+        if(isLocationServiceEnabled()){
+            if(isNetworkAvailable()){
+                startLocationUpdates();
+            }else{
+                Toast.makeText(RegisterActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Toast.makeText(RegisterActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+            showSettingDialog();
+        }
+
 
         mRegBtn = (Button) findViewById(R.id.btnRegister);
         mLoginPageBtn = (Button) findViewById(R.id.btnLinkToLoginScreen);
@@ -128,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void Register(){
         if(longtitude == null || latitude == null)
         {
-            Toast.makeText(RegisterActivity.this,"Something Went Wrong with your location Please Try Again...",Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this,"Something Went Wrong with your location Please Try Again...",Toast.LENGTH_SHORT).show();
             return;
         }
         Myname = fullname.getText().toString();
@@ -151,6 +167,8 @@ public class RegisterActivity extends AppCompatActivity {
                         mregisterprogressbar.setVisibility(View.VISIBLE);
 
                         String User_id = mAuth.getCurrentUser().getUid();
+                        MyBackgroundService myBackgroundService=new MyBackgroundService();
+                        myBackgroundService.mCurrentID=User_id;
                         String Token_id = FirebaseInstanceId.getInstance().getToken();
 
                         Map<String,Object> userMap= new HashMap<>();
@@ -225,6 +243,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         return true;
     }
+
     protected void startLocationUpdates() {
 
         // Create the location request to start receiving updates
@@ -271,11 +290,13 @@ public class RegisterActivity extends AppCompatActivity {
         // You can now create a LatLng Object for use with maps
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
     }
+
     private void SendToMain() {
-            Intent intent = new Intent(RegisterActivity.this, HelpRequest.class);
+            Intent intent = new Intent(RegisterActivity.this, Home.class);
             startActivity(intent);
             finish();
     }
+
     private void showSettingDialog() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);//Setting priotity of Location request to high
@@ -317,6 +338,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -330,16 +352,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(RegisterActivity.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            client.getLastLocation().addOnSuccessListener( RegisterActivity.this, new OnSuccessListener<Location>() {
-                                @Override
-                                public void onSuccess(Location location) {
-                                    if(location != null){
-                                        longtitude = ""+location.getLongitude();
-                                        latitude = ""+location.getLatitude();
-                                    }
-                                }
-                            });
-                            Register();
+                            startLocationUpdates();
                         }else{
                             Toast.makeText(RegisterActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
@@ -351,6 +364,7 @@ public class RegisterActivity extends AppCompatActivity {
                 break;
         }
     }
+
     public boolean isLocationServiceEnabled(){
         boolean gps_enabled= false;
 
@@ -364,6 +378,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         return gps_enabled ;
     }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

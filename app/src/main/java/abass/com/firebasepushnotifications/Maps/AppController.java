@@ -1,11 +1,16 @@
 package abass.com.firebasepushnotifications.Maps;
 
+import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.karan.churi.PermissionManager.PermissionManager;
+
+import abass.com.firebasepushnotifications.ConnectivityReceiver;
+import abass.com.firebasepushnotifications.MyBackgroundService;
 
 public class AppController extends MultiDexApplication {
 
@@ -17,7 +22,7 @@ public class AppController extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-
+        startService(new Intent(this, MyBackgroundService.class));
     }
 
     public static synchronized AppController getInstance() {
@@ -45,5 +50,9 @@ public class AppController extends MultiDexApplication {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
         }
+    }
+
+    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
+        ConnectivityReceiver.connectivityReceiverListener = listener;
     }
 }

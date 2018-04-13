@@ -6,6 +6,12 @@
     android:orientation="vertical"
     tools:context="abass.com.firebasepushnotifications.Home">
 
+    <include
+        layout="@layout/my_action_bar"
+        android:id="@+id/app_bar"
+        />
+
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
