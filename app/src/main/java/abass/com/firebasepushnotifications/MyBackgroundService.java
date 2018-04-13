@@ -85,9 +85,9 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
                 startLocationUpdates();
                 Log.e(TAG, "User ID is ==> "+mCurrentID);
                 changeLocation();
-                handler.postDelayed(this, 1*20*1000);
+                handler.postDelayed(this, 30*60*1000);
             }
-        }, 1*20*1000);
+        }, 30*60*1000);
     }
 
     public void changeLocation(){
