@@ -129,8 +129,6 @@ public class HelpRequest extends AppCompatActivity {
                 .build();
         mGoogleApiClient.connect();
 
-
-
         if (isLocationServiceEnabled()) {
             if (isNetworkAvailable()) {
                 startLocationUpdates();
@@ -191,27 +189,21 @@ public class HelpRequest extends AppCompatActivity {
             sendToLogin();
         } else {
             mfirestore = FirebaseFirestore.getInstance();
-            mCurrentID = mAuth.getUid();
-            mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    mCurrentName = documentSnapshot.get("name").toString();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(HelpRequest.this, "Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
     void SendNotifications() {
         mfirestore = FirebaseFirestore.getInstance();
-
+        mCurrentID = mAuth.getUid();
+        mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                mCurrentName = documentSnapshot.get("name").toString();
+            }
+        });
         Message = requestText.getText().toString();
         Domain = spinner.getSelectedItem().toString();
 
-        if (Message == null) {
+        if (Message.equals("")) {
             Toast.makeText(HelpRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -427,6 +419,7 @@ public class HelpRequest extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {

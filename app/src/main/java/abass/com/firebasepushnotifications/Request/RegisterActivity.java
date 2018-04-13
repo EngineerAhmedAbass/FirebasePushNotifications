@@ -49,6 +49,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.HashMap;
 import java.util.Map;
 
+import abass.com.firebasepushnotifications.Home;
 import abass.com.firebasepushnotifications.R;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -128,7 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void Register(){
         if(longtitude == null || latitude == null)
         {
-            Toast.makeText(RegisterActivity.this,"Something Went Wrong with your location Please Try Again...",Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this,"Something Went Wrong with your location Please Try Again...",Toast.LENGTH_SHORT).show();
             return;
         }
         Myname = fullname.getText().toString();
@@ -225,6 +226,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         return true;
     }
+
     protected void startLocationUpdates() {
 
         // Create the location request to start receiving updates
@@ -271,11 +273,13 @@ public class RegisterActivity extends AppCompatActivity {
         // You can now create a LatLng Object for use with maps
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
     }
+
     private void SendToMain() {
-            Intent intent = new Intent(RegisterActivity.this, HelpRequest.class);
+            Intent intent = new Intent(RegisterActivity.this, Home.class);
             startActivity(intent);
             finish();
     }
+
     private void showSettingDialog() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);//Setting priotity of Location request to high
@@ -317,6 +321,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -330,15 +335,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(RegisterActivity.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            client.getLastLocation().addOnSuccessListener( RegisterActivity.this, new OnSuccessListener<Location>() {
-                                @Override
-                                public void onSuccess(Location location) {
-                                    if(location != null){
-                                        longtitude = ""+location.getLongitude();
-                                        latitude = ""+location.getLatitude();
-                                    }
-                                }
-                            });
+                            startLocationUpdates();
                             Register();
                         }else{
                             Toast.makeText(RegisterActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
@@ -351,6 +348,7 @@ public class RegisterActivity extends AppCompatActivity {
                 break;
         }
     }
+
     public boolean isLocationServiceEnabled(){
         boolean gps_enabled= false;
 
@@ -364,6 +362,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         return gps_enabled ;
     }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

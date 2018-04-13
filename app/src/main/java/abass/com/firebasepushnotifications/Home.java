@@ -1,14 +1,23 @@
 package abass.com.firebasepushnotifications;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import abass.com.firebasepushnotifications.Maps.MainMap;
 import abass.com.firebasepushnotifications.Request.HelpRequest;
+import abass.com.firebasepushnotifications.Request.LoginActivity;
 import abass.com.firebasepushnotifications.Request.MainActivity;
 
 public class Home extends AppCompatActivity {
@@ -18,12 +27,14 @@ public class Home extends AppCompatActivity {
     public Button SOS_BTN;
     public Button Places_BTN;
     public Button First_Aid_BTN;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        mAuth = FirebaseAuth.getInstance();
         Help_Request_BTN = (Button) findViewById(R.id.help_request_Btn);
         Blood_Donor_BTN = (Button) findViewById(R.id.Blood_BTN);
         SOS_BTN =  (Button) findViewById(R.id.SOS_BTN);
@@ -62,5 +73,18 @@ public class Home extends AppCompatActivity {
                 Toast.makeText(Home.this, "Go To First Aid.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser CurrentUser = mAuth.getCurrentUser();
+        if (CurrentUser == null) {
+            sendToLogin();
+        }
+    }
+    private void sendToLogin() {
+        Intent intent = new Intent(Home.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
