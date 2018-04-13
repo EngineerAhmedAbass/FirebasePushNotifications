@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ public class  LoginActivity extends AppCompatActivity {
     private Button mRegPageBtn;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
-    private ProgressBar loginProgBar;
+    private android.support.v4.widget.ContentLoadingProgressBar loginProgBar;
     PermissionManager permissionManager;
     MyBackgroundService myBackgroundService=new MyBackgroundService();
 
@@ -53,7 +54,7 @@ public class  LoginActivity extends AppCompatActivity {
         mPassword = (EditText) findViewById(R.id.edpassword);
         mLoginBtn = (Button) findViewById(R.id.btnLogin);
         mRegPageBtn = (Button) findViewById(R.id.btnLinkToRegisterScreen);
-        loginProgBar =(ProgressBar) findViewById(R.id.login_progress);
+        loginProgBar =(android.support.v4.widget.ContentLoadingProgressBar) findViewById(R.id.login_progress);
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();

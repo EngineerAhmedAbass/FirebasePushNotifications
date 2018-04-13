@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="abass.com.firebasepushnotifications" >
+    package="abass.com.firebasepushnotifications">
 
     <uses-permission android:name="com.androidmastermind.gplaces.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -34,7 +34,7 @@
         <activity android:name=".Request.LoginActivity" />
         <activity android:name=".Request.RegisterActivity" />
 
-        <service android:name=".Request.FirebaseMessagingService" >
+        <service android:name=".Request.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -44,7 +44,7 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name=".Request.NotificationActivity" >
+        <activity android:name=".Request.NotificationActivity">
             <intent-filter>
                 <action android:name="abass.com.firebasepushnotifications.TARGETNOTIFICATION" />
 
@@ -58,7 +58,7 @@
             android:label="@string/title_activity_maps"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".Maps.MainMap" />
-        <activity android:name=".Home" >
+        <activity android:name=".Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -72,7 +72,7 @@
 
         <receiver
             android:name=".ConnectivityReceiver"
-            android:enabled="true" >
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -81,8 +81,14 @@
         <service
             android:name=".MyBackgroundService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="true" />
+
+        <activity
+            android:name=".ShowNotifications"
+            android:parentActivityName=".Home"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>
