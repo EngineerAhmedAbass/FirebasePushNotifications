@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -70,6 +71,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import abass.com.firebasepushnotifications.Home;
+import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.SettingsActivity;
 import abass.com.firebasepushnotifications.ShowNotifications;
@@ -134,6 +136,10 @@ public class HelpRequest extends AppCompatActivity {
         actionBar.setTitle("Request Help");
 
         mAuth = FirebaseAuth.getInstance();
+        MyBackgroundService myBackgroundService = new MyBackgroundService();
+        mCurrentID = myBackgroundService.mCurrentID;
+        mCurrentName  = myBackgroundService.mCurrentName;
+
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -209,16 +215,8 @@ public class HelpRequest extends AppCompatActivity {
     }
     void SendNotifications() {
         mfirestore = FirebaseFirestore.getInstance();
-        mCurrentID = mAuth.getUid();
-        mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                mCurrentName = documentSnapshot.get("name").toString();
-            }
-        });
         Message = requestText.getText().toString();
         Domain = spinner.getSelectedItem().toString();
-
         if (Message.equals("")) {
             Toast.makeText(HelpRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
             return;
@@ -286,6 +284,7 @@ public class HelpRequest extends AppCompatActivity {
         }
 
         protected void onPostExecute(String RequestID) {
+            Toast.makeText(HelpRequest.this, "Sender Name  " + mCurrentName, Toast.LENGTH_SHORT).show();
             for (int i = 0; i < user_ids.size(); i++) {
                 Map<String, Object> notificationMessage = new HashMap<>();
                 notificationMessage.put("message", Message);

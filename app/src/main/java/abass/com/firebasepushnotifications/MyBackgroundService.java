@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import com.google.android.gms.location.LocationCallback;
@@ -20,8 +21,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -42,6 +45,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     LocationManager locationManager;
 
     static public String mCurrentID;
+    static public String mCurrentName;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
@@ -75,6 +79,18 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser() != null){
             mCurrentID = mAuth.getCurrentUser().getUid();
+            mFirestore = FirebaseFirestore.getInstance();
+            mFirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    mCurrentName = documentSnapshot.get("name").toString();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("Useeeeer Name ",e.getMessage());
+                }
+            });
         }
         startLocationUpdates();
     }

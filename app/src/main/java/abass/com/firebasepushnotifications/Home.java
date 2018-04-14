@@ -11,8 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import abass.com.firebasepushnotifications.Maps.MainMap;
 import abass.com.firebasepushnotifications.Request.HelpRequest;
@@ -28,6 +34,7 @@ public class Home extends AppCompatActivity {
     public Button First_Aid_BTN;
     private Toolbar toolbar;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mfirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +105,29 @@ public class Home extends AppCompatActivity {
                 Intent settings = new Intent(Home.this, SettingsActivity.class);
                 startActivity(settings);
                 break;
+            case R.id.log_out:
+                Log_Out();
+                break;
             default:
 
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void Log_Out() {
+        Map<String, Object> tokenMapRemove = new HashMap<>();
+        tokenMapRemove.put("token_id", FieldValue.delete());
+        MyBackgroundService myBackgroundService = new MyBackgroundService();
+        String mCurrentID = myBackgroundService.mCurrentID;
+        mfirestore.collection("Users").document(mCurrentID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mAuth.signOut();
+                Intent LoginIntent = new Intent(Home.this, LoginActivity.class);
+                startActivity(LoginIntent);
+            }
+        });
     }
 
     @Override
@@ -111,6 +136,8 @@ public class Home extends AppCompatActivity {
         FirebaseUser CurrentUser = mAuth.getCurrentUser();
         if (CurrentUser == null) {
             sendToLogin();
+        }else{
+            mfirestore = FirebaseFirestore.getInstance();
         }
     }
 
