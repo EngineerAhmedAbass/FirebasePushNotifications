@@ -216,7 +216,7 @@ public class bloodDonationRequest extends AppCompatActivity {
         });
         Message = requestText.getText().toString();
         btype = spinner.getSelectedItem().toString();
-        Message +="\n";
+        Message +=" \n ";
         Message += btype + "فصيلة الدم "  ;
         if (Message.equals("")) {
             Toast.makeText(bloodDonationRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
