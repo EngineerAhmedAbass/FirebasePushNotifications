@@ -7,12 +7,18 @@
     <string name="title_activity_maps">Map</string>
     <string name="settings_name">Settings</string>
     <string name="Notification">Notification</string>
-    <string-array name="planets_array">
+    <string-array name="Requests_Domains">
         <item>قلب</item>
         <item>حرق</item>
         <item>ضغط وسكر</item>
         <item>غيبوبة</item>
         <item>اسعافات اولية</item>
+    </string-array>
+    <string-array name="blood_types">
+        <item>A</item>
+        <item>B</item>
+        <item>AB</item>
+        <item>O</item>
     </string-array>
     <string name="title_activity_splash">Splash</string>
     <string name="dummy_button">Dummy Button</string>

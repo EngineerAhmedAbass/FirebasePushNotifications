@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="abass.com.firebasepushnotifications.Request.HelpRequest">
+    tools:context="abass.com.firebasepushnotifications.Request.bloodDonationRequest">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,12 +27,12 @@
                     android:layout_marginStart="16dp"
                     android:gravity="right"
                     android:paddingTop="10dp"
-                    android:text="مجال الطلب"
+                    android:text="blood type"
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:textStyle="bold" />
                 <Spinner
-                    android:id="@+id/domain_spinner"
+                    android:id="@+id/Blood_type_Spinner"
                     android:layout_width="fill_parent"
                     android:layout_height="47dp"
                     android:layout_alignParentLeft="true"
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="وصف طلب المساعدة"
+                android:text="Describe the patient state"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -67,26 +67,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="35dp"
                 android:text="ارسال طلب"/>
-
-            <Button
-                android:id="@+id/logOutBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:text="Log Out" />
-
-            <Button
-                android:id="@+id/goToMainBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:text="Go To Main" />
         </LinearLayout>
 
     </ScrollView>
-
 </android.support.constraint.ConstraintLayout>

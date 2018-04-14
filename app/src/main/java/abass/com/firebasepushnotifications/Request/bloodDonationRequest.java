@@ -67,8 +67,7 @@ import abass.com.firebasepushnotifications.R;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
-public class HelpRequest extends AppCompatActivity {
-
+public class bloodDonationRequest extends AppCompatActivity {
     private Spinner spinner;
     private EditText requestText;
     private Button SendRequestBtn;
@@ -81,7 +80,7 @@ public class HelpRequest extends AppCompatActivity {
     private long FASTEST_INTERVAL = 2000; /* 2 sec */
 
     private String Message;
-    private String Domain;
+    private String btype;
     private int RequestID;
     private String longtitude, latitude;
 
@@ -103,12 +102,13 @@ public class HelpRequest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_request);
 
+
         requestPermission();
         /*  Start Spinner Code */
-        spinner = (Spinner) findViewById(R.id.domain_spinner);
+        spinner = (Spinner) findViewById(R.id.Blood_type_Spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.Requests_Domains, android.R.layout.simple_spinner_item);
+                R.array.blood_types, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -124,7 +124,7 @@ public class HelpRequest extends AppCompatActivity {
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(HelpRequest.this)
+        mGoogleApiClient = new GoogleApiClient.Builder(bloodDonationRequest.this)
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
@@ -133,10 +133,10 @@ public class HelpRequest extends AppCompatActivity {
             if (isNetworkAvailable()) {
                 startLocationUpdates();
             } else {
-                Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(HelpRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(bloodDonationRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
             showSettingDialog();
         }
 
@@ -150,7 +150,7 @@ public class HelpRequest extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         mAuth.signOut();
-                        Intent LoginIntent = new Intent(HelpRequest.this, LoginActivity.class);
+                        Intent LoginIntent = new Intent(bloodDonationRequest.this, LoginActivity.class);
                         startActivity(LoginIntent);
                     }
                 });
@@ -160,7 +160,7 @@ public class HelpRequest extends AppCompatActivity {
         mMainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent MainIntnet = new Intent(HelpRequest.this, MainActivity.class);
+                Intent MainIntnet = new Intent(bloodDonationRequest.this, MainActivity.class);
                 startActivity(MainIntnet);
             }
         });
@@ -172,10 +172,10 @@ public class HelpRequest extends AppCompatActivity {
                         startLocationUpdates();
                         SendNotifications();
                     } else {
-                        Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(HelpRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(bloodDonationRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
                     showSettingDialog();
                 }
             }
@@ -201,19 +201,19 @@ public class HelpRequest extends AppCompatActivity {
             }
         });
         Message = requestText.getText().toString();
-        Domain = spinner.getSelectedItem().toString();
-
+        btype = spinner.getSelectedItem().toString();
+        Message += "فصيلة الدم\n" + btype;
         if (Message.equals("")) {
-            Toast.makeText(HelpRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
+            Toast.makeText(bloodDonationRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (longtitude == null || latitude == null) {
-            Toast.makeText(HelpRequest.this, "Can not Retrieve your location Please Try Again...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(bloodDonationRequest.this, "Can not Retrieve your location Please Try Again...", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        mfirestore.collection("Users").addSnapshotListener(HelpRequest.this, new EventListener<QuerySnapshot>() {
+        mfirestore.collection("Users").addSnapshotListener(bloodDonationRequest.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
@@ -234,8 +234,8 @@ public class HelpRequest extends AppCompatActivity {
                 }
             }
         });
-        new GetRequestID().execute(SentUsers);
-        Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
+        new bloodDonationRequest.GetRequestID().execute(SentUsers);
+        Toast.makeText(bloodDonationRequest.this, "Blood Donation Request Sent ", Toast.LENGTH_SHORT).show();
     }
 
     class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
@@ -270,7 +270,7 @@ public class HelpRequest extends AppCompatActivity {
                 notificationMessage.put("message", Message);
                 notificationMessage.put("from", mCurrentID);
                 notificationMessage.put("user_name", mCurrentName);
-                notificationMessage.put("domain", Domain);
+                notificationMessage.put("domain", "تبرع بالدم");
                 notificationMessage.put("longtitude", longtitude);
                 notificationMessage.put("latitude", latitude);
                 notificationMessage.put("requestID", RequestID);
@@ -283,7 +283,7 @@ public class HelpRequest extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(bloodDonationRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -370,12 +370,12 @@ public class HelpRequest extends AppCompatActivity {
                 });
     }
     private void sendToLogin() {
-        Intent intent = new Intent(HelpRequest.this, LoginActivity.class);
+        Intent intent = new Intent(bloodDonationRequest.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
     private void requestPermission(){
-        ActivityCompat.requestPermissions(HelpRequest.this,new String[]{ACCESS_FINE_LOCATION},1);
+        ActivityCompat.requestPermissions(bloodDonationRequest.this,new String[]{ACCESS_FINE_LOCATION},1);
     }
 
     private void showSettingDialog() {
@@ -405,7 +405,7 @@ public class HelpRequest extends AppCompatActivity {
                         try {
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
-                            status.startResolutionForResult(HelpRequest.this, REQUEST_CHECK_SETTINGS);
+                            status.startResolutionForResult(bloodDonationRequest.this, REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
                             e.printStackTrace();
                             // Ignore the error.
@@ -429,17 +429,17 @@ public class HelpRequest extends AppCompatActivity {
                     case RESULT_OK:
                         Log.e("Settings", "Result OK");
                         if(isNetworkAvailable()){
-                            if (ActivityCompat.checkSelfPermission( HelpRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                Toast.makeText(HelpRequest.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
+                            if (ActivityCompat.checkSelfPermission( bloodDonationRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                Toast.makeText(bloodDonationRequest.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             startLocationUpdates();
                         }else{
-                            Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case RESULT_CANCELED:
-                        Toast.makeText(HelpRequest.this, "No...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(bloodDonationRequest.this, "No...", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
