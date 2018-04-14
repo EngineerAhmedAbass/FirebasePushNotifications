@@ -138,8 +138,6 @@ public class HelpRequest extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         MyBackgroundService myBackgroundService = new MyBackgroundService();
         mCurrentID = myBackgroundService.mCurrentID;
-        mCurrentName  = myBackgroundService.mCurrentName;
-
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -215,6 +213,8 @@ public class HelpRequest extends AppCompatActivity {
     }
     void SendNotifications() {
         mfirestore = FirebaseFirestore.getInstance();
+        mCurrentName = mAuth.getCurrentUser().getDisplayName();
+
         Message = requestText.getText().toString();
         Domain = spinner.getSelectedItem().toString();
         if (Message.equals("")) {

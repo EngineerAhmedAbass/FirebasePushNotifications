@@ -48,7 +48,6 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     LocationManager locationManager;
 
     static public String mCurrentID;
-    static public String mCurrentName;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
@@ -80,25 +79,6 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         Log.e(TAG, "onCreate");
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mAuth = FirebaseAuth.getInstance();
-        if(mAuth.getCurrentUser() != null){
-            mCurrentID = mAuth.getCurrentUser().getUid();
-            mFirestore = FirebaseFirestore.getInstance();
-            mFirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    mCurrentName = documentSnapshot.get("name").toString();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e("Useeeeer Name ",e.getMessage());
-                }
-            });
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MyBackgroundService.this);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("example_text",mCurrentName);
-            editor.commit();
-        }
         startLocationUpdates();
     }
 
@@ -126,6 +106,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     private void UpdateCurrentLocation() {
         if(mCurrentID != null){
             mFirestore = FirebaseFirestore.getInstance();
+            mCurrentID = mAuth.getCurrentUser().getUid();
             Map<String, Object> UpdatedLocation = new HashMap<>();
             UpdatedLocation.put("latitude",latitude);
             UpdatedLocation.put("longtitude",longtitude);
@@ -162,26 +143,6 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         Log.e(TAG, "Connection Changed.....");
-        if(isNetworkAvailable() && mAuth.getCurrentUser() != null){
-            if(mCurrentName == null){
-                mFirestore = FirebaseFirestore.getInstance();
-                mFirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        mCurrentName = documentSnapshot.get("name").toString();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("Useeeeer Name ",e.getMessage());
-                    }
-                });
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MyBackgroundService.this);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString("example_text",mCurrentName);
-                editor.commit();
-            }
-        }
         if(isConnected && Updated==false){
             Log.e(TAG, "Location Updated In DataBase.....");
             UpdateCurrentLocation();

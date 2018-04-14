@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -11,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -185,7 +187,6 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(Myname)
                                         .build();
@@ -197,6 +198,10 @@ public class RegisterActivity extends AppCompatActivity {
                                                 }
                                             }
                                         });
+                                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
+                                SharedPreferences.Editor editor = settings.edit();
+                                editor.putString("example_text",Myname);
+                                editor.commit();
                                 SendToMain();
                             }
                         }).addOnFailureListener(new OnFailureListener() {

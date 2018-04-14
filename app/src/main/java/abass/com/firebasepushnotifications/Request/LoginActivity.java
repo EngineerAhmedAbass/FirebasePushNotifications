@@ -97,11 +97,13 @@ public class  LoginActivity extends AppCompatActivity {
                                     String token_Id = FirebaseInstanceId.getInstance().getToken();
                                     String current_Id = mAuth.getCurrentUser().getUid();
                                     myBackgroundService.mCurrentID=current_Id;
-                                    myBackgroundService.mCurrentName = mAuth.getCurrentUser().getDisplayName();
-                                    Toast.makeText(LoginActivity.this,"Welcome "+ myBackgroundService.mCurrentName,Toast.LENGTH_SHORT).show();
+                                    String mCurrentName = mAuth.getCurrentUser().getDisplayName();
+
+                                    Toast.makeText(LoginActivity.this,"Welcome "+ mCurrentName,Toast.LENGTH_SHORT).show();
+
                                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                     SharedPreferences.Editor editor = settings.edit();
-                                    editor.putString("example_text",myBackgroundService.mCurrentName);
+                                    editor.putString("example_text",mCurrentName);
                                     editor.commit();
 
                                     Map<String, Object> tokenMap = new HashMap<>();

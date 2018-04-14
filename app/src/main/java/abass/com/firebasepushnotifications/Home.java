@@ -119,8 +119,7 @@ public class Home extends AppCompatActivity {
     private void Log_Out() {
         Map<String, Object> tokenMapRemove = new HashMap<>();
         tokenMapRemove.put("token_id", FieldValue.delete());
-        MyBackgroundService myBackgroundService = new MyBackgroundService();
-        String mCurrentID = myBackgroundService.mCurrentID;
+        String mCurrentID = mAuth.getCurrentUser().getUid();
         mfirestore.collection("Users").document(mCurrentID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
