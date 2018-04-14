@@ -13,7 +13,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -86,9 +85,9 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
                 startLocationUpdates();
                 Log.e(TAG, "User ID is ==> "+mCurrentID);
                 changeLocation();
-                handler.postDelayed(this, 1*20*1000);
+                handler.postDelayed(this, 30*60*1000);
             }
-        }, 1*20*1000);
+        }, 30*60*1000);
     }
 
     public void changeLocation(){
@@ -150,7 +149,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
 
         // Create the location request to start receiving updates
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
