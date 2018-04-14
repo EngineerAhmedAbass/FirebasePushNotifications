@@ -7,10 +7,12 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.karan.churi.PermissionManager.PermissionManager;
 
 import abass.com.firebasepushnotifications.ConnectivityReceiver;
 import abass.com.firebasepushnotifications.MyBackgroundService;
+import io.fabric.sdk.android.Fabric;
 
 public class AppController extends MultiDexApplication {
 
@@ -21,6 +23,7 @@ public class AppController extends MultiDexApplication {
 
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         mInstance = this;
         startService(new Intent(this, MyBackgroundService.class));
     }

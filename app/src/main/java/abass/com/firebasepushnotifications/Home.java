@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,7 +68,7 @@ public class Home extends AppCompatActivity {
         SOS_BTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Home.this, "Go To SOS .", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, "Sos Message.", Toast.LENGTH_SHORT).show();
             }
         });
         Places_BTN.setOnClickListener(new View.OnClickListener() {
