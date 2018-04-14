@@ -63,6 +63,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -256,7 +258,12 @@ public class HelpRequest extends AppCompatActivity {
         Vector<String> user_ids;
 
         protected String doInBackground(Vector<String>... strings) {
-            String url = "http://refadatours.com/android/addRequest.php?message=" + Message+"&senderID="+mCurrentID;
+            String url = null;
+            try {
+                url = "http://refadatours.com/android/addRequest.php?message=" + URLEncoder.encode(Message, "UTF-8")+"&senderID="+mCurrentID;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             user_ids = strings[0];
             HttpEntity httpEntity = null;
             try {
