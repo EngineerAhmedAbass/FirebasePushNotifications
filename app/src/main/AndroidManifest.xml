@@ -51,20 +51,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Request.HelpRequest"
+        <activity  android:name=".Request.HelpRequest"
             android:parentActivityName=".Home"
             />
-        <activity
-            android:name=".Maps.MapsActivity"
+        <activity android:name=".Maps.MapsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_maps"
             android:theme="@style/FullscreenTheme"
             android:parentActivityName=".Home"/>
-        <activity
-            android:name=".Maps.MainMap"
-            android:parentActivityName=".Home"
-            />
+        <activity  android:name=".Maps.MainMap"
+            android:parentActivityName=".Home" />
+
         <activity android:name=".Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -86,16 +83,13 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity
-            android:name=".ShowNotifications"
+        <activity  android:name=".ShowNotifications"
             android:parentActivityName=".Home" />
-        <activity
-            android:name=".SettingsActivity"
+        <activity  android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Home"
             />
-        <activity
-            android:name=".Request.bloodDonationRequest"
+        <activity  android:name=".Request.bloodDonationRequest"
             android:parentActivityName=".Home"
             >
         </activity>

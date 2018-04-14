@@ -36,9 +36,7 @@ import org.json.JSONObject;
 
 import abass.com.firebasepushnotifications.R;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
-
-        LocationListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,LocationListener {
 
     private GoogleMap mMap;
     LocationManager locationManager;
@@ -46,8 +44,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String data = "hospital";
     String Distance;
     int Dist = 0;
+    
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -96,7 +94,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -229,7 +226,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-
     public void onLocationChanged(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
