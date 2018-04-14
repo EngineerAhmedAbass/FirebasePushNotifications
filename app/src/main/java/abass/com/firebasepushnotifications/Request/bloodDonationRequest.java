@@ -12,9 +12,14 @@ import android.os.AsyncTask;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -62,6 +67,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import abass.com.firebasepushnotifications.R;
+import abass.com.firebasepushnotifications.SettingsActivity;
+import abass.com.firebasepushnotifications.ShowNotifications;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
@@ -72,6 +79,7 @@ public class bloodDonationRequest extends AppCompatActivity {
     private Button SendRequestBtn;
     private Button mLogOutBtn;
     private Button mMainBtn;
+    private Toolbar toolbar;
 
     private LocationRequest mLocationRequest;
 
@@ -99,7 +107,7 @@ public class bloodDonationRequest extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_help_request);
+        setContentView(R.layout.activity_blood_donation_request);
 
 
         requestPermission();
@@ -117,6 +125,12 @@ public class bloodDonationRequest extends AppCompatActivity {
 
         requestText = (EditText) findViewById(R.id.text_help);
         SendRequestBtn = (Button) findViewById(R.id.sendrequest);
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Request Blood");
+
         mAuth = FirebaseAuth.getInstance();
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -153,6 +167,34 @@ public class bloodDonationRequest extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.notification:
+                Intent GoToNotifications = new Intent(this, ShowNotifications.class);
+                startActivity(GoToNotifications);
+                break;
+            case R.id.settings:
+                Intent settings = new Intent(this, SettingsActivity.class);
+                startActivity(settings);
+                break;
+            default:
+
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();

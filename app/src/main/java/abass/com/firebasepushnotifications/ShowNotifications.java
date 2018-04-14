@@ -49,6 +49,7 @@ public class ShowNotifications extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Notifications");
 
         mFirestore = FirebaseFirestore.getInstance();
 

@@ -4,6 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,12 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import abass.com.firebasepushnotifications.R;
+import abass.com.firebasepushnotifications.SettingsActivity;
+import abass.com.firebasepushnotifications.ShowNotifications;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class MainMap extends Activity implements AdapterView.OnItemSelectedListener {
+public class MainMap extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     TextView seekBarValue;
+    private Toolbar toolbar;
+
     String Data = "3";
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,8 +45,11 @@ public class MainMap extends Activity implements AdapterView.OnItemSelectedListe
         Button button=(Button)findViewById(R.id.button);
         seekBarValue = findViewById(R.id.textView3);
         final SeekBar Seek = findViewById(R.id.seekBar);
-
-
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Places");
 
         // Spinner click listener
         spinner.setOnItemSelectedListener(this);
@@ -86,6 +99,33 @@ public class MainMap extends Activity implements AdapterView.OnItemSelectedListe
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.notification:
+                Intent GoToNotifications = new Intent(this, ShowNotifications.class);
+                startActivity(GoToNotifications);
+                break;
+            case R.id.settings:
+                Intent settings = new Intent(this, SettingsActivity.class);
+                startActivity(settings);
+                break;
+            default:
+
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

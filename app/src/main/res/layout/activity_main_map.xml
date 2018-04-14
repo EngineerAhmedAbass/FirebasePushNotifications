@@ -4,11 +4,17 @@
     android:layout_height="match_parent"
     tools:context=".Maps.MainMap">
 
-
+    <include
+        layout="@layout/my_action_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/app_bar"
+        />
     <LinearLayout
         android:id="@+id/linear_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/app_bar"
         android:orientation="vertical"
         android:padding="10dip">
 

@@ -10,12 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusableInTouchMode="true"
             android:orientation="vertical">
-
+            <include
+                layout="@layout/my_action_bar"
+                android:id="@+id/app_bar"
+                />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -68,23 +72,6 @@
                 android:layout_marginTop="35dp"
                 android:text="ارسال طلب"/>
 
-            <Button
-                android:id="@+id/logOutBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:text="Log Out" />
-
-            <Button
-                android:id="@+id/goToMainBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:text="Go To Main" />
         </LinearLayout>
 
     </ScrollView>

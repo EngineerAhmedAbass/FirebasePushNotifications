@@ -12,9 +12,14 @@ import android.os.AsyncTask;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -62,7 +67,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import abass.com.firebasepushnotifications.Home;
 import abass.com.firebasepushnotifications.R;
+import abass.com.firebasepushnotifications.SettingsActivity;
+import abass.com.firebasepushnotifications.ShowNotifications;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
@@ -72,8 +80,7 @@ public class HelpRequest extends AppCompatActivity {
     private Spinner spinner;
     private EditText requestText;
     private Button SendRequestBtn;
-    private Button mLogOutBtn;
-    private Button mMainBtn;
+    private Toolbar toolbar;
 
     private LocationRequest mLocationRequest;
 
@@ -118,8 +125,12 @@ public class HelpRequest extends AppCompatActivity {
 
         requestText = (EditText) findViewById(R.id.text_help);
         SendRequestBtn = (Button) findViewById(R.id.sendrequest);
-        mLogOutBtn = (Button) findViewById(R.id.logOutBtn);
-        mMainBtn = (Button) findViewById(R.id.goToMainBtn);
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Request Help");
+
         mAuth = FirebaseAuth.getInstance();
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -139,31 +150,6 @@ public class HelpRequest extends AppCompatActivity {
             Toast.makeText(HelpRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
             showSettingDialog();
         }
-
-        mLogOutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Map<String, Object> tokenMapRemove = new HashMap<>();
-                tokenMapRemove.put("token_id", FieldValue.delete());
-
-                mfirestore.collection("Users").document(mCurrentID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        mAuth.signOut();
-                        Intent LoginIntent = new Intent(HelpRequest.this, LoginActivity.class);
-                        startActivity(LoginIntent);
-                    }
-                });
-
-            }
-        });
-        mMainBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent MainIntnet = new Intent(HelpRequest.this, MainActivity.class);
-                startActivity(MainIntnet);
-            }
-        });
         SendRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,6 +167,34 @@ public class HelpRequest extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.notification:
+                Intent GoToNotifications = new Intent(this, ShowNotifications.class);
+                startActivity(GoToNotifications);
+                break;
+            case R.id.settings:
+                Intent settings = new Intent(this, SettingsActivity.class);
+                startActivity(settings);
+                break;
+            default:
+
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
