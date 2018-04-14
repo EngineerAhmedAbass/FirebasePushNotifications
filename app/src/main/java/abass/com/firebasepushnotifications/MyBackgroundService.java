@@ -155,10 +155,27 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         Log.e(TAG, "Connection Changed.....");
+        if(isNetworkAvailable() && mAuth.getCurrentUser() != null){
+            if(mCurrentName == null){
+                mFirestore = FirebaseFirestore.getInstance();
+                mFirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        mCurrentName = documentSnapshot.get("name").toString();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Useeeeer Name ",e.getMessage());
+                    }
+                });
+            }
+        }
         if(isConnected && Updated==false){
             Log.e(TAG, "Location Updated In DataBase.....");
             UpdateCurrentLocation();
         }
+
     }
 
     protected void startLocationUpdates() {
