@@ -2,8 +2,10 @@ package abass.com.firebasepushnotifications.Request;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -90,17 +92,18 @@ public class  LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+
                                     // Sign in success, update UI with the signed-in user's information
                                     String token_Id = FirebaseInstanceId.getInstance().getToken();
                                     String current_Id = mAuth.getCurrentUser().getUid();
                                     myBackgroundService.mCurrentID=current_Id;
-                                    mFirestore = FirebaseFirestore.getInstance();
-                                    mFirestore.collection("Users").document(current_Id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            myBackgroundService.mCurrentName = documentSnapshot.get("name").toString();
-                                        }
-                                    });
+                                    myBackgroundService.mCurrentName = mAuth.getCurrentUser().getDisplayName();
+                                    Toast.makeText(LoginActivity.this,"Welcome "+ myBackgroundService.mCurrentName,Toast.LENGTH_SHORT).show();
+                                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                                    SharedPreferences.Editor editor = settings.edit();
+                                    editor.putString("example_text",myBackgroundService.mCurrentName);
+                                    editor.commit();
+
                                     Map<String, Object> tokenMap = new HashMap<>();
                                     tokenMap.put("token_id",token_Id);
                                     mFirestore.collection("Users").document(current_Id).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -109,7 +112,6 @@ public class  LoginActivity extends AppCompatActivity {
                                             SendToMain();
                                         }
                                     });
-
                                 } else {
                                     loginProgBar.setVisibility(View.INVISIBLE);
                                     // If sign in fails, display a message to the user.

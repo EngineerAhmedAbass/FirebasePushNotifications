@@ -3,6 +3,7 @@ package abass.com.firebasepushnotifications;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -11,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -31,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import abass.com.firebasepushnotifications.Maps.AppController;
+import abass.com.firebasepushnotifications.Request.LoginActivity;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -91,6 +94,10 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
                     Log.e("Useeeeer Name ",e.getMessage());
                 }
             });
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MyBackgroundService.this);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("example_text",mCurrentName);
+            editor.commit();
         }
         startLocationUpdates();
     }
@@ -169,6 +176,10 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
                         Log.e("Useeeeer Name ",e.getMessage());
                     }
                 });
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MyBackgroundService.this);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("example_text",mCurrentName);
+                editor.commit();
             }
         }
         if(isConnected && Updated==false){
