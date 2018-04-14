@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import abass.com.firebasepushnotifications.Maps.MainMap;
 import abass.com.firebasepushnotifications.Request.HelpRequest;
 import abass.com.firebasepushnotifications.Request.LoginActivity;
+import abass.com.firebasepushnotifications.Request.bloodDonationRequest;
 
 public class Home extends AppCompatActivity {
 
@@ -52,7 +53,8 @@ public class Home extends AppCompatActivity {
         Blood_Donor_BTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Home.this, "Go To Blood Donor.", Toast.LENGTH_SHORT).show();
+                Intent bloodIntent = new Intent(Home.this, bloodDonationRequest.class );
+                startActivity(bloodIntent);
             }
         });
         SOS_BTN.setOnClickListener(new View.OnClickListener() {

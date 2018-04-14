@@ -45,7 +45,6 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -118,8 +117,6 @@ public class bloodDonationRequest extends AppCompatActivity {
 
         requestText = (EditText) findViewById(R.id.text_help);
         SendRequestBtn = (Button) findViewById(R.id.sendrequest);
-        mLogOutBtn = (Button) findViewById(R.id.logOutBtn);
-        mMainBtn = (Button) findViewById(R.id.goToMainBtn);
         mAuth = FirebaseAuth.getInstance();
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -139,31 +136,6 @@ public class bloodDonationRequest extends AppCompatActivity {
             Toast.makeText(bloodDonationRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
             showSettingDialog();
         }
-
-        mLogOutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Map<String, Object> tokenMapRemove = new HashMap<>();
-                tokenMapRemove.put("token_id", FieldValue.delete());
-
-                mfirestore.collection("Users").document(mCurrentID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        mAuth.signOut();
-                        Intent LoginIntent = new Intent(bloodDonationRequest.this, LoginActivity.class);
-                        startActivity(LoginIntent);
-                    }
-                });
-
-            }
-        });
-        mMainBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent MainIntnet = new Intent(bloodDonationRequest.this, MainActivity.class);
-                startActivity(MainIntnet);
-            }
-        });
         SendRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
