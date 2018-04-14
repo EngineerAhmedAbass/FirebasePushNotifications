@@ -81,7 +81,7 @@ public class bloodDonationRequest extends AppCompatActivity {
 
     private String Message;
     private String btype;
-    private int RequestID;
+    //private int RequestID;
     private String longtitude, latitude;
 
     private String mCurrentID;
