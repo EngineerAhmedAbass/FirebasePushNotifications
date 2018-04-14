@@ -68,6 +68,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.SettingsActivity;
 import abass.com.firebasepushnotifications.ShowNotifications;
@@ -134,6 +135,10 @@ public class bloodDonationRequest extends AppCompatActivity {
         actionBar.setTitle("Request Blood");
 
         mAuth = FirebaseAuth.getInstance();
+        MyBackgroundService myBackgroundService = new MyBackgroundService();
+        mCurrentID = myBackgroundService.mCurrentID;
+        mCurrentName  = myBackgroundService.mCurrentName;
+
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -209,13 +214,6 @@ public class bloodDonationRequest extends AppCompatActivity {
     }
     void SendNotifications() {
         mfirestore = FirebaseFirestore.getInstance();
-        mCurrentID = mAuth.getUid();
-        mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                mCurrentName = documentSnapshot.get("name").toString();
-            }
-        });
         Message = requestText.getText().toString();
         btype = spinner.getSelectedItem().toString();
         Message +=" \n ";
