@@ -121,7 +121,7 @@ public class SosActivity extends Activity {
         Intent intent = new Intent(SosActivity.this, Home.class);
         intent.putExtra("names", Names);
         intent.putExtra("numbers", Numbers);
-        intent.putExtra("sos_switch", sos_flag);
+        intent.putExtra("sos_switch", sos_switch.isChecked());
         startActivity(intent);
     }
     @Override

@@ -30,9 +30,9 @@ public class contacts extends Activity {
     public TextView phoneView;
     private static final int RESULT_PICK_CONTACT = 85500;
     public boolean sos_flag;
-    public ArrayList<Integer> index_arr;
     public ArrayList<String> Names;
     public ArrayList<String> Numbers;
+    public ArrayList<Integer> index_arr;
     public int count;
     String[] test_numbers;
     List<String> list;
