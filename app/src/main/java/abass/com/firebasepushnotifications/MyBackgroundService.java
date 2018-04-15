@@ -79,6 +79,11 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         Log.e(TAG, "onCreate");
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser() != null)
+        {
+            mCurrentID = mAuth.getCurrentUser().getUid();
+        }
+
         startLocationUpdates();
     }
 
@@ -86,11 +91,12 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         handler.postDelayed(new Runnable() {
             public void run() {
                 startLocationUpdates();
+                mCurrentID=mAuth.getCurrentUser().getUid();
                 Log.e(TAG, "User ID is ==> "+mCurrentID);
                 changeLocation();
-                handler.postDelayed(this, 30*60*1000);
+                handler.postDelayed(this, 01*60*1000);
             }
-        }, 30*60*1000);
+        }, 01*60*1000);
     }
 
     public void changeLocation(){
@@ -104,13 +110,14 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     }
 
     private void UpdateCurrentLocation() {
-        if(mCurrentID != null){
+        if(mAuth.getCurrentUser() != null){
             mFirestore = FirebaseFirestore.getInstance();
+            mCurrentID=mAuth.getCurrentUser().getUid();
             mCurrentID = mAuth.getCurrentUser().getUid();
             Map<String, Object> UpdatedLocation = new HashMap<>();
             UpdatedLocation.put("latitude",latitude);
             UpdatedLocation.put("longtitude",longtitude);
-            mFirestore.collection("Users").document(mCurrentID).update(UpdatedLocation).addOnSuccessListener(new OnSuccessListener<Void>() {
+            mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).update(UpdatedLocation).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Updated = true;

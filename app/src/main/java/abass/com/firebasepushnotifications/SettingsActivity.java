@@ -214,11 +214,31 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             Preference p = findPreference("example_text");
             p.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
+                public boolean onPreferenceChange(final Preference preference, final Object o) {
                     Log.e("Test ", o.toString());
                     if (isNetworkAvailable(getActivity())) {
-                        ChangeUserName(o.toString());
-                        preference.setSummary(o.toString());
+                        final String Name=o.toString();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(Name)
+                                .build();
+                        user.updateProfile(profileUpdates)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Map<String, Object> tokenMap = new HashMap<>();
+                                            tokenMap.put("name",Name);
+                                            mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(getActivity(), "Updated Successfully", Toast.LENGTH_SHORT).show();
+                                                    preference.setSummary(o.toString());
+                                               }
+                                            });
+                                        }
+                                    }
+                                });
                         return true;
                     } else {
                         Toast.makeText(getActivity(), "Check Your Internet Connection", Toast.LENGTH_SHORT).show();
@@ -229,26 +249,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
         private void ChangeUserName(final String Myname) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(Myname)
-                    .build();
-            user.updateProfile(profileUpdates)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Map<String, Object> tokenMap = new HashMap<>();
-                                tokenMap.put("name",Myname);
-                                mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getActivity(), "Updated Successfully", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        }
-                    });
+
         }
 
         private boolean isNetworkAvailable(Context context) {

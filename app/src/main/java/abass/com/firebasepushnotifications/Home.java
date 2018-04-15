@@ -25,6 +25,7 @@ import abass.com.firebasepushnotifications.Maps.MainMap;
 import abass.com.firebasepushnotifications.Request.HelpRequest;
 import abass.com.firebasepushnotifications.Request.LoginActivity;
 import abass.com.firebasepushnotifications.Request.bloodDonationRequest;
+import abass.com.firebasepushnotifications.Sos.SosActivity;
 
 public class Home extends AppCompatActivity {
 
@@ -68,7 +69,8 @@ public class Home extends AppCompatActivity {
         SOS_BTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Home.this, "Sos Message.", Toast.LENGTH_SHORT).show();
+                Intent HelpIntent = new Intent(Home.this, SosActivity.class);
+                startActivity(HelpIntent);
             }
         });
         Places_BTN.setOnClickListener(new View.OnClickListener() {

@@ -136,7 +136,7 @@ public class bloodDonationRequest extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         MyBackgroundService myBackgroundService = new MyBackgroundService();
-        mCurrentID = myBackgroundService.mCurrentID;
+        mCurrentID = mAuth.getCurrentUser().getUid();
 
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -161,6 +161,7 @@ public class bloodDonationRequest extends AppCompatActivity {
             public void onClick(View view) {
                 if (isLocationServiceEnabled()) {
                     if (isNetworkAvailable()) {
+                        mCurrentID = mAuth.getCurrentUser().getUid();
                         startLocationUpdates();
                         SendNotifications();
                     } else {
@@ -212,8 +213,10 @@ public class bloodDonationRequest extends AppCompatActivity {
         }
     }
     void SendNotifications() {
+        SentUsers.clear();
         mfirestore = FirebaseFirestore.getInstance();
         mCurrentName = mAuth.getCurrentUser().getDisplayName();
+        mCurrentID = mAuth.getCurrentUser().getUid();
         Message = requestText.getText().toString();
         btype = spinner.getSelectedItem().toString();
         Message +=" \n ";

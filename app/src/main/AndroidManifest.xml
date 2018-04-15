@@ -8,7 +8,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -95,6 +97,9 @@
             android:parentActivityName=".Home"
             >
         </activity>
+        <activity android:name=".Sos.SosActivity" />
+        <activity android:name=".Sos.Send_SOS_Message" />
+        <activity android:name=".Sos.contacts" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9392e2e8658c4a409ede6c637c1e3ee1d94f0482" />

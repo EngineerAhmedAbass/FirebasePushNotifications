@@ -75,4 +75,22 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="log_out">Log Out</string>
 
+<!-- **************************************** -->
+    <string name="hello_world">Hello World</string>
+    <string name="instruction1">- To be able to use this feature please turn on the switch.</string>
+    <string name="instruction2">- Add at least one contact and at most 3 contacts.</string>
+    <string name="instruction3">- The SOS message will contain your current location in addition to the following text message: \'Please Help Me\'</string>
+    <string name="send_sos_message_btn">Send SOS Message</string>
+    <string name="add_edit_contacts_btn">Add / Edit Contacts</string>
+    <string name="add_contact_btn">Add Contact</string>
+    <string name="back_btn">Back</string>
+    <string name="sending_to">Sending to:</string>
+    <string name="send_btn">Send</string>
+    <string name="sos_deactivate">Deactivate SOS Message!</string>
+    <string name="sos_activate">Activate SOS Message!</string>
+    <string name="name">Name:</string>
+    <string name="phone_number">Phone Number:</string>
+    <string name="remove">Remove</string>
+    <!-- **************************************** -->
+
 </resources>

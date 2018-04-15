@@ -137,7 +137,7 @@ public class HelpRequest extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         MyBackgroundService myBackgroundService = new MyBackgroundService();
-        mCurrentID = myBackgroundService.mCurrentID;
+        mCurrentID = mAuth.getCurrentUser().getUid();
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -212,9 +212,10 @@ public class HelpRequest extends AppCompatActivity {
         }
     }
     void SendNotifications() {
+
         mfirestore = FirebaseFirestore.getInstance();
         mCurrentName = mAuth.getCurrentUser().getDisplayName();
-
+        mCurrentID= mAuth.getCurrentUser().getUid();
         Message = requestText.getText().toString();
         Domain = spinner.getSelectedItem().toString();
         if (Message.equals("")) {
@@ -226,7 +227,7 @@ public class HelpRequest extends AppCompatActivity {
             Toast.makeText(HelpRequest.this, "Can not Retrieve your location Please Try Again...", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        SentUsers.clear();
         mfirestore.collection("Users").addSnapshotListener(HelpRequest.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -254,7 +255,6 @@ public class HelpRequest extends AppCompatActivity {
 
     class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
         Vector<String> user_ids;
-
         protected String doInBackground(Vector<String>... strings) {
             String url = null;
             try {
