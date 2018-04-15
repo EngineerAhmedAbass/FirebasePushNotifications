@@ -32,6 +32,7 @@ public class Home extends AppCompatActivity {
     public boolean sos_flag;
     public ArrayList<String> Names;
     public ArrayList<String> Numbers;
+    public int count;
 
 
     public Button Help_Request_BTN;
@@ -55,6 +56,7 @@ public class Home extends AppCompatActivity {
             Names = (ArrayList<String>) bd.get("names");
             Numbers = (ArrayList<String>) bd.get("numbers");
             sos_flag = bd.getBoolean("sos_switch");
+            count = bd.getInt("count");
         }
 
         mAuth = FirebaseAuth.getInstance();
@@ -87,6 +89,7 @@ public class Home extends AppCompatActivity {
                 HelpIntent.putExtra("names", Names);
                 HelpIntent.putExtra("numbers", Numbers);
                 HelpIntent.putExtra("sos_switch", sos_flag);
+                HelpIntent.putExtra("count", count);
                 startActivity(HelpIntent);
             }
         });

@@ -17,6 +17,7 @@ import abass.com.firebasepushnotifications.R;
 public class SosActivity extends Activity {
     public Switch sos_switch;
     public boolean sos_flag;
+    public int count;
 
     /*private TextView latituteField;
     private TextView longitudeField;*/
@@ -52,6 +53,7 @@ public class SosActivity extends Activity {
             Names = (ArrayList<String>) bd.get("names");
             Numbers = (ArrayList<String>) bd.get("numbers");
             sos_flag = bd.getBoolean("sos_switch");
+            count = bd.getInt("count");
         }
         sos_switch.setChecked(sos_flag);
         if (sos_switch.isChecked()) {
@@ -122,6 +124,7 @@ public class SosActivity extends Activity {
         intent.putExtra("names", Names);
         intent.putExtra("numbers", Numbers);
         intent.putExtra("sos_switch", sos_switch.isChecked());
+        intent.putExtra("count",count);
         startActivity(intent);
     }
     @Override

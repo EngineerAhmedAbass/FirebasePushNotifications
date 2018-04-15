@@ -117,6 +117,7 @@ public class contacts extends Activity {
         intent.putExtra("names", Names);
         intent.putExtra("numbers", Numbers);
         intent.putExtra("sos_switch", sos_flag);
+        intent.putExtra("count",count);
         startActivity(intent);
     }
     public void onAddField(View v) {
