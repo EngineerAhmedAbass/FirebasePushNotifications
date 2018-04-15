@@ -226,7 +226,6 @@ public class HelpRequest extends AppCompatActivity {
             Toast.makeText(HelpRequest.this, "Can not Retrieve your location Please Try Again...", Toast.LENGTH_SHORT).show();
             return;
         }
-        SentUsers.clear();
         mfirestore.collection("Users").addSnapshotListener(HelpRequest.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -238,7 +237,7 @@ public class HelpRequest extends AppCompatActivity {
                         if (temp_user.getToken_id() == null || user_id.equals(mCurrentID)) {
                             continue;
                         }
-                        double Dist = distance  (Double.parseDouble(latitude), Double.parseDouble(longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
+                        double Dist = distance(Double.parseDouble(latitude), Double.parseDouble(longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
                         if (Dist > 10) {
                             continue;
                         }
@@ -249,7 +248,6 @@ public class HelpRequest extends AppCompatActivity {
             }
         });
         new GetRequestID().execute(SentUsers);
-        Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
     }
 
     class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
@@ -306,7 +304,14 @@ public class HelpRequest extends AppCompatActivity {
                     }
                 });
             }
+            Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
+            GoToHome();
         }
+    }
+
+    private void GoToHome() {
+        Intent HomeIntent = new Intent(this, Home.class);
+        startActivity(HomeIntent);
     }
 
     protected void startLocationUpdates() {

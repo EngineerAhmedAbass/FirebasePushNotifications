@@ -48,7 +48,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -68,6 +67,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import abass.com.firebasepushnotifications.Home;
 import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.SettingsActivity;
@@ -213,7 +213,6 @@ public class bloodDonationRequest extends AppCompatActivity {
         }
     }
     void SendNotifications() {
-        SentUsers.clear();
         mfirestore = FirebaseFirestore.getInstance();
         mCurrentName = mAuth.getCurrentUser().getDisplayName();
         mCurrentID = mAuth.getCurrentUser().getUid();
@@ -248,12 +247,11 @@ public class bloodDonationRequest extends AppCompatActivity {
                         }
                         SentUsers.add(user_id);
                     }
-
                 }
             }
         });
         new bloodDonationRequest.GetRequestID().execute(SentUsers);
-        Toast.makeText(bloodDonationRequest.this, "Blood Donation Request Sent ", Toast.LENGTH_SHORT).show();
+
     }
 
     class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
@@ -310,9 +308,14 @@ public class bloodDonationRequest extends AppCompatActivity {
                     }
                 });
             }
+            Toast.makeText(bloodDonationRequest.this, "Blood Donation Request Sent ", Toast.LENGTH_SHORT).show();
+            GoToHome();
         }
     }
-
+    private void GoToHome() {
+        Intent HomeIntent = new Intent(this, Home.class);
+        startActivity(HomeIntent);
+    }
     protected void startLocationUpdates() {
 
         // Create the location request to start receiving updates
