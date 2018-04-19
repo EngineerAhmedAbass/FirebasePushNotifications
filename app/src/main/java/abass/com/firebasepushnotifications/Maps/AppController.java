@@ -25,7 +25,7 @@ public class AppController extends MultiDexApplication {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         mInstance = this;
-
+        startService(new Intent(this, MyBackgroundService.class));
     }
 
     public static synchronized AppController getInstance() {

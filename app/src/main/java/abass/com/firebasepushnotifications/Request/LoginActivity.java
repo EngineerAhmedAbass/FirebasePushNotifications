@@ -128,7 +128,6 @@ public class  LoginActivity extends AppCompatActivity {
 
     private void SendToMain() {
         loginProgBar.setVisibility(View.INVISIBLE);
-        startService(new Intent(this, MyBackgroundService.class));
         Intent intent = new Intent(LoginActivity.this, Home.class);
         startActivity(intent);
         finish();
