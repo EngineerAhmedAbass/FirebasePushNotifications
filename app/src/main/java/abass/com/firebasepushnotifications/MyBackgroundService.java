@@ -98,7 +98,6 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         editor.putString("latitude",latitude);
         editor.commit();
     }
-
     public void scheduleSendLocation() {
         handler.postDelayed(new Runnable() {
             public void run() {
