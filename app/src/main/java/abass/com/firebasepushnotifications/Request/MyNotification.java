@@ -6,8 +6,17 @@ package abass.com.firebasepushnotifications.Request;
 
 public class MyNotification extends NotificationId{
     private String domain , from , latitude ,longtitude , message , requestID , user_name , type;
+    private double Distance;
 
     public MyNotification() {
+    }
+
+    public double getDistance() {
+        return Distance;
+    }
+
+    public void setDistance(double distance) {
+        Distance = distance;
     }
 
     public String getDomain() {

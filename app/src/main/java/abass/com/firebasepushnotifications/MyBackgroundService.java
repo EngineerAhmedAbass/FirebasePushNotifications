@@ -71,8 +71,6 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         return START_STICKY;
     }
 
-
-
     @Override
     public void onCreate() {
         Log.e(TAG, "onCreate");

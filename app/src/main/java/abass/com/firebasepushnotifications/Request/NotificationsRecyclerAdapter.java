@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 
 /**
@@ -47,10 +48,10 @@ public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<Notificat
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-
         holder.user_name_view.setText(notificationsList.get(position).getUser_name());
         holder.Domain_view.setText(notificationsList.get(position).getDomain());
-
+        String Distance_Text = String.format("%.2f", notificationsList.get(position).getDistance())+" Km";
+        holder.Distance.setText(Distance_Text);
         final String Notification_Id = notificationsList.get(position).notificationId;
         String Current_User_Id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         db = FirebaseFirestore.getInstance();
@@ -110,7 +111,7 @@ public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<Notificat
 
         private View mview;
 
-        private TextView user_name_view, Domain_view;
+        private TextView user_name_view, Domain_view , Distance;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -119,9 +120,29 @@ public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<Notificat
 
             user_name_view = (TextView) mview.findViewById(R.id.sender_name);
             Domain_view = (TextView) mview.findViewById(R.id.domain);
-
+            Distance = (TextView) mview.findViewById(R.id.distance);
         }
     }
 
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        // haversine great circle distance approximation, returns meters
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60; // 60 nautical miles per degree of seperation
+        dist = dist * 1852; // 1852 meters per nautical mile
+        dist = dist / 1000;
+        return (dist);
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
 
 }

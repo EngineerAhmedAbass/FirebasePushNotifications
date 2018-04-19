@@ -142,11 +142,12 @@ public class ShowNotifications extends AppCompatActivity {
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()){
                     if(doc.getType() == DocumentChange.Type.ADDED){
-
                         String Notification_Id = doc.getDocument().getId();
                         MyNotification notifications = doc.getDocument().toObject(MyNotification.class).withId(Notification_Id);
+                        MyBackgroundService myBackgroundService =new MyBackgroundService();
+                        double Dist = distance(Double.parseDouble(myBackgroundService.latitude), Double.parseDouble(myBackgroundService.longtitude), Double.parseDouble(notifications.getLatitude()), Double.parseDouble(notifications.getLongtitude()));
+                        notifications.setDistance(Dist);
                         notificationsList.add(notifications);
-
                         notificationsRecyclerAdapter.notifyDataSetChanged();
                     }
                 }
@@ -157,4 +158,25 @@ public class ShowNotifications extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        // haversine great circle distance approximation, returns meters
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60; // 60 nautical miles per degree of seperation
+        dist = dist * 1852; // 1852 meters per nautical mile
+        dist = dist / 1000;
+        return (dist);
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
+
 }
