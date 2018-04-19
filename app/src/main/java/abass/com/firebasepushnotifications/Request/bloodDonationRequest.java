@@ -63,6 +63,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -282,6 +284,7 @@ public class bloodDonationRequest extends AppCompatActivity {
         protected void onPostExecute(String RequestID) {
             for (int i = 0; i < user_ids.size(); i++) {
                 Map<String, Object> notificationMessage = new HashMap<>();
+                Date currentTime = Calendar.getInstance().getTime();
                 notificationMessage.put("message", Message);
                 notificationMessage.put("from", mCurrentID);
                 notificationMessage.put("user_name", mCurrentName);
@@ -290,6 +293,7 @@ public class bloodDonationRequest extends AppCompatActivity {
                 notificationMessage.put("latitude", myBackgroundService.latitude);
                 notificationMessage.put("requestID", RequestID);
                 notificationMessage.put("type", "Request");
+                notificationMessage.put("date", currentTime);
 
                 mfirestore.collection("Users/" + user_ids.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override

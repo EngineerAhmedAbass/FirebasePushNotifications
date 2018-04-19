@@ -1,5 +1,7 @@
 package abass.com.firebasepushnotifications.Request;
 
+import java.util.Date;
+
 /**
  * Created by ahmed on 27-Mar-18.
  */
@@ -7,8 +9,17 @@ package abass.com.firebasepushnotifications.Request;
 public class MyNotification extends NotificationId{
     private String domain , from , latitude ,longtitude , message , requestID , user_name , type;
     private double Distance;
+    private Date date;
 
     public MyNotification() {
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public double getDistance() {
