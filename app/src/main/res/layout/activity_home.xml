@@ -24,21 +24,20 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:drawablePadding="@dimen/place_autocomplete_button_padding"
-            android:drawableTop="@drawable/ic_charity"
+            android:drawableTop="@drawable/charity"
             android:padding="25dp"
-            android:text="Help Request"
-            android:textSize="18dp"/>
+            android:text="Request Help"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/Blood_BTN"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_blood_transfusion"
+            android:drawableTop="@drawable/blood"
             android:padding="25dp"
             android:text="Request Blood"
-            android:textSize="18dp"/>
+            android:textSize="18sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -53,10 +52,10 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_sos"
+            android:drawableTop="@drawable/sos"
             android:padding="25dp"
             android:text="SOS Message"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -71,19 +70,19 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_placeholder"
+            android:drawableTop="@drawable/placeholder"
             android:padding="25dp"
             android:text="Places"
-            android:textSize="18dp"/>
+            android:textSize="18sp"/>
 
         <Button
             android:id="@+id/First_Aid_BTN"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_online"
+            android:drawableTop="@drawable/bandage1"
             android:padding="25dp"
             android:text="First Aid Tips"
-            android:textSize="18dp"/>
+            android:textSize="18sp"/>
     </LinearLayout>
 </LinearLayout>

@@ -41,7 +41,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     LocationManager locationManager;
     CoordinatorLayout mainCoordinatorLayout;
-    String data = "hospital";
+    String data = "";
     String Distance;
     int Dist = 0;
     
