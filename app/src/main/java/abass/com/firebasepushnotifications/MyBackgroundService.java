@@ -71,6 +71,8 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         return START_STICKY;
     }
 
+
+
     @Override
     public void onCreate() {
         Log.e(TAG, "onCreate");
@@ -83,6 +85,15 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         startLocationUpdates();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e("Test","............. OnDestroy .......");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("test","Hellooooooooooooo");
+        editor.commit();
+    }
     public void scheduleSendLocation() {
         handler.postDelayed(new Runnable() {
             public void run() {

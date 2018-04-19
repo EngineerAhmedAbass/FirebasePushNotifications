@@ -2,15 +2,20 @@ package abass.com.firebasepushnotifications;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,9 +45,35 @@ public class ShowNotifications extends AppCompatActivity {
     private List<MyNotification> notificationsList;
     private NotificationsRecyclerAdapter notificationsRecyclerAdapter;
 
+    private String Test;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.e("Test","............. OnSave .......");
+        outState.putString("test", "Welcome back to Activity");
+    }
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.e("Test","............. OnRestore .......");
+        super.onRestoreInstanceState(savedInstanceState);
+        Test = savedInstanceState.getString("test");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("Test","............. OnDestroy .......");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("test","Hellooooooooooooo");
+        editor.commit();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("Test","............. OnCreate .......");
         setContentView(R.layout.activity_show_notifications);
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -50,7 +81,10 @@ public class ShowNotifications extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Notifications");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        Test=settings.getString("test","Null");
 
+        Toast.makeText(this, Test, Toast.LENGTH_SHORT).show();
         mFirestore = FirebaseFirestore.getInstance();
 
         mNotificationsListView = (RecyclerView) findViewById(R.id.notifications_l);

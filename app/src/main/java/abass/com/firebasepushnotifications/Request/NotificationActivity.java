@@ -218,12 +218,6 @@ public class NotificationActivity extends AppCompatActivity {
         mfirestore = FirebaseFirestore.getInstance();
 
         Message = "I'm willing to help";
-
-        if (Message.equals("")){
-            Toast.makeText(NotificationActivity.this,"من فضلك ادخل معلومات عن طلب المساعدة",Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         if(longt == null || lati == null)
         {
             Toast.makeText(NotificationActivity.this,"Can't Retrieve your location try again...",Toast.LENGTH_SHORT).show();
