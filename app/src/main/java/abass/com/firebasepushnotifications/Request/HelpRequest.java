@@ -81,32 +81,21 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 
 public class HelpRequest extends AppCompatActivity {
 
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private static GoogleApiClient mGoogleApiClient;
+    MyBackgroundService myBackgroundService;
+    LocationManager locationManager;
     private Spinner spinner;
     private EditText requestText;
     private Button SendRequestBtn;
     private Toolbar toolbar;
-
-    private LocationRequest mLocationRequest;
-
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
-
     private String Message;
     private String Domain;
-    private int RequestID;
-    private String longtitude, latitude;
-
     private String mCurrentID;
     private String mCurrentName;
-
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
-
-    LocationManager locationManager;
     private FusedLocationProviderClient client;
-    private static GoogleApiClient mGoogleApiClient;
-    private static final int REQUEST_CHECK_SETTINGS = 0x1;
-
     private Vector<String> SentUsers = new Vector<>();
 
     @Override
@@ -127,6 +116,8 @@ public class HelpRequest extends AppCompatActivity {
 
         /*  End Spinner Code */
 
+        myBackgroundService = new MyBackgroundService();
+
         requestText = (EditText) findViewById(R.id.text_help);
         SendRequestBtn = (Button) findViewById(R.id.sendrequest);
         toolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -136,7 +127,7 @@ public class HelpRequest extends AppCompatActivity {
         actionBar.setTitle("Request Help");
 
         mAuth = FirebaseAuth.getInstance();
-        mCurrentID = mAuth.getCurrentUser().getUid();
+        mCurrentID = myBackgroundService.mCurrentID;
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -146,9 +137,7 @@ public class HelpRequest extends AppCompatActivity {
         mGoogleApiClient.connect();
 
         if (isLocationServiceEnabled()) {
-            if (isNetworkAvailable()) {
-                startLocationUpdates();
-            } else {
+            if (!isNetworkAvailable()) {
                 Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
             }
         } else {
@@ -160,7 +149,6 @@ public class HelpRequest extends AppCompatActivity {
             public void onClick(View view) {
                 if (isLocationServiceEnabled()) {
                     if (isNetworkAvailable()) {
-                        startLocationUpdates();
                         SendNotifications();
                     } else {
                         Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
@@ -176,15 +164,14 @@ public class HelpRequest extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu,menu);
+        menuInflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.notification:
                 Intent GoToNotifications = new Intent(this, ShowNotifications.class);
                 startActivity(GoToNotifications);
@@ -210,20 +197,14 @@ public class HelpRequest extends AppCompatActivity {
             mfirestore = FirebaseFirestore.getInstance();
         }
     }
-    void SendNotifications() {
 
+    void SendNotifications() {
         mfirestore = FirebaseFirestore.getInstance();
         mCurrentName = mAuth.getCurrentUser().getDisplayName();
-        mCurrentID= mAuth.getCurrentUser().getUid();
         Message = requestText.getText().toString();
         Domain = spinner.getSelectedItem().toString();
         if (Message.equals("")) {
             Toast.makeText(HelpRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (longtitude == null || latitude == null) {
-            Toast.makeText(HelpRequest.this, "Can not Retrieve your location Please Try Again...", Toast.LENGTH_SHORT).show();
             return;
         }
         mfirestore.collection("Users").addSnapshotListener(HelpRequest.this, new EventListener<QuerySnapshot>() {
@@ -237,7 +218,7 @@ public class HelpRequest extends AppCompatActivity {
                         if (temp_user.getToken_id() == null || user_id.equals(mCurrentID)) {
                             continue;
                         }
-                        double Dist = distance(Double.parseDouble(latitude), Double.parseDouble(longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
+                        double Dist = distance(Double.parseDouble(myBackgroundService.latitude), Double.parseDouble(myBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
                         if (Dist > 10) {
                             continue;
                         }
@@ -250,156 +231,19 @@ public class HelpRequest extends AppCompatActivity {
         new GetRequestID().execute(SentUsers);
     }
 
-    class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
-        Vector<String> user_ids;
-        protected String doInBackground(Vector<String>... strings) {
-            String url = null;
-            try {
-                url = "http://refadatours.com/android/addRequest.php?message=" + URLEncoder.encode(Message, "UTF-8")+"&senderID="+mCurrentID;
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            user_ids = strings[0];
-            HttpEntity httpEntity = null;
-            try {
-                DefaultHttpClient httpClient = new DefaultHttpClient();  // Default HttpClient
-                HttpGet httpGet = new HttpGet(url);
-                HttpResponse httpResponse = httpClient.execute(httpGet);
-                httpEntity = httpResponse.getEntity();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String entityResponse = null;
-            try {
-                entityResponse = EntityUtils.toString(httpEntity);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return entityResponse;
-        }
-
-        protected void onPostExecute(String RequestID) {
-            Toast.makeText(HelpRequest.this, "Sender Name  " + mCurrentName, Toast.LENGTH_SHORT).show();
-            for (int i = 0; i < user_ids.size(); i++) {
-                Map<String, Object> notificationMessage = new HashMap<>();
-                notificationMessage.put("message", Message);
-                notificationMessage.put("from", mCurrentID);
-                notificationMessage.put("user_name", mCurrentName);
-                notificationMessage.put("domain", Domain);
-                notificationMessage.put("longtitude", longtitude);
-                notificationMessage.put("latitude", latitude);
-                notificationMessage.put("requestID", RequestID);
-                notificationMessage.put("type", "Request");
-
-                mfirestore.collection("Users/" + user_ids.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-            Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
-            GoToHome();
-        }
-    }
-
     private void GoToHome() {
         Intent HomeIntent = new Intent(this, Home.class);
         startActivity(HomeIntent);
     }
 
-    protected void startLocationUpdates() {
-
-        // Create the location request to start receiving updates
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-        // Create LocationSettingsRequest object using location request
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-        LocationSettingsRequest locationSettingsRequest = builder.build();
-
-        // Check whether location settings are satisfied
-        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
-        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-        settingsClient.checkLocationSettings(locationSettingsRequest);
-
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        // do work here
-                        onLocationChanged(locationResult.getLastLocation());
-                    }
-                },
-                Looper.myLooper());
-    }
-
-    public void onLocationChanged(Location location) {
-        // New location has now been determined
-        longtitude = Double.toString(location.getLongitude());
-        latitude = Double.toString(location.getLatitude());
-        // You can now create a LatLng Object for use with maps
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-    }
-
-    public void getLastLocation() {
-        // Get last known recent location using new Google Play Services SDK (v11+)
-        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationClient.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // GPS location can be null if GPS is switched off
-                        if (location != null) {
-                            onLocationChanged(location);
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("MapDemoActivity", "Error trying to get last GPS location");
-                        e.printStackTrace();
-                    }
-                });
-    }
     private void sendToLogin() {
         Intent intent = new Intent(HelpRequest.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
-    private void requestPermission(){
-        ActivityCompat.requestPermissions(HelpRequest.this,new String[]{ACCESS_FINE_LOCATION},1);
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(HelpRequest.this, new String[]{ACCESS_FINE_LOCATION}, 1);
     }
 
     private void showSettingDialog() {
@@ -452,42 +296,45 @@ public class HelpRequest extends AppCompatActivity {
                 switch (resultCode) {
                     case RESULT_OK:
                         Log.e("Settings", "Result OK");
-                        if(isNetworkAvailable()){
-                            if (ActivityCompat.checkSelfPermission( HelpRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        if (isNetworkAvailable()) {
+                            if (ActivityCompat.checkSelfPermission(HelpRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                 Toast.makeText(HelpRequest.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            startLocationUpdates();
-                        }else{
+                            Toast.makeText(HelpRequest.this, "Location Enabled .", Toast.LENGTH_SHORT).show();
+                        } else {
                             Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case RESULT_CANCELED:
-                        Toast.makeText(HelpRequest.this, "No...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HelpRequest.this, "Location Disabled...", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
         }
     }
-    public boolean isLocationServiceEnabled(){
-        boolean gps_enabled= false;
 
-        if(locationManager ==null)
+    public boolean isLocationServiceEnabled() {
+        boolean gps_enabled = false;
+
+        if (locationManager == null)
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        try{
+        try {
             gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             //do nothing...
         }
 
-        return gps_enabled ;
+        return gps_enabled;
     }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
     private double distance(double lat1, double lon1, double lat2, double lon2) {
         // haversine great circle distance approximation, returns meters
         double theta = lon1 - lon2;
@@ -501,11 +348,73 @@ public class HelpRequest extends AppCompatActivity {
         dist = dist / 1000;
         return (dist);
     }
+
     private double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
+
     private double rad2deg(double rad) {
         return (rad * 180.0 / Math.PI);
+    }
+
+    class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
+        Vector<String> user_ids;
+
+        protected String doInBackground(Vector<String>... strings) {
+            String url = null;
+            try {
+                url = "http://refadatours.com/android/addRequest.php?message=" + URLEncoder.encode(Message, "UTF-8") + "&senderID=" + mCurrentID;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            user_ids = strings[0];
+            HttpEntity httpEntity = null;
+            try {
+                DefaultHttpClient httpClient = new DefaultHttpClient();  // Default HttpClient
+                HttpGet httpGet = new HttpGet(url);
+                HttpResponse httpResponse = httpClient.execute(httpGet);
+                httpEntity = httpResponse.getEntity();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String entityResponse = null;
+            try {
+                entityResponse = EntityUtils.toString(httpEntity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return entityResponse;
+        }
+
+        protected void onPostExecute(String RequestID) {
+            Toast.makeText(HelpRequest.this, "Sender Name  " + mCurrentName, Toast.LENGTH_SHORT).show();
+            for (int i = 0; i < user_ids.size(); i++) {
+                Map<String, Object> notificationMessage = new HashMap<>();
+                notificationMessage.put("message", Message);
+                notificationMessage.put("from", mCurrentID);
+                notificationMessage.put("user_name", mCurrentName);
+                notificationMessage.put("domain", Domain);
+                notificationMessage.put("longtitude", myBackgroundService.longtitude);
+                notificationMessage.put("latitude", myBackgroundService.latitude);
+                notificationMessage.put("requestID", RequestID);
+                notificationMessage.put("type", "Request");
+
+                mfirestore.collection("Users/" + user_ids.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
+            GoToHome();
+        }
     }
 
 }
