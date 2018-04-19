@@ -140,6 +140,8 @@ public class Home extends AppCompatActivity {
     }
 
     private void Log_Out() {
+        Intent myService = new Intent(Home.this, MyBackgroundService.class);
+        stopService(myService);
         Map<String, Object> tokenMapRemove = new HashMap<>();
         tokenMapRemove.put("token_id", FieldValue.delete());
         String mCurrentID = mAuth.getCurrentUser().getUid();

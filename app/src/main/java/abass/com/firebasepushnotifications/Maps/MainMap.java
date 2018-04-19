@@ -13,11 +13,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.SettingsActivity;
@@ -29,8 +32,11 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 public class MainMap extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     TextView seekBarValue;
     String Data = "3";
-    String dataString = "";
     private Toolbar toolbar;
+    private CheckBox hospital;
+    private CheckBox police ;
+    private CheckBox pharmacy;
+    private Vector<String> Selected_Date;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,12 +44,16 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_map);
 
+        Selected_Date = new Vector<String>();
         // Spinner element
         //final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         Button button = (Button) findViewById(R.id.button);
         seekBarValue = findViewById(R.id.textView3);
         final SeekBar Seek = findViewById(R.id.seekBar);
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        hospital = findViewById(R.id.hospital);
+        police = findViewById(R.id.police);
+        pharmacy = findViewById(R.id.pharmacy);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -91,7 +101,15 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String dataString="";
                 Intent intent = new Intent(MainMap.this, MapsActivity.class);
+                for(int i=0 ; i < Selected_Date.size();i++){
+                    if(i==Selected_Date.size()-1){
+                        dataString+=Selected_Date.elementAt(i);
+                    }else{
+                        dataString+=Selected_Date.elementAt(i)+"|";
+                    }
+                }
                 intent.putExtra("data", dataString);
                 intent.putExtra("Distance", Data);
                 startActivity(intent);
@@ -107,55 +125,24 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
     }
 
     public void onCheckBoxClicked(View view) {
-        final CheckBox hospital = findViewById(R.id.hospital);
-        final CheckBox police = findViewById(R.id.police);
-        final CheckBox pharmacy = findViewById(R.id.pharmacy);
+        Selected_Date.clear();
         boolean checked = ((CheckBox) view).isChecked();
         if (hospital.isChecked()) {
-            if (dataString.length() == 0) {
-                dataString += "hospital";
-            } else if (!dataString.contains("hospital")) {
-                dataString += "|hospital";
-            }
+            Selected_Date.add("hospital");
         } else {
-            if (dataString.length() != 0) {
-                if (dataString.length() == "hospital".length()) {
-                    dataString.replaceAll("hospital", "");
-                } else {
-                    dataString.replaceAll("|hospital", "");
-                }
-            }
+            Selected_Date.remove("hospital");
         }
         if (police.isChecked()) {
-            if (dataString.length() == 0) {
-                dataString += "police";
-            } else if (!dataString.contains("police")) {
-                dataString += "|police";
-            }
+            Selected_Date.add("police");
         } else {
-            if (dataString.length() != 0) {
-                if (dataString.length() == "police".length()) {
-                    dataString.replaceAll("police", "");
-                } else {
-                    dataString.replaceAll("|police", "");
-                }
-            }
+            Selected_Date.remove("police");
         }
-        if (police.isChecked()) {
-            if (dataString.length() == 0) {
-                dataString += "pharmacy";
-            } else if (!dataString.contains("pharmacy")) {
-                dataString += "|pharmacy";
-            }
+        if (pharmacy.isChecked()) {
+            Selected_Date.add("pharmacy");
         } else {
-            if (dataString.length() != 0) {
-                if (dataString.length() == "pharmacy".length()) {
-                    dataString.replaceAll("pharmacy", "");
-                } else {
-                    dataString.replaceAll("|pharmacy", "");
-                }
-            }
+            Selected_Date.remove("pharmacy");
         }
+        Toast.makeText(this, Selected_Date.toString(),Toast.LENGTH_SHORT).show();
     }
 
     @Override
