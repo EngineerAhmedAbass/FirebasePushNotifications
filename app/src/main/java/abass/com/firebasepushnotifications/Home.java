@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +24,6 @@ import java.util.Map;
 import abass.com.firebasepushnotifications.Maps.MainMap;
 import abass.com.firebasepushnotifications.Request.HelpRequest;
 import abass.com.firebasepushnotifications.Request.LoginActivity;
-import abass.com.firebasepushnotifications.Request.MainActivity;
 import abass.com.firebasepushnotifications.Request.bloodDonationRequest;
 import abass.com.firebasepushnotifications.Sos.SosActivity;
 

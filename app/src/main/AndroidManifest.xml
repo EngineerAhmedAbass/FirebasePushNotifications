@@ -29,8 +29,6 @@
 
         <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
 
-        <activity android:name=".Request.MainActivity" />
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
@@ -48,10 +46,10 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name=".Request.NotificationActivity">
+        <activity android:name=".Request.NotificationActivity"
+                  android:parentActivityName=".ShowNotifications">
             <intent-filter>
                 <action android:name="abass.com.firebasepushnotifications.TARGETNOTIFICATION" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

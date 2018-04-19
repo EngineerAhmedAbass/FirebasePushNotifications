@@ -3,7 +3,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="default_notification_channel_id">Tvac_CH_01</string>
+    <string name="default_notification_channel_id">Ch01_Abass</string>
     <string name="title_activity_maps">Map</string>
     <string name="settings_name">Settings</string>
     <string name="Notification">Notification</string>
@@ -98,6 +98,8 @@
     <string name="name">Name:</string>
     <string name="phone_number">Phone Number:</string>
     <string name="remove">Remove</string>
+    <string name="notifications_admin_channel_name">Es3fny_Channel</string>
+    <string name="notifications_admin_channel_description">This Channel Used In Notification Of Es3fny App</string>
     <!-- **************************************** -->
 
 </resources>

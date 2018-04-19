@@ -1,5 +1,6 @@
 package abass.com.firebasepushnotifications.Request;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -13,10 +14,15 @@ import android.os.AsyncTask;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,6 +49,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.apache.http.HttpEntity;
@@ -57,13 +64,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import abass.com.firebasepushnotifications.Home;
+import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
+import abass.com.firebasepushnotifications.SettingsActivity;
+import abass.com.firebasepushnotifications.ShowNotifications;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class NotificationActivity extends AppCompatActivity {
 
+    private Toolbar toolbar;
     private TextView fromText ;
     private TextView DomainTxt;
     private TextView MessageTxt;
@@ -113,6 +125,12 @@ public class NotificationActivity extends AppCompatActivity {
         type =getIntent().getStringExtra("type");
 
         String LocationUEL = "http://maps.google.com/maps?q="+latitude+","+longtitude;
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(Domain);
 
         fromText = (TextView) findViewById(R.id.from_txt);
         DomainTxt = (TextView) findViewById(R.id.domain_txt);
@@ -192,6 +210,53 @@ public class NotificationActivity extends AppCompatActivity {
             Status.setText("response");
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.notification:
+                Intent GoToNotifications = new Intent(NotificationActivity.this, ShowNotifications.class);
+                startActivity(GoToNotifications);
+                break;
+            case R.id.settings:
+                Intent settings = new Intent(NotificationActivity.this, SettingsActivity.class);
+                startActivity(settings);
+                break;
+            case R.id.log_out:
+                Log_Out();
+                break;
+            default:
+
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void Log_Out() {
+        Intent myService = new Intent(NotificationActivity.this, MyBackgroundService.class);
+        stopService(myService);
+        Map<String, Object> tokenMapRemove = new HashMap<>();
+        tokenMapRemove.put("token_id", FieldValue.delete());
+        String mCurrentID = mAuth.getCurrentUser().getUid();
+        mfirestore.collection("Users").document(mCurrentID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mAuth.signOut();
+                Intent LoginIntent = new Intent(NotificationActivity.this, LoginActivity.class);
+                startActivity(LoginIntent);
+            }
+        });
+    }
+
     protected void onStart() {
         super.onStart();
         FirebaseUser CurrentUser = mAuth.getCurrentUser();
@@ -212,6 +277,12 @@ public class NotificationActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     private void SendNotificationsRespond() {
