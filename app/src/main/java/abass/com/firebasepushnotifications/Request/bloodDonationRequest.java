@@ -63,6 +63,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -91,11 +93,10 @@ public class bloodDonationRequest extends AppCompatActivity {
 
     private String Message;
     private String btype;
-    //private int RequestID;
-    private String longtitude, latitude;
 
     private String mCurrentID;
     private String mCurrentName;
+    MyBackgroundService myBackgroundService;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
@@ -135,8 +136,10 @@ public class bloodDonationRequest extends AppCompatActivity {
         actionBar.setTitle("Request Blood");
 
         mAuth = FirebaseAuth.getInstance();
-        MyBackgroundService myBackgroundService = new MyBackgroundService();
-        mCurrentID = mAuth.getCurrentUser().getUid();
+
+        myBackgroundService = new MyBackgroundService();
+
+        mCurrentID = myBackgroundService.mCurrentID;
 
         client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -147,9 +150,7 @@ public class bloodDonationRequest extends AppCompatActivity {
         mGoogleApiClient.connect();
 
         if (isLocationServiceEnabled()) {
-            if (isNetworkAvailable()) {
-                startLocationUpdates();
-            } else {
+            if (!isNetworkAvailable()) {
                 Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
             }
         } else {
@@ -161,8 +162,6 @@ public class bloodDonationRequest extends AppCompatActivity {
             public void onClick(View view) {
                 if (isLocationServiceEnabled()) {
                     if (isNetworkAvailable()) {
-                        mCurrentID = mAuth.getCurrentUser().getUid();
-                        startLocationUpdates();
                         SendNotifications();
                     } else {
                         Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
@@ -224,12 +223,6 @@ public class bloodDonationRequest extends AppCompatActivity {
             Toast.makeText(bloodDonationRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        if (longtitude == null || latitude == null) {
-            Toast.makeText(bloodDonationRequest.this, "Can not Retrieve your location Please Try Again...", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         mfirestore.collection("Users").addSnapshotListener(bloodDonationRequest.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -241,7 +234,10 @@ public class bloodDonationRequest extends AppCompatActivity {
                         if (temp_user.getToken_id() == null || user_id.equals(mCurrentID)) {
                             continue;
                         }
-                        double Dist = distance(Double.parseDouble(latitude), Double.parseDouble(longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
+                        if(temp_user.getLatitude() == null || temp_user.getLongtitude() == null  ){
+                            continue;
+                        }
+                        double Dist = distance(Double.parseDouble(myBackgroundService.latitude), Double.parseDouble(myBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
                         if (Dist > 10) {
                             continue;
                         }
@@ -288,14 +284,16 @@ public class bloodDonationRequest extends AppCompatActivity {
         protected void onPostExecute(String RequestID) {
             for (int i = 0; i < user_ids.size(); i++) {
                 Map<String, Object> notificationMessage = new HashMap<>();
+                Date currentTime = Calendar.getInstance().getTime();
                 notificationMessage.put("message", Message);
                 notificationMessage.put("from", mCurrentID);
                 notificationMessage.put("user_name", mCurrentName);
                 notificationMessage.put("domain", "تبرع بالدم");
-                notificationMessage.put("longtitude", longtitude);
-                notificationMessage.put("latitude", latitude);
+                notificationMessage.put("longtitude", myBackgroundService.longtitude);
+                notificationMessage.put("latitude", myBackgroundService.latitude);
                 notificationMessage.put("requestID", RequestID);
                 notificationMessage.put("type", "Request");
+                notificationMessage.put("date", currentTime);
 
                 mfirestore.collection("Users/" + user_ids.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -316,90 +314,13 @@ public class bloodDonationRequest extends AppCompatActivity {
         Intent HomeIntent = new Intent(this, Home.class);
         startActivity(HomeIntent);
     }
-    protected void startLocationUpdates() {
 
-        // Create the location request to start receiving updates
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-        // Create LocationSettingsRequest object using location request
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-        LocationSettingsRequest locationSettingsRequest = builder.build();
-
-        // Check whether location settings are satisfied
-        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
-        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-        settingsClient.checkLocationSettings(locationSettingsRequest);
-
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        // do work here
-                        onLocationChanged(locationResult.getLastLocation());
-                    }
-                },
-                Looper.myLooper());
-    }
-
-    public void onLocationChanged(Location location) {
-        // New location has now been determined
-        longtitude = Double.toString(location.getLongitude());
-        latitude = Double.toString(location.getLatitude());
-        // You can now create a LatLng Object for use with maps
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-    }
-
-    public void getLastLocation() {
-        // Get last known recent location using new Google Play Services SDK (v11+)
-        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationClient.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // GPS location can be null if GPS is switched off
-                        if (location != null) {
-                            onLocationChanged(location);
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("MapDemoActivity", "Error trying to get last GPS location");
-                        e.printStackTrace();
-                    }
-                });
-    }
     private void sendToLogin() {
         Intent intent = new Intent(bloodDonationRequest.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
+
     private void requestPermission(){
         ActivityCompat.requestPermissions(bloodDonationRequest.this,new String[]{ACCESS_FINE_LOCATION},1);
     }
@@ -459,13 +380,13 @@ public class bloodDonationRequest extends AppCompatActivity {
                                 Toast.makeText(bloodDonationRequest.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            startLocationUpdates();
+                            Toast.makeText(bloodDonationRequest.this, "Location Enabled .", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case RESULT_CANCELED:
-                        Toast.makeText(bloodDonationRequest.this, "No...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(bloodDonationRequest.this, "Location Disabled...", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;

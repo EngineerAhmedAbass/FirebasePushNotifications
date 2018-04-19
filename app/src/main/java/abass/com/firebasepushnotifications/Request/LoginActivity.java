@@ -100,7 +100,6 @@ public class  LoginActivity extends AppCompatActivity {
                                     String mCurrentName = mAuth.getCurrentUser().getDisplayName();
 
                                     Toast.makeText(LoginActivity.this,"Welcome "+ mCurrentName,Toast.LENGTH_SHORT).show();
-
                                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                     SharedPreferences.Editor editor = settings.edit();
                                     editor.putString("example_text",mCurrentName);

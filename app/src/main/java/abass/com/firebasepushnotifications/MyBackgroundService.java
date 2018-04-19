@@ -71,27 +71,30 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         return START_STICKY;
     }
 
-
-
     @Override
     public void onCreate() {
         Log.e(TAG, "onCreate");
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
-            mCurrentID = mAuth.getCurrentUser().getUid();
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+            mCurrentID=settings.getString("mCurrentID","Shit");
+            longtitude = settings.getString("longtitude","Shit");
+            latitude=settings.getString("latitude","Shit");
         }
-
         startLocationUpdates();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.e("Test","............. OnDestroy .......");
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        Log.e("Test","............. onTaskRemoved .......");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("test","Hellooooooooooooo");
+        editor.putString("mCurrentID",mCurrentID);
+        editor.putString("longtitude",longtitude);
+        editor.putString("latitude",latitude);
         editor.commit();
     }
     public void scheduleSendLocation() {
