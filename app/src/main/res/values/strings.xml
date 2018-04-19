@@ -20,6 +20,13 @@
         <item>AB</item>
         <item>O</item>
     </string-array>
+    <string-array name="sorting_method">
+        <item>Select Sorting Method</item>
+        <item>Ascending by Distance</item>
+        <item>Descending by Distance</item>
+        <item>Ascending by Time</item>
+        <item>Descending by Time</item>
+    </string-array>
     <string name="title_activity_splash">Splash</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
