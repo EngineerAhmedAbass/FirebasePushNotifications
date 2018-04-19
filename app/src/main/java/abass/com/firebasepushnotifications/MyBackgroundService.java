@@ -82,7 +82,6 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
             longtitude = settings.getString("longtitude","Shit");
             latitude=settings.getString("latitude","Shit");
         }
-
         startLocationUpdates();
     }
 

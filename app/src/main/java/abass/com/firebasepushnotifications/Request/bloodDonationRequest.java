@@ -232,6 +232,9 @@ public class bloodDonationRequest extends AppCompatActivity {
                         if (temp_user.getToken_id() == null || user_id.equals(mCurrentID)) {
                             continue;
                         }
+                        if(temp_user.getLatitude() == null || temp_user.getLongtitude() == null  ){
+                            continue;
+                        }
                         double Dist = distance(Double.parseDouble(myBackgroundService.latitude), Double.parseDouble(myBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
                         if (Dist > 10) {
                             continue;
