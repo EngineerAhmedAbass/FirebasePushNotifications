@@ -24,14 +24,21 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="Help Request" />
+            android:drawablePadding="@dimen/place_autocomplete_button_padding"
+            android:drawableTop="@drawable/ic_charity"
+            android:padding="25dp"
+            android:text="Help Request"
+            android:textSize="18dp"/>
 
         <Button
             android:id="@+id/Blood_BTN"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="Request Blood" />
+            android:drawableTop="@drawable/ic_blood_transfusion"
+            android:padding="25dp"
+            android:text="Request Blood"
+            android:textSize="18dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -46,7 +53,10 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="SOS Message" />
+            android:drawableTop="@drawable/ic_sos"
+            android:padding="25dp"
+            android:text="SOS Message"
+            android:textSize="18dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,13 +71,19 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="Places" />
+            android:drawableTop="@drawable/ic_placeholder"
+            android:padding="25dp"
+            android:text="Places"
+            android:textSize="18dp"/>
 
         <Button
             android:id="@+id/First_Aid_BTN"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="First Aid Tips" />
+            android:drawableTop="@drawable/ic_online"
+            android:padding="25dp"
+            android:text="First Aid Tips"
+            android:textSize="18dp"/>
     </LinearLayout>
 </LinearLayout>
