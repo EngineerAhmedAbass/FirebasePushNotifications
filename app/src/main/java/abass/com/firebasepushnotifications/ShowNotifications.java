@@ -241,14 +241,18 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         if(Selected_sort.equals("Select Sorting Method")){
             Toast.makeText(this, "Please Choose Sorting Method", Toast.LENGTH_SHORT).show();
         }else if(Selected_sort.equals("Ascending by Distance")){
+            Toast.makeText(this, "Sorting Ascending by Distance", Toast.LENGTH_SHORT).show();
             Collections.sort(notificationsList_Displayed,new Custom_Distace_Comparator());
         }else if(Selected_sort.equals("Descending by Distance")){
+            Toast.makeText(this, "Sorting Descending by Distance", Toast.LENGTH_SHORT).show();
             Collections.sort(notificationsList_Displayed,new Custom_Distace_Comparator());
             Collections.reverse(notificationsList_Displayed);
         }
         else if(Selected_sort.equals("Ascending by Time")){
+            Toast.makeText(this, "Sorting Ascending by Distance", Toast.LENGTH_SHORT).show();
             Collections.sort(notificationsList_Displayed,new Custom_Date_Comparator());
         }else if(Selected_sort.equals("Descending by Time")){
+            Toast.makeText(this, "Sorting Descending by Time", Toast.LENGTH_SHORT).show();
             Collections.sort(notificationsList_Displayed,new Custom_Date_Comparator());
             Collections.reverse(notificationsList_Displayed);
         }
