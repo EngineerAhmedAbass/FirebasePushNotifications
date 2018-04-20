@@ -157,15 +157,18 @@ public class bloodDonationRequest extends AppCompatActivity {
         SendRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SendRequestBtn.setClickable(false);
                 if (isLocationServiceEnabled()) {
                     if (isNetworkAvailable()) {
                         progressDialog.show();
                         SendNotifications();
                     } else {
+                        SendRequestBtn.setClickable(true);
                         Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(bloodDonationRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+                    SendRequestBtn.setClickable(true);
+                    Toast.makeText(bloodDonationRequest.this, "Please Open Location First.", Toast.LENGTH_SHORT).show();
                     showSettingDialog();
                 }
             }
@@ -297,11 +300,13 @@ public class bloodDonationRequest extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.hide();
+                        SendRequestBtn.setClickable(true);
                         Toast.makeText(bloodDonationRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
             progressDialog.hide();
+            SendRequestBtn.setClickable(true);
             Toast.makeText(bloodDonationRequest.this, "Blood Donation Request Sent ", Toast.LENGTH_SHORT).show();
             GoToHome();
         }

@@ -154,15 +154,18 @@ public class HelpRequest extends AppCompatActivity {
         SendRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SendRequestBtn.setClickable(false);
                 if (isLocationServiceEnabled()) {
                     if (isNetworkAvailable()) {
                         progressDialog.show();
                         SendNotifications();
                     } else {
+                        SendRequestBtn.setClickable(true);
                         Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(HelpRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+                    SendRequestBtn.setClickable(true);
+                    Toast.makeText(HelpRequest.this, "Please Enable Location First.", Toast.LENGTH_SHORT).show();
                     showSettingDialog();
                 }
             }
@@ -213,6 +216,7 @@ public class HelpRequest extends AppCompatActivity {
         Domain = spinner.getSelectedItem().toString();
         if (Message.equals("")) {
             progressDialog.hide();
+            SendRequestBtn.setClickable(true);
             Toast.makeText(HelpRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -422,11 +426,13 @@ public class HelpRequest extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.hide();
+                        SendRequestBtn.setClickable(true);
                         Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
             progressDialog.hide();
+            SendRequestBtn.setClickable(true);
             Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
             GoToHome();
         }

@@ -184,14 +184,17 @@ public class NotificationActivity extends AppCompatActivity {
             sendRespond.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    sendRespond.setClickable(false);
                     if (isLocationServiceEnabled()) {
                         if (isNetworkAvailable()) {
                             progressDialog.show();
                             SendNotificationsRespond();
                         } else {
+                            sendRespond.setClickable(true);
                             Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
+                        sendRespond.setClickable(true);
                         Toast.makeText(NotificationActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
                         showSettingDialog();
                     }
@@ -435,7 +438,6 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(final String feed) {
-            sendRespond.setVisibility(View.INVISIBLE);
             Status.setText("closed");
             MyBackgroundService myBackgroundService= new MyBackgroundService();
             Date currentTime = Calendar.getInstance().getTime();
@@ -452,6 +454,7 @@ public class NotificationActivity extends AppCompatActivity {
             mfirestore.collection("Users/" + feed + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
+                    sendRespond.setVisibility(View.INVISIBLE);
                     progressDialog.hide();
                     Toast.makeText(NotificationActivity.this, "Respond Sent ", Toast.LENGTH_SHORT).show();
                 }
@@ -459,6 +462,7 @@ public class NotificationActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     progressDialog.hide();
+                    sendRespond.setClickable(true);
                     Toast.makeText(NotificationActivity.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
