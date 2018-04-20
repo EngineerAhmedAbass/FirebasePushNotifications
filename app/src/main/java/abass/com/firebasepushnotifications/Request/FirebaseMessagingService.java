@@ -13,7 +13,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Date;
 import java.util.Random;
+import java.util.Vector;
 
 import abass.com.firebasepushnotifications.R;
 
@@ -23,7 +25,7 @@ import abass.com.firebasepushnotifications.R;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
     NotificationManager mNotifyMgr;
-
+    public Vector<NotificationManager> mNotificationsMgr = new Vector<NotificationManager>();
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -51,9 +53,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 .setContentTitle(MessageTitle)
                 .setContentText(MessageBody)
                 .setSound(defaultSoundUri)
+                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-
+        long  mNotification_id =  new Date().getTime();
         Intent intent = new Intent(this, NotificationActivity.class);
         intent.putExtra("message", dataMessage);
         intent.putExtra("from_user_id", dataFrom);
@@ -62,16 +65,19 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         intent.putExtra("domain", Domain);
         intent.putExtra("request_id", RequestID);
         intent.putExtra("type", type);
+        intent.setAction("abass.com.firebasepushnotifications"+mNotification_id);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         mBuilder.setContentIntent(pendingIntent);
 
-        int mNotification_id = new Random().nextInt(60000);
         mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(mNotification_id, mBuilder.build());
+        mNotificationsMgr.add(mNotifyMgr);
+        mNotificationsMgr.lastElement().notify((int)mNotification_id,mBuilder.build());
+        //mNotifyMgr.notify(mNotification_id, mBuilder.build());
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setupChannels() {
