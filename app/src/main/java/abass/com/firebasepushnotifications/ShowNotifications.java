@@ -213,6 +213,8 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
                 notificationsList_Displayed.removeAll(notificationsList_Responces);
             }
         }
+        String Selected_sort = Sorting_Spiner.getSelectedItem().toString();
+        Sort_The_Data(Selected_sort);
         notificationsRecyclerAdapter.notifyDataSetChanged();
     }
 
@@ -285,9 +287,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         return (rad * 180.0 / Math.PI);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String Selected_sort = adapterView.getItemAtPosition(i).toString();
+    public void Sort_The_Data(String Selected_sort){
         if (Selected_sort.equals("Select Sorting Method")) {
             Toast.makeText(this, "Please Choose Sorting Method", Toast.LENGTH_SHORT).show();
         } else if (Selected_sort.equals("Ascending by Distance")) {
@@ -306,6 +306,12 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
             Collections.reverse(notificationsList_Displayed);
         }
         notificationsRecyclerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String Selected_sort = adapterView.getItemAtPosition(i).toString();
+        Sort_The_Data(Selected_sort);
     }
 
     @Override
