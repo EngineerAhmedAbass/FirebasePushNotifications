@@ -162,8 +162,6 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         ProgressDialog.show(RegisterActivity.this, "Registering", "Please Wait until Registering completes ");
-                        mregisterprogressbar.setVisibility(View.VISIBLE);
-
                         String User_id = mAuth.getCurrentUser().getUid();
                         MyBackgroundService myBackgroundService = new MyBackgroundService();
                         myBackgroundService.mCurrentID = User_id;

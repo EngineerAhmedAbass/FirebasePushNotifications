@@ -1,5 +1,6 @@
 package abass.com.firebasepushnotifications.Request;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -82,7 +83,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class HelpRequest extends AppCompatActivity {
-
+    ProgressDialog progressDialog;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     private static GoogleApiClient mGoogleApiClient;
     MyBackgroundService myBackgroundService;
@@ -120,6 +121,10 @@ public class HelpRequest extends AppCompatActivity {
 
         myBackgroundService = new MyBackgroundService();
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Requesting");
+        progressDialog.setMessage("Please Wait till Help Request Completes");
+
         requestText = (EditText) findViewById(R.id.text_help);
         SendRequestBtn = (Button) findViewById(R.id.sendrequest);
         toolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -151,6 +156,7 @@ public class HelpRequest extends AppCompatActivity {
             public void onClick(View view) {
                 if (isLocationServiceEnabled()) {
                     if (isNetworkAvailable()) {
+                        progressDialog.show();
                         SendNotifications();
                     } else {
                         Toast.makeText(HelpRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
@@ -206,6 +212,7 @@ public class HelpRequest extends AppCompatActivity {
         Message = requestText.getText().toString();
         Domain = spinner.getSelectedItem().toString();
         if (Message.equals("")) {
+            progressDialog.hide();
             Toast.makeText(HelpRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -414,10 +421,12 @@ public class HelpRequest extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        progressDialog.hide();
                         Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
+            progressDialog.hide();
             Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
             GoToHome();
         }

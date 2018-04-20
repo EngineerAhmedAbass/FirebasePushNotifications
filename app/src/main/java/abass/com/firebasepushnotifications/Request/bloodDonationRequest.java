@@ -1,5 +1,6 @@
 package abass.com.firebasepushnotifications.Request;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -82,14 +83,7 @@ public class bloodDonationRequest extends AppCompatActivity {
     private Spinner spinner;
     private EditText requestText;
     private Button SendRequestBtn;
-    private Button mLogOutBtn;
-    private Button mMainBtn;
     private Toolbar toolbar;
-
-    private LocationRequest mLocationRequest;
-
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
 
     private String Message;
     private String btype;
@@ -97,7 +91,7 @@ public class bloodDonationRequest extends AppCompatActivity {
     private String mCurrentID;
     private String mCurrentName;
     MyBackgroundService myBackgroundService;
-
+    ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
 
@@ -138,6 +132,9 @@ public class bloodDonationRequest extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         myBackgroundService = new MyBackgroundService();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Requesting");
+        progressDialog.setMessage("Please Wait till Blood Request Completes");
 
         mCurrentID = myBackgroundService.mCurrentID;
 
@@ -162,6 +159,7 @@ public class bloodDonationRequest extends AppCompatActivity {
             public void onClick(View view) {
                 if (isLocationServiceEnabled()) {
                     if (isNetworkAvailable()) {
+                        progressDialog.show();
                         SendNotifications();
                     } else {
                         Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
@@ -219,10 +217,6 @@ public class bloodDonationRequest extends AppCompatActivity {
         btype = spinner.getSelectedItem().toString();
         Message +=" \n ";
         Message += btype + "فصيلة الدم "  ;
-        if (Message.equals("")) {
-            Toast.makeText(bloodDonationRequest.this, "من فضلك ادخل معلومات عن طلب المساعدة", Toast.LENGTH_SHORT).show();
-            return;
-        }
         mfirestore.collection("Users").addSnapshotListener(bloodDonationRequest.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -302,10 +296,12 @@ public class bloodDonationRequest extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        progressDialog.hide();
                         Toast.makeText(bloodDonationRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
+            progressDialog.hide();
             Toast.makeText(bloodDonationRequest.this, "Blood Donation Request Sent ", Toast.LENGTH_SHORT).show();
             GoToHome();
         }

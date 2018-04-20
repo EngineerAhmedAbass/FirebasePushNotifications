@@ -1,6 +1,7 @@
 package abass.com.firebasepushnotifications.Request;
 
 import android.app.Notification;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -87,6 +88,9 @@ public class NotificationActivity extends AppCompatActivity {
     String Domain;
     String request_id = null;
     String type;
+
+    ProgressDialog progressDialog;
+
     private Toolbar toolbar;
     private TextView fromText;
     private TextView DomainTxt;
@@ -95,22 +99,19 @@ public class NotificationActivity extends AppCompatActivity {
     private TextView Status;
     private Button sendRespond;
     private String Message;
-    private String longt, lati;
-    private LocationRequest mLocationRequest;
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
     private String mCurrentID;
     private String mCurrentName;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
     private FusedLocationProviderClient client;
-    private Vector<String> SentUsers = new Vector<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
-
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Responding");
+        progressDialog.setMessage("Please Wait till Response Completes");
         dataMessage = getIntent().getStringExtra("message");
         dataFrom = getIntent().getStringExtra("from_user_id");
         longtitude = getIntent().getStringExtra("longtitude");
@@ -142,10 +143,7 @@ public class NotificationActivity extends AppCompatActivity {
                 .build();
         mGoogleApiClient.connect();
 
-        requestPermission();
-
         mAuth = FirebaseAuth.getInstance();
-
 
         placeTxt.setClickable(true);
         placeTxt.setMovementMethod(LinkMovementMethod.getInstance());
@@ -174,7 +172,6 @@ public class NotificationActivity extends AppCompatActivity {
         if (!type.equals("response")) {
             if (isLocationServiceEnabled()) {
                 if (isNetworkAvailable()) {
-                    startLocationUpdates();
                 } else {
                     Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
                 }
@@ -187,10 +184,9 @@ public class NotificationActivity extends AppCompatActivity {
             sendRespond.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     if (isLocationServiceEnabled()) {
                         if (isNetworkAvailable()) {
-                            startLocationUpdates();
+                            progressDialog.show();
                             SendNotificationsRespond();
                         } else {
                             Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
@@ -282,14 +278,8 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void SendNotificationsRespond() {
         mfirestore = FirebaseFirestore.getInstance();
-
         Message = "I'm willing to help";
-        if (longt == null || lati == null) {
-            Toast.makeText(NotificationActivity.this, "Can't Retrieve your location try again...", Toast.LENGTH_SHORT).show();
-            return;
-        }
         new changeState().execute(Integer.parseInt(request_id));
-        Toast.makeText(NotificationActivity.this, "The Respond Sent ", Toast.LENGTH_SHORT).show();
     }
 
     private void showSettingDialog() {
@@ -347,21 +337,17 @@ public class NotificationActivity extends AppCompatActivity {
                                 Toast.makeText(NotificationActivity.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            startLocationUpdates();
+                            Toast.makeText(NotificationActivity.this, "Location Enabled .", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case RESULT_CANCELED:
-                        Toast.makeText(NotificationActivity.this, "No...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NotificationActivity.this, "Location Disabled...", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
         }
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(NotificationActivity.this, new String[]{ACCESS_FINE_LOCATION}, 1);
     }
 
     public boolean isLocationServiceEnabled() {
@@ -383,53 +369,6 @@ public class NotificationActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    protected void startLocationUpdates() {
-
-        // Create the location request to start receiving updates
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-        // Create LocationSettingsRequest object using location request
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-        LocationSettingsRequest locationSettingsRequest = builder.build();
-
-        // Check whether location settings are satisfied
-        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
-        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-        settingsClient.checkLocationSettings(locationSettingsRequest);
-
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        // do work here
-                        onLocationChanged(locationResult.getLastLocation());
-                    }
-                },
-                Looper.myLooper());
-    }
-
-    public void onLocationChanged(Location location) {
-        // New location has now been determined
-        longt = Double.toString(location.getLongitude());
-        lati = Double.toString(location.getLatitude());
-        // You can now create a LatLng Object for use with maps
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
     }
 
     private void sendToLogin() {
@@ -498,30 +437,31 @@ public class NotificationActivity extends AppCompatActivity {
         protected void onPostExecute(final String feed) {
             sendRespond.setVisibility(View.INVISIBLE);
             Status.setText("closed");
-
+            MyBackgroundService myBackgroundService= new MyBackgroundService();
             Date currentTime = Calendar.getInstance().getTime();
             Map<String, Object> notificationMessage = new HashMap<>();
             notificationMessage.put("message", Message);
             notificationMessage.put("from", mCurrentID);
             notificationMessage.put("user_name", mCurrentName);
             notificationMessage.put("domain", Domain + " (Response)");
-            notificationMessage.put("longtitude", longt);
-            notificationMessage.put("latitude", lati);
+            notificationMessage.put("longtitude", myBackgroundService.longtitude);
+            notificationMessage.put("latitude", myBackgroundService.latitude);
             notificationMessage.put("requestID", request_id);
             notificationMessage.put("type", "response");
             notificationMessage.put("date", currentTime);
             mfirestore.collection("Users/" + feed + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
+                    progressDialog.hide();
+                    Toast.makeText(NotificationActivity.this, "Respond Sent ", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    progressDialog.hide();
                     Toast.makeText(NotificationActivity.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-
-            Toast.makeText(NotificationActivity.this, "Respond Message Sent ", Toast.LENGTH_SHORT).show();
         }
     }
 }
