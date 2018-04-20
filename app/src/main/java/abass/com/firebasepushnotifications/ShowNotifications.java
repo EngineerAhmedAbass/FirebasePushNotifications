@@ -3,6 +3,8 @@ package abass.com.firebasepushnotifications;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -42,6 +46,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     private RecyclerView mNotificationsListView;
     private Toolbar toolbar;
     private Spinner Sorting_Spiner;
+    private CheckBox Request_check, Blood_check, Responces_check;
 
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
@@ -59,12 +64,13 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.e("Test","............. OnSave .......");
+        Log.e("Test", "............. OnSave .......");
         outState.putString("test", "Welcome back to Activity");
     }
+
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.e("Test","............. OnRestore .......");
+        Log.e("Test", "............. OnRestore .......");
         super.onRestoreInstanceState(savedInstanceState);
         Test = savedInstanceState.getString("test");
     }
@@ -72,24 +78,24 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.e("Test","............. OnDestroy .......");
+        Log.e("Test", "............. OnDestroy .......");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("test","Hellooooooooooooo");
+        editor.putString("test", "Hellooooooooooooo");
         editor.commit();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("Test","............. OnCreate .......");
+        Log.e("Test", "............. OnCreate .......");
         setContentView(R.layout.activity_show_notifications);
 
 
 
         /*  Start Spinner Code */
 
-        Sorting_Spiner =(Spinner) findViewById(R.id.sorting_spinner);
+        Sorting_Spiner = (Spinner) findViewById(R.id.sorting_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sorting_method, android.R.layout.simple_spinner_item);
@@ -102,13 +108,42 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
 
         Sorting_Spiner.setOnItemSelectedListener(this);
 
+        Request_check = (CheckBox) findViewById(R.id.request);
+        Blood_check = (CheckBox) findViewById(R.id.blood);
+        Responces_check = (CheckBox) findViewById(R.id.response);
+
+        Log.e("Test", Request_check.isChecked()+" "+Blood_check.isChecked()+" "+Responces_check.isChecked());
+        Request_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Toast.makeText(ShowNotifications.this, "Help Check is " + b, Toast.LENGTH_SHORT).show();
+                Chech_Filters("Request");
+            }
+        });
+
+        Blood_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Toast.makeText(ShowNotifications.this, "Blood Check is " + b, Toast.LENGTH_SHORT).show();
+                Chech_Filters("Blood");
+            }
+        });
+
+        Responces_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Toast.makeText(ShowNotifications.this, "Responces Check is " + b, Toast.LENGTH_SHORT).show();
+                Chech_Filters("Response");
+            }
+        });
+
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Notifications");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        Test=settings.getString("test","Null");
+        Test = settings.getString("test", "Null");
 
         Toast.makeText(this, Test, Toast.LENGTH_SHORT).show();
         mFirestore = FirebaseFirestore.getInstance();
@@ -127,18 +162,18 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         mNotificationsListView.setAdapter(notificationsRecyclerAdapter);
         mAuth = FirebaseAuth.getInstance();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu,menu);
+        menuInflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.notification:
                 Intent GoToNotifications = new Intent(this, ShowNotifications.class);
                 startActivity(GoToNotifications);
@@ -153,49 +188,81 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         return super.onOptionsItemSelected(item);
     }
 
+    public void Chech_Filters(String Type) {
+        boolean request = Request_check.isChecked();
+        boolean blood = Blood_check.isChecked();
+        boolean response = Responces_check.isChecked();
+        if ((Type.equals("Request") || Type.equals("Main"))) {
+            if (request) {
+                notificationsList_Displayed.addAll(notificationsList_Help_Request);
+            } else {
+                notificationsList_Displayed.removeAll(notificationsList_Help_Request);
+            }
+        }
+        if ((Type.equals("Blood") || Type.equals("Main"))) {
+            if (blood) {
+                notificationsList_Displayed.addAll(notificationsList_Blood_Request);
+            } else {
+                notificationsList_Displayed.removeAll(notificationsList_Blood_Request);
+            }
+        }
+        if ((Type.equals("Response") || Type.equals("Main"))) {
+            if(response) {
+                notificationsList_Displayed.addAll(notificationsList_Responces);
+            }else {
+                notificationsList_Displayed.removeAll(notificationsList_Responces);
+            }
+        }
+        notificationsRecyclerAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-
-        notificationsList_Displayed.clear();
+        Log.e("Test Me ", "----- OnStart --------");
         FirebaseUser CurrentUser = mAuth.getCurrentUser();
-        if(CurrentUser == null ){
+        if (CurrentUser == null) {
             sendToLogin();
-        }else{
+        } else {
             mFirestore = FirebaseFirestore.getInstance();
             mCurrentID = mAuth.getUid();
         }
-
-        mFirestore.collection("Users").document(mCurrentID).collection("Notifications").addSnapshotListener(this,new EventListener<QuerySnapshot>() {
+        notificationsList_Blood_Request.clear();
+        notificationsList_Help_Request.clear();
+        notificationsList_Responces.clear();
+        notificationsList_Displayed.clear();
+        mFirestore.collection("Users").document(mCurrentID).collection("Notifications").addSnapshotListener(this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                for (DocumentChange doc : documentSnapshots.getDocumentChanges()){
-                    if(doc.getType() == DocumentChange.Type.ADDED){
+                for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+                    if (doc.getType() == DocumentChange.Type.ADDED) {
                         String Notification_Id = doc.getDocument().getId();
                         MyNotification notifications = doc.getDocument().toObject(MyNotification.class).withId(Notification_Id);
-                        MyBackgroundService myBackgroundService =new MyBackgroundService();
+                        MyBackgroundService myBackgroundService = new MyBackgroundService();
                         double Dist = distance(Double.parseDouble(myBackgroundService.latitude), Double.parseDouble(myBackgroundService.longtitude), Double.parseDouble(notifications.getLatitude()), Double.parseDouble(notifications.getLongtitude()));
                         notifications.setDistance(Dist);
-                        if(notifications.getType().equals("Request")){
-                            if(notifications.getDomain().equals("تبرع بالدم")){
+                        if (notifications.getType().equals("Request")) {
+                            if (notifications.getDomain().equals("تبرع بالدم")) {
                                 notificationsList_Blood_Request.add(notifications);
-                            }else{
+                            } else {
                                 notificationsList_Help_Request.add(notifications);
                             }
-                        }else{
+                        } else {
                             notificationsList_Responces.add(notifications);
                         }
-                        notificationsList_Displayed.add(notifications);
-                        notificationsRecyclerAdapter.notifyDataSetChanged();
                     }
                 }
+                Chech_Filters("Main");
             }
         });
+
     }
+
     private void sendToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
+
     private double distance(double lat1, double lon1, double lat2, double lon2) {
         // haversine great circle distance approximation, returns meters
         double theta = lon1 - lon2;
@@ -213,47 +280,29 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     private double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
+
     private double rad2deg(double rad) {
         return (rad * 180.0 / Math.PI);
     }
 
-    public class Custom_Distace_Comparator implements Comparator<MyNotification> {
-        @Override
-        public int compare(MyNotification o1, MyNotification o2) {
-            if(o1.getDistance() == o2.getDistance()){
-                return 0;
-            }else if(o1.getDistance() > o2.getDistance()){
-                return 1;
-            }else{
-                return -1;
-            }
-        }
-    }
-    public class Custom_Date_Comparator implements Comparator<MyNotification> {
-        @Override
-        public int compare(MyNotification o1, MyNotification o2) {
-            return o1.getDate().compareTo(o2.getDate());
-        }
-    }
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String Selected_sort = adapterView.getItemAtPosition(i).toString();
-        if(Selected_sort.equals("Select Sorting Method")){
+        if (Selected_sort.equals("Select Sorting Method")) {
             Toast.makeText(this, "Please Choose Sorting Method", Toast.LENGTH_SHORT).show();
-        }else if(Selected_sort.equals("Ascending by Distance")){
+        } else if (Selected_sort.equals("Ascending by Distance")) {
             Toast.makeText(this, "Sorting Ascending by Distance", Toast.LENGTH_SHORT).show();
-            Collections.sort(notificationsList_Displayed,new Custom_Distace_Comparator());
-        }else if(Selected_sort.equals("Descending by Distance")){
+            Collections.sort(notificationsList_Displayed, new Custom_Distace_Comparator());
+        } else if (Selected_sort.equals("Descending by Distance")) {
             Toast.makeText(this, "Sorting Descending by Distance", Toast.LENGTH_SHORT).show();
-            Collections.sort(notificationsList_Displayed,new Custom_Distace_Comparator());
+            Collections.sort(notificationsList_Displayed, new Custom_Distace_Comparator());
             Collections.reverse(notificationsList_Displayed);
-        }
-        else if(Selected_sort.equals("Ascending by Time")){
+        } else if (Selected_sort.equals("Ascending by Time")) {
             Toast.makeText(this, "Sorting Ascending by Distance", Toast.LENGTH_SHORT).show();
-            Collections.sort(notificationsList_Displayed,new Custom_Date_Comparator());
-        }else if(Selected_sort.equals("Descending by Time")){
+            Collections.sort(notificationsList_Displayed, new Custom_Date_Comparator());
+        } else if (Selected_sort.equals("Descending by Time")) {
             Toast.makeText(this, "Sorting Descending by Time", Toast.LENGTH_SHORT).show();
-            Collections.sort(notificationsList_Displayed,new Custom_Date_Comparator());
+            Collections.sort(notificationsList_Displayed, new Custom_Date_Comparator());
             Collections.reverse(notificationsList_Displayed);
         }
         notificationsRecyclerAdapter.notifyDataSetChanged();
@@ -262,5 +311,32 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public class Custom_Distace_Comparator implements Comparator<MyNotification> {
+        @Override
+        public int compare(MyNotification o1, MyNotification o2) {
+            if (o1.getDistance() == o2.getDistance()) {
+                return 0;
+            } else if (o1.getDistance() > o2.getDistance()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
+
+    public class Custom_Date_Comparator implements Comparator<MyNotification> {
+        @Override
+        public int compare(MyNotification o1, MyNotification o2) {
+            return o1.getDate().compareTo(o2.getDate());
+        }
     }
 }

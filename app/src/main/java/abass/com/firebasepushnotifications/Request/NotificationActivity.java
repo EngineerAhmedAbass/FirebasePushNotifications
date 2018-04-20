@@ -218,6 +218,7 @@ public class NotificationActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -363,7 +364,7 @@ public class NotificationActivity extends AppCompatActivity {
                 notificationMessage.put("message", Message);
                 notificationMessage.put("from", mCurrentID);
                 notificationMessage.put("user_name", mCurrentName);
-                notificationMessage.put("domain", Domain);
+                notificationMessage.put("domain", Domain+" (Response)");
                 notificationMessage.put("longtitude",longt);
                 notificationMessage.put("latitude",lati);
                 notificationMessage.put("requestID",request_id);
