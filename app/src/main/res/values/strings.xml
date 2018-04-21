@@ -100,6 +100,7 @@
     <string name="remove">Remove</string>
     <string name="notifications_admin_channel_name">Es3fny_Channel</string>
     <string name="notifications_admin_channel_description">This Channel Used In Notification Of Es3fny App</string>
+    <string name="home">Home</string>
     <!-- **************************************** -->
 
 </resources>

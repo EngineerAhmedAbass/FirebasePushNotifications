@@ -11,17 +11,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import abass.com.firebasepushnotifications.Maps.MainMap;
 import abass.com.firebasepushnotifications.Request.HelpRequest;
 import abass.com.firebasepushnotifications.Request.LoginActivity;
@@ -45,14 +41,14 @@ public class Home extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
-        Help_Request_BTN = (Button) findViewById(R.id.help_request_Btn);
-        Blood_Donor_BTN = (Button) findViewById(R.id.Blood_BTN);
-        SOS_BTN = (Button) findViewById(R.id.SOS_BTN);
-        Places_BTN = (Button) findViewById(R.id.Places_BTN);
-        First_Aid_BTN = (Button) findViewById(R.id.First_Aid_BTN);
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
-        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        mTitle.setText("Home");
+        Help_Request_BTN = findViewById(R.id.help_request_Btn);
+        Blood_Donor_BTN = findViewById(R.id.Blood_BTN);
+        SOS_BTN = findViewById(R.id.SOS_BTN);
+        Places_BTN = findViewById(R.id.Places_BTN);
+        First_Aid_BTN = findViewById(R.id.First_Aid_BTN);
+        toolbar =  findViewById(R.id.app_bar);
+        TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);
+        mTitle.setText(R.string.home);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 

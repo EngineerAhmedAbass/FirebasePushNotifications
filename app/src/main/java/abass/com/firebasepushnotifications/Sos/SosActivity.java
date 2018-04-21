@@ -22,9 +22,7 @@ import abass.com.firebasepushnotifications.R;
 public class SosActivity extends Activity {
     public Switch sos_switch;
     public boolean sos_flag;
-    public int count;
     public ArrayList<String> Names;
-    public ArrayList<String> Numbers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
