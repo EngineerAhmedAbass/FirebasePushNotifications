@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,11 +34,11 @@ public class contacts extends Activity {
     public TextView nameView;
     public TextView phoneView;
     private static final int RESULT_PICK_CONTACT = 85500;
-    public boolean sos_flag;
     public ArrayList<String> Names;
     public ArrayList<String> Numbers;
     public ArrayList<Integer> index_arr;
     public int count;
+    public boolean sos_flag;
     String[] test_numbers;
     List<String> list;
 
@@ -42,43 +47,16 @@ public class contacts extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
-
-        index_arr = new ArrayList<>();
-        Names = new ArrayList<>();
-        Numbers = new ArrayList<>();
         test_numbers = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
         list = Arrays.asList(test_numbers);
-        count = 0;
+        index_arr = new ArrayList<>();
 //------------------------------------------------------------------------------------------------------------
-        // Check whether we're recreating a previously destroyed instance
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            Names = savedInstanceState.getStringArrayList("names");
-            Numbers = savedInstanceState.getStringArrayList("numbers");
-            index_arr = savedInstanceState.getIntegerArrayList("index");
-            count = savedInstanceState.getInt("count");
-            sos_flag = savedInstanceState.getBoolean("sos");
-        } else {
-            // Probably initialize members with default values for a new instance
-        }
-//------------------------------------------------------------------------------------------------------------
-
-
-
+        loadData();
 
         parent_Relative_layout = findViewById(R.id.parent_Relative_layout);
-        Intent iintent = getIntent();
-        Bundle bd = iintent.getExtras();
-        if(bd != null)
-        {
-            sos_flag = bd.getBoolean("sos_switch");
-            Names = (ArrayList<String>) bd.get("names");
-            Numbers = (ArrayList<String>) bd.get("numbers");
-        }
 
         if (Names != null) {
             for (int i = 0; i < Names.size(); i++) {
-                count++;
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 assert inflater != null;
                 @SuppressLint("InflateParams") RelativeLayout rowView = (RelativeLayout) inflater.inflate(R.layout.field, null);
@@ -103,25 +81,8 @@ public class contacts extends Activity {
             }
         }
     }
-    public void save (View v)
-    {
-        Intent intent = new Intent(contacts.this, SosActivity.class);
-        intent.putExtra("names", Names);
-        intent.putExtra("numbers", Numbers);
-        intent.putExtra("sos_switch", sos_flag);
-        startActivity(intent);
-    }
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(contacts.this, SosActivity.class);
-        intent.putExtra("names", Names);
-        intent.putExtra("numbers", Numbers);
-        intent.putExtra("sos_switch", sos_flag);
-        intent.putExtra("count",count);
-        startActivity(intent);
-    }
     public void onAddField(View v) {
-        if(count==3)
+        if(count>=3)
         {
             Toast.makeText(getApplicationContext(),"Sorry you can't add more than 3 Contacts!",Toast.LENGTH_SHORT).show();
         }
@@ -146,6 +107,7 @@ public class contacts extends Activity {
             r.setLayoutParams(params);
         }
         count--;
+        saveData();
         Toast.makeText(getApplicationContext(),"Contact deleted successfully! ",Toast.LENGTH_SHORT).show();
     }
     public void pickContact()
@@ -243,6 +205,7 @@ public class contacts extends Activity {
                     Numbers.add(phoneNo.toString());
                     count++;
                     Toast.makeText(getApplicationContext(), "Contact added successfully! ", Toast.LENGTH_SHORT).show();
+                    saveData();
                 }
 
         } catch (Exception e) {
@@ -251,27 +214,37 @@ public class contacts extends Activity {
     }
 
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
-        savedInstanceState.putStringArrayList("names", Names);
-        savedInstanceState.putStringArrayList("numbers", Numbers);
-        savedInstanceState.putInt("count", count);
-        savedInstanceState.putIntegerArrayList("index", index_arr);
-        savedInstanceState.putBoolean("sos_switch", sos_flag);
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
+    public void saveData()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(Names);
+        String json2 = gson.toJson(Numbers);
+        editor.putString("names",json);
+        editor.putString("numbers",json2);
+        editor.putInt("count",Names.size());
+        editor.putBoolean("sos_flag",sos_flag);
+        editor.apply();
     }
+    public void loadData()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("names",null);
+        String json2 = sharedPreferences.getString("numbers",null);
+        count = sharedPreferences.getInt("count",0);
+        sos_flag = sharedPreferences.getBoolean("sos_flag",true);
+        Type type = new TypeToken<ArrayList<String>>(){}.getType();
+        Names = gson.fromJson(json,type);
+        Numbers = gson.fromJson(json2,type);
+        if (Names == null)
+        {
+            Names = new ArrayList<>();
+            Numbers = new ArrayList<>();
+            count =0;
+        }
 
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Always call the superclass so it can restore the view hierarchy
-        super.onRestoreInstanceState(savedInstanceState);
-
-        // Restore state members from saved instance
-        Names = savedInstanceState.getStringArrayList("names");
-        Numbers = savedInstanceState.getStringArrayList("numbers");
-        sos_flag = savedInstanceState.getBoolean("sos");
     }
 
 

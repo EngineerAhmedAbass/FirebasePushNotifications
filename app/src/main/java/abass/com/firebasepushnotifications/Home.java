@@ -29,12 +29,6 @@ import abass.com.firebasepushnotifications.Request.bloodDonationRequest;
 import abass.com.firebasepushnotifications.Sos.SosActivity;
 
 public class Home extends AppCompatActivity {
-    public boolean sos_flag;
-    public ArrayList<String> Names;
-    public ArrayList<String> Numbers;
-    public int count;
-
-
     public Button Help_Request_BTN;
     public Button Blood_Donor_BTN;
     public Button SOS_BTN;
@@ -48,16 +42,7 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Names = new ArrayList<>();
-        Numbers = new ArrayList<>();
-        Intent iintent = getIntent();
-        Bundle bd = iintent.getExtras();
-        if (bd != null) {
-            Names = (ArrayList<String>) bd.get("names");
-            Numbers = (ArrayList<String>) bd.get("numbers");
-            sos_flag = bd.getBoolean("sos_switch");
-            count = bd.getInt("count");
-        }
+
 
         mAuth = FirebaseAuth.getInstance();
         Help_Request_BTN = (Button) findViewById(R.id.help_request_Btn);
@@ -89,10 +74,6 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent HelpIntent = new Intent(Home.this, SosActivity.class);
-                HelpIntent.putExtra("names", Names);
-                HelpIntent.putExtra("numbers", Numbers);
-                HelpIntent.putExtra("sos_switch", sos_flag);
-                HelpIntent.putExtra("count", count);
                 startActivity(HelpIntent);
             }
         });

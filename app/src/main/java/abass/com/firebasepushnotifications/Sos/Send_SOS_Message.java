@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
@@ -16,6 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -37,14 +42,7 @@ public class Send_SOS_Message extends AppCompatActivity {
         buttonSend =  findViewById(R.id.buttonSend);
         RelativeLayout parent_Relative_layout = findViewById(R.id.parent_Relative_layout2);
 
-        Intent iintent = getIntent();
-        Bundle bd = iintent.getExtras();
-        if(bd != null)
-        {
-            Names = (ArrayList<String>) bd.get("names");
-            Numbers = (ArrayList<String>) bd.get("numbers");
-            sos_switch = (boolean) bd.get("sos_switch");
-        }
+       loadData();
 //------------------------------------------------------------------------------------------------------------------------------------------------
         for (int i=0; i<Names.size(); i++) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -110,10 +108,23 @@ public class Send_SOS_Message extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Send_SOS_Message.this, SosActivity.class);
-        intent.putExtra("names", Names);
-        intent.putExtra("numbers", Numbers);
-        intent.putExtra("sos_switch", sos_switch);
         startActivity(intent);
+    }
+    public void loadData()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("names",null);
+        String json2 = sharedPreferences.getString("numbers",null);
+        Type type = new TypeToken<ArrayList<String>>(){}.getType();
+        Names = gson.fromJson(json,type);
+        Numbers = gson.fromJson(json2,type);
+        if (Names == null)
+        {
+            Names = new ArrayList<>();
+            Numbers = new ArrayList<>();
+        }
+
     }
 
 }
