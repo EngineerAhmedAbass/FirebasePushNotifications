@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/charity"
+            android:drawableTop="@drawable/help"
             android:padding="25dp"
             android:text="Request Help"
             android:textSize="18sp" />
@@ -34,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/blood"
+            android:drawableTop="@drawable/bloodtransfusion1"
             android:padding="25dp"
             android:text="Request Blood"
             android:textSize="18sp"/>
@@ -52,7 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/sos"
+            android:drawableTop="@drawable/sos1"
             android:padding="25dp"
             android:text="SOS Message"
             android:textSize="18sp" />
@@ -70,7 +70,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/placeholder"
+            android:drawableTop="@drawable/placeholder1"
             android:padding="25dp"
             android:text="Places"
             android:textSize="18sp"/>
@@ -80,7 +80,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/bandage1"
+            android:drawableTop="@drawable/medicine"
             android:padding="25dp"
             android:text="First Aid Tips"
             android:textSize="18sp"/>
