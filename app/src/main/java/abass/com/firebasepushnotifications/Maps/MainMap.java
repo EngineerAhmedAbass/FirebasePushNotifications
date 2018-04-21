@@ -57,7 +57,11 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Places");
+        setTitle("Places");
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        mTitle.setText(getTitle());
 
         // Spinner click listener
         //spinner.setOnItemSelectedListener(this);

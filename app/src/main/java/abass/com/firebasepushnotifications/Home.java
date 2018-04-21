@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -65,7 +66,10 @@ public class Home extends AppCompatActivity {
         Places_BTN = (Button) findViewById(R.id.Places_BTN);
         First_Aid_BTN = (Button) findViewById(R.id.First_Aid_BTN);
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        mTitle.setText("Home");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Help_Request_BTN.setOnClickListener(new View.OnClickListener() {
             @Override

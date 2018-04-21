@@ -126,8 +126,11 @@ public class NotificationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(Domain);
+        setTitle(Domain);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        mTitle.setText(getTitle());
         fromText = (TextView) findViewById(R.id.from_txt);
         DomainTxt = (TextView) findViewById(R.id.domain_txt);
         MessageTxt = (TextView) findViewById(R.id.message);
