@@ -35,8 +35,10 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Request.LoginActivity" />
-        <activity android:name=".Request.RegisterActivity" />
+        <activity android:name=".Request.LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Request.RegisterActivity"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".Request.FirebaseMessagingService">
             <intent-filter>
@@ -49,6 +51,7 @@
             android:value="@string/default_notification_channel_id" />
 
         <activity android:name=".Request.NotificationActivity"
+                  android:screenOrientation="portrait"
                   android:parentActivityName=".ShowNotifications">
             <intent-filter>
                 <action android:name="abass.com.firebasepushnotifications.TARGETNOTIFICATION" />
@@ -56,6 +59,7 @@
             </intent-filter>
         </activity>
         <activity  android:name=".Request.HelpRequest"
+            android:screenOrientation="portrait"
             android:parentActivityName=".Home"
             />
         <activity android:name=".Maps.MapsActivity"
@@ -64,9 +68,11 @@
             android:theme="@style/FullscreenTheme"
             android:parentActivityName=".Home"/>
         <activity  android:name=".Maps.MainMap"
+            android:screenOrientation="portrait"
             android:parentActivityName=".Home" />
 
-        <activity android:name=".Home">
+        <activity android:name=".Home"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -88,18 +94,24 @@
             android:exported="true" />
 
         <activity  android:name=".ShowNotifications"
+            android:screenOrientation="portrait"
             android:parentActivityName=".Home" />
         <activity  android:name=".SettingsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Home"
             />
         <activity  android:name=".Request.bloodDonationRequest"
+            android:screenOrientation="portrait"
             android:parentActivityName=".Home"
             >
         </activity>
-        <activity android:name=".Sos.SosActivity" />
-        <activity android:name=".Sos.Send_SOS_Message" />
-        <activity android:name=".Sos.contacts" />
+        <activity android:name=".Sos.SosActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".Sos.Send_SOS_Message"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Sos.contacts"
+            android:screenOrientation="portrait"/>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9392e2e8658c4a409ede6c637c1e3ee1d94f0482" />
