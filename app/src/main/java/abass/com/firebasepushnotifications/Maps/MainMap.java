@@ -36,7 +36,7 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
     private CheckBox hospital;
     private CheckBox police ;
     private CheckBox pharmacy;
-    private Vector<String> Selected_Date;
+    private ArrayList<String> Selected_Date;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_map);
 
-        Selected_Date = new Vector<String>();
+        Selected_Date = new ArrayList<String>();
         // Spinner element
         //final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         Button button = (Button) findViewById(R.id.button);
@@ -103,14 +103,14 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
             public void onClick(View v) {
                 String dataString="";
                 Intent intent = new Intent(MainMap.this, MapsActivity.class);
-                for(int i=0 ; i < Selected_Date.size();i++){
+                /*for(int i=0 ; i < Selected_Date.size();i++){
                     if(i==Selected_Date.size()-1){
-                        dataString+=Selected_Date.elementAt(i);
+                        dataString+=Selected_Date.get(i);
                     }else{
-                        dataString+=Selected_Date.elementAt(i)+"|";
+                        dataString+=Selected_Date.get(i)+"|";
                     }
-                }
-                intent.putExtra("data", dataString);
+                }*/
+                intent.putStringArrayListExtra("data",Selected_Date);
                 intent.putExtra("Distance", Data);
                 startActivity(intent);
             }

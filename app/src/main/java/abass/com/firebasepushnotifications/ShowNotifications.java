@@ -59,8 +59,6 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     private List<MyNotification> notificationsList_Responces;
     private NotificationsRecyclerAdapter notificationsRecyclerAdapter;
 
-    private String Test;
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -72,17 +70,11 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.e("Test", "............. OnRestore .......");
         super.onRestoreInstanceState(savedInstanceState);
-        Test = savedInstanceState.getString("test");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.e("Test", "............. OnDestroy .......");
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("test", "Hellooooooooooooo");
-        editor.commit();
     }
 
     @Override
@@ -112,11 +104,9 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         Blood_check = (CheckBox) findViewById(R.id.blood);
         Responces_check = (CheckBox) findViewById(R.id.response);
 
-        Log.e("Test", Request_check.isChecked()+" "+Blood_check.isChecked()+" "+Responces_check.isChecked());
         Request_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Toast.makeText(ShowNotifications.this, "Help Check is " + b, Toast.LENGTH_SHORT).show();
                 Chech_Filters("Request");
             }
         });
@@ -124,7 +114,6 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         Blood_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Toast.makeText(ShowNotifications.this, "Blood Check is " + b, Toast.LENGTH_SHORT).show();
                 Chech_Filters("Blood");
             }
         });
@@ -132,7 +121,6 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         Responces_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Toast.makeText(ShowNotifications.this, "Responces Check is " + b, Toast.LENGTH_SHORT).show();
                 Chech_Filters("Response");
             }
         });
@@ -142,10 +130,6 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Notifications");
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        Test = settings.getString("test", "Null");
-
-        Toast.makeText(this, Test, Toast.LENGTH_SHORT).show();
         mFirestore = FirebaseFirestore.getInstance();
 
         mNotificationsListView = (RecyclerView) findViewById(R.id.notifications_l);

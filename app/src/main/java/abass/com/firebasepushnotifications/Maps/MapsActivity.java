@@ -1,5 +1,6 @@
 package abass.com.firebasepushnotifications.Maps;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -34,17 +35,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import abass.com.firebasepushnotifications.R;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,LocationListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
-    private GoogleMap mMap;
     LocationManager locationManager;
     CoordinatorLayout mainCoordinatorLayout;
     String data = "";
+    ArrayList<String> The_Array;
     String Distance;
     int Dist = 0;
-    
+    private GoogleMap mMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +57,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         setContentView(R.layout.activity_maps);
-        Bundle bundle=getIntent().getExtras();
-        data = bundle.get("data").toString();
+        Bundle bundle = getIntent().getExtras();
+        The_Array = new ArrayList<>();
+        The_Array = bundle.getStringArrayList("data");
+        //data = bundle.get("data").toString();
         Distance = bundle.get("Distance").toString();
         Dist = Integer.parseInt(Distance) * 1000;
-        Toast.makeText(getBaseContext(), "Places searching for are "+ data + "s within " + Dist + " Meter",
+        Toast.makeText(getBaseContext(), "Places searching for are " + data + "s within " + Dist + " Meter",
                 Toast.LENGTH_LONG).show();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -67,6 +73,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             showLocationSettings();
+        }else{
+            showCurrentLocation();
         }
     }
 
@@ -76,7 +84,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         Snackbar.LENGTH_LONG)
                 .setAction("Enable", new View.OnClickListener() {
-                    @Override                    public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
 
                         startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
@@ -138,38 +147,43 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void loadNearByPlaces(double latitude, double longitude) {
 //YOU Can change this type at your own will, e.g hospital, cafe, restaurant.... and see how it all works
 
-        String type = data;
-        StringBuilder googlePlacesUrl =
+        for (int i = 0; i < The_Array.size(); i++) {
+            Log.e("Places", "Looking For " + The_Array.get(i));
+            String type = The_Array.get(i);
+            StringBuilder googlePlacesUrl =
+                    new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+            googlePlacesUrl.append("location=").append(latitude).append(",").append(longitude);
+            googlePlacesUrl.append("&radius=").append(Dist);
+            googlePlacesUrl.append("&types=").append(type);
+            googlePlacesUrl.append("&sensor=true");
+            googlePlacesUrl.append("&key=" + AppConfig.GOOGLE_BROWSER_API_KEY);
 
-                new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlacesUrl.append("location=").append(latitude).append(",").append(longitude);
-        googlePlacesUrl.append("&radius=").append(Dist);
-        googlePlacesUrl.append("&types=").append(type);
-        googlePlacesUrl.append("&sensor=true");
-        googlePlacesUrl.append("&key=" + AppConfig.GOOGLE_BROWSER_API_KEY);
+            final int finalI = i;
+            JsonObjectRequest request = new JsonObjectRequest(googlePlacesUrl.toString(),
 
-        JsonObjectRequest request = new JsonObjectRequest(googlePlacesUrl.toString(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
 
-                new Response.Listener<JSONObject>() {
-                    @Override
+                        public void onResponse(JSONObject result) {
 
-                    public void onResponse(JSONObject result) {
+                            Log.i(AppConfig.TAG, "onResponse: Result= " + result.toString());
 
-                        Log.i(AppConfig.TAG, "onResponse: Result= " + result.toString());
-                        parseLocationResult(result);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override                    public void onErrorResponse(VolleyError error) {
-                        Log.e(AppConfig.TAG, "onErrorResponse: Error= " + error);
-                        Log.e(AppConfig.TAG, "onErrorResponse: Error= " + error.getMessage());
-                    }
-                });
+                            parseLocationResult(result, finalI);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e(AppConfig.TAG, "onErrorResponse: Error= " + error);
+                            Log.e(AppConfig.TAG, "onErrorResponse: Error= " + error.getMessage());
+                        }
+                    });
+            AppController.getInstance().addToRequestQueue(request);
+        }
 
-        AppController.getInstance().addToRequestQueue(request);
     }
 
-    private void parseLocationResult(JSONObject result) {
+    private void parseLocationResult(JSONObject result, int count) {
 
         String id, place_id, placeName = null, reference, icon, vicinity = null;
         double latitude, longitude;
@@ -179,8 +193,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if (result.getString(AppConfig.STATUS).equalsIgnoreCase(AppConfig.OK)) {
 
-                mMap.clear();
-
+                if (count == 0) {
+                    mMap.clear();
+                }
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject place = jsonArray.getJSONObject(i);
 

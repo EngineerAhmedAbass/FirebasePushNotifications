@@ -81,6 +81,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
             mCurrentID=settings.getString("mCurrentID","Shit");
             longtitude = settings.getString("longtitude","Shit");
             latitude=settings.getString("latitude","Shit");
+            Updated = settings.getBoolean("Updated",false);
         }
         startLocationUpdates();
     }
@@ -91,12 +92,13 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         Log.e("Test","............. onTaskRemoved .......");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("test","Hellooooooooooooo");
         editor.putString("mCurrentID",mCurrentID);
         editor.putString("longtitude",longtitude);
         editor.putString("latitude",latitude);
+        editor.putBoolean("Updated",Updated);
         editor.commit();
     }
+
     public void scheduleSendLocation() {
         handler.postDelayed(new Runnable() {
             public void run() {
