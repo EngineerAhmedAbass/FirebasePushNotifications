@@ -48,11 +48,9 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     private Toolbar toolbar;
     private Spinner Sorting_Spiner;
     private CheckBox Request_check, Blood_check, Responces_check;
-
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
     private String mCurrentID;
-
     private Context context;
     private List<MyNotification> notificationsList_Displayed;
     private List<MyNotification> notificationsList_Blood_Request;

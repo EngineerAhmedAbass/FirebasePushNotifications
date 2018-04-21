@@ -1,6 +1,9 @@
 package abass.com.firebasepushnotifications;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -119,21 +122,32 @@ public class Home extends AppCompatActivity {
     }
 
     private void Log_Out() {
-        Intent myService = new Intent(Home.this, MyBackgroundService.class);
-        stopService(myService);
-        Map<String, Object> tokenMapRemove = new HashMap<>();
-        tokenMapRemove.put("token_id", FieldValue.delete());
-        String mCurrentID = mAuth.getCurrentUser().getUid();
-        mfirestore.collection("Users").document(mCurrentID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                mAuth.signOut();
-                Intent LoginIntent = new Intent(Home.this, LoginActivity.class);
-                startActivity(LoginIntent);
-            }
-        });
+        if(isNetworkAvailable()) {
+            Intent myService = new Intent(Home.this, MyBackgroundService.class);
+            stopService(myService);
+            Map<String, Object> tokenMapRemove = new HashMap<>();
+            tokenMapRemove.put("token_id", FieldValue.delete());
+            String mCurrentID = mAuth.getCurrentUser().getUid();
+            mfirestore.collection("Users").document(mCurrentID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    mAuth.signOut();
+                    Intent LoginIntent = new Intent(Home.this, LoginActivity.class);
+                    startActivity(LoginIntent);
+                }
+            });
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), "Check your Internet connection!", Toast.LENGTH_LONG).show();
+        }
     }
-
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     @Override
     protected void onStart() {
         super.onStart();

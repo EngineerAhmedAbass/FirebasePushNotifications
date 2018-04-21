@@ -75,7 +75,6 @@ public class Send_SOS_Message extends AppCompatActivity {
             public void onClick(View v) {
 
                 String smss = "Please Help Me!";
-                Toast.makeText(Send_SOS_Message.this, smss, Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(getApplicationContext(),Send_SOS_Message.class);
 
                 Intent iiintent = new Intent(Send_SOS_Message.this, SosActivity.class);
@@ -89,7 +88,6 @@ public class Send_SOS_Message extends AppCompatActivity {
                     SmsManager sms = SmsManager.getDefault();
                     for (int i=0; i<Numbers.size();i++) {
                         String temp = Numbers.get(i);
-                        Toast.makeText(getApplicationContext(), Numbers.get(i), Toast.LENGTH_LONG).show();
                         sms.sendTextMessage(temp, null, smss, pi, null);
                         Toast.makeText(getApplicationContext(), "SMS Sent!", Toast.LENGTH_LONG).show();
                     }
