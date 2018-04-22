@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -34,16 +32,12 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -84,10 +78,8 @@ public class bloodDonationRequest extends AppCompatActivity {
     private Spinner spinner;
     private EditText requestText;
     private Button SendRequestBtn;
-    private Toolbar toolbar;
 
     private String Message;
-    private String btype;
 
     private String mCurrentID;
     private String mCurrentName;
@@ -97,7 +89,6 @@ public class bloodDonationRequest extends AppCompatActivity {
     private FirebaseFirestore mfirestore;
 
     LocationManager locationManager;
-    private FusedLocationProviderClient client;
     private static GoogleApiClient mGoogleApiClient;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
@@ -111,7 +102,7 @@ public class bloodDonationRequest extends AppCompatActivity {
 
         requestPermission();
         /*  Start Spinner Code */
-        spinner = (Spinner) findViewById(R.id.Blood_type_Spinner);
+        spinner = findViewById(R.id.Blood_type_Spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.blood_types, android.R.layout.simple_spinner_item);
@@ -122,27 +113,27 @@ public class bloodDonationRequest extends AppCompatActivity {
 
         /*  End Spinner Code */
 
-        requestText = (EditText) findViewById(R.id.text_help);
-        SendRequestBtn = (Button) findViewById(R.id.sendrequest);
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        requestText = findViewById(R.id.text_help);
+        SendRequestBtn = findViewById(R.id.send_request);
+        Toolbar toolbar = findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle("Request Blood");
+        setTitle(R.string.request_blood);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getTitle());
         mAuth = FirebaseAuth.getInstance();
 
         myBackgroundService = new MyBackgroundService();
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Requesting");
-        progressDialog.setMessage("Please Wait till Blood Request Completes");
+        progressDialog.setTitle(R.string.requesting);
+        progressDialog.setMessage(getString(R.string.please_wait_till_blood_request));
 
-        mCurrentID = myBackgroundService.mCurrentID;
+        mCurrentID = MyBackgroundService.mCurrentID;
 
-        client = getFusedLocationProviderClient(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         mGoogleApiClient = new GoogleApiClient.Builder(bloodDonationRequest.this)
@@ -152,10 +143,10 @@ public class bloodDonationRequest extends AppCompatActivity {
 
         if (isLocationServiceEnabled()) {
             if (!isNetworkAvailable()) {
-                Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(bloodDonationRequest.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(bloodDonationRequest.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(bloodDonationRequest.this, R.string.location_disabled, Toast.LENGTH_SHORT).show();
             showSettingDialog();
         }
         SendRequestBtn.setOnClickListener(new View.OnClickListener() {
@@ -168,11 +159,11 @@ public class bloodDonationRequest extends AppCompatActivity {
                         SendNotifications();
                     } else {
                         SendRequestBtn.setClickable(true);
-                        Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(bloodDonationRequest.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     SendRequestBtn.setClickable(true);
-                    Toast.makeText(bloodDonationRequest.this, "Please Open Location First.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(bloodDonationRequest.this, R.string.open_location_first, Toast.LENGTH_SHORT).show();
                     showSettingDialog();
                 }
             }
@@ -216,14 +207,15 @@ public class bloodDonationRequest extends AppCompatActivity {
             mfirestore = FirebaseFirestore.getInstance();
         }
     }
+
     void SendNotifications() {
         mfirestore = FirebaseFirestore.getInstance();
         mCurrentName = mAuth.getCurrentUser().getDisplayName();
         mCurrentID = mAuth.getCurrentUser().getUid();
         Message = requestText.getText().toString();
-        btype = spinner.getSelectedItem().toString();
+        String btype = spinner.getSelectedItem().toString();
         Message +=" \n ";
-        Message += btype + "فصيلة الدم "  ;
+        Message += btype + R.string.blood_type  ;
         mfirestore.collection("Users").addSnapshotListener(bloodDonationRequest.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -238,7 +230,7 @@ public class bloodDonationRequest extends AppCompatActivity {
                         if(temp_user.getLatitude() == null || temp_user.getLongtitude() == null  ){
                             continue;
                         }
-                        double Dist = distance(Double.parseDouble(myBackgroundService.latitude), Double.parseDouble(myBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
+                        double Dist = distance(Double.parseDouble(MyBackgroundService.latitude), Double.parseDouble(MyBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
                         if (Dist > 10) {
                             continue;
                         }
@@ -268,8 +260,6 @@ public class bloodDonationRequest extends AppCompatActivity {
                 HttpGet httpGet = new HttpGet(url);
                 HttpResponse httpResponse = httpClient.execute(httpGet);
                 httpEntity = httpResponse.getEntity();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -290,8 +280,8 @@ public class bloodDonationRequest extends AppCompatActivity {
                 notificationMessage.put("from", mCurrentID);
                 notificationMessage.put("user_name", mCurrentName);
                 notificationMessage.put("domain", "تبرع بالدم");
-                notificationMessage.put("longtitude", myBackgroundService.longtitude);
-                notificationMessage.put("latitude", myBackgroundService.latitude);
+                notificationMessage.put("longtitude", MyBackgroundService.longtitude);
+                notificationMessage.put("latitude", MyBackgroundService.latitude);
                 notificationMessage.put("requestID", RequestID);
                 notificationMessage.put("type", "Request");
                 notificationMessage.put("date", currentTime);
@@ -311,7 +301,7 @@ public class bloodDonationRequest extends AppCompatActivity {
             }
             progressDialog.hide();
             SendRequestBtn.setClickable(true);
-            Toast.makeText(bloodDonationRequest.this, "Blood Donation Request Sent ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(bloodDonationRequest.this, R.string.blood_request_success, Toast.LENGTH_SHORT).show();
             GoToHome();
         }
     }
@@ -382,16 +372,16 @@ public class bloodDonationRequest extends AppCompatActivity {
                         Log.e("Settings", "Result OK");
                         if(isNetworkAvailable()){
                             if (ActivityCompat.checkSelfPermission( bloodDonationRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                Toast.makeText(bloodDonationRequest.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(bloodDonationRequest.this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            Toast.makeText(bloodDonationRequest.this, "Location Enabled .", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(bloodDonationRequest.this, R.string.location_enabled, Toast.LENGTH_SHORT).show();
                         }else{
-                            Toast.makeText(bloodDonationRequest.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(bloodDonationRequest.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case RESULT_CANCELED:
-                        Toast.makeText(bloodDonationRequest.this, "Location Disabled...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(bloodDonationRequest.this, R.string.location_disabled, Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
@@ -417,7 +407,6 @@ public class bloodDonationRequest extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     private double distance(double lat1, double lon1, double lat2, double lon2) {
-        // haversine great circle distance approximation, returns meters
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
                 + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))

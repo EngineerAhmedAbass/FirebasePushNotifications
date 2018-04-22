@@ -1,18 +1,15 @@
 package abass.com.firebasepushnotifications.Request;
 
-import android.app.Notification;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -34,16 +31,12 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,16 +58,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
-import abass.com.firebasepushnotifications.Home;
 import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.SettingsActivity;
 import abass.com.firebasepushnotifications.ShowNotifications;
 
+import static abass.com.firebasepushnotifications.R.id.app_bar;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class NotificationActivity extends AppCompatActivity {
 
@@ -91,11 +82,6 @@ public class NotificationActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
 
-    private Toolbar toolbar;
-    private TextView fromText;
-    private TextView DomainTxt;
-    private TextView MessageTxt;
-    private TextView placeTxt;
     private TextView Status;
     private Button sendRespond;
     private String Message;
@@ -103,7 +89,6 @@ public class NotificationActivity extends AppCompatActivity {
     private String mCurrentName;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
-    private FusedLocationProviderClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,25 +105,23 @@ public class NotificationActivity extends AppCompatActivity {
         request_id = getIntent().getStringExtra("request_id");
         type = getIntent().getStringExtra("type");
 
-        String LocationUEL = "http://maps.google.com/maps?q=" + latitude + "," + longtitude;
-
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        Toolbar toolbar = findViewById(app_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(Domain);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        TextView mTitle = toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getTitle());
-        fromText = (TextView) findViewById(R.id.from_txt);
-        DomainTxt = (TextView) findViewById(R.id.domain_txt);
-        MessageTxt = (TextView) findViewById(R.id.message);
-        placeTxt = (TextView) findViewById(R.id.place);
-        Status = (TextView) findViewById(R.id.status);
-        sendRespond = (Button) findViewById(R.id.respondButton);
+        TextView fromText = findViewById(R.id.from_txt);
+        TextView domainTxt = findViewById(R.id.domain_txt);
+        TextView messageTxt = findViewById(R.id.message);
+        TextView placeTxt = findViewById(R.id.place);
+        Status = findViewById(R.id.status);
+        sendRespond = findViewById(R.id.respondButton);
 
-        client = LocationServices.getFusedLocationProviderClient(NotificationActivity.this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         mGoogleApiClient = new GoogleApiClient.Builder(NotificationActivity.this)
@@ -168,18 +151,17 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
         fromText.setText(dataFrom);
-        DomainTxt.setText(Domain);
-        MessageTxt.setText(dataMessage);
-        placeTxt.setText(LocationUEL);
+        domainTxt.setText(Domain);
+        messageTxt.setText(dataMessage);
+        placeTxt.setText(R.string.the_location);
 
         if (!type.equals("response")) {
             if (isLocationServiceEnabled()) {
-                if (isNetworkAvailable()) {
-                } else {
-                    Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                if (!isNetworkAvailable()) {
+                    Toast.makeText(NotificationActivity.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(NotificationActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NotificationActivity.this, R.string.location_disabled, Toast.LENGTH_SHORT).show();
                 showSettingDialog();
             }
 
@@ -194,17 +176,17 @@ public class NotificationActivity extends AppCompatActivity {
                             SendNotificationsRespond();
                         } else {
                             sendRespond.setClickable(true);
-                            Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(NotificationActivity.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         sendRespond.setClickable(true);
-                        Toast.makeText(NotificationActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NotificationActivity.this, R.string.location_disabled, Toast.LENGTH_SHORT).show();
                         showSettingDialog();
                     }
                 }
             });
         } else {
-            Status.setText("response");
+            Status.setText(R.string.response);
         }
     }
 
@@ -284,7 +266,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void SendNotificationsRespond() {
         mfirestore = FirebaseFirestore.getInstance();
-        Message = "I'm willing to help";
+        Message = getString(R.string.respond_message);
         new changeState().execute(Integer.parseInt(request_id));
     }
 
@@ -340,16 +322,16 @@ public class NotificationActivity extends AppCompatActivity {
                         Log.e("Settings", "Result OK");
                         if (isNetworkAvailable()) {
                             if (ActivityCompat.checkSelfPermission(NotificationActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                Toast.makeText(NotificationActivity.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(NotificationActivity.this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            Toast.makeText(NotificationActivity.this, "Location Enabled .", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(NotificationActivity.this, R.string.location_enabled, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(NotificationActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(NotificationActivity.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case RESULT_CANCELED:
-                        Toast.makeText(NotificationActivity.this, "Location Disabled...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NotificationActivity.this, R.string.location_disabled, Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
@@ -362,6 +344,7 @@ public class NotificationActivity extends AppCompatActivity {
         if (locationManager == null)
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         try {
+            assert locationManager != null;
             gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception ex) {
             //do nothing...
@@ -373,6 +356,7 @@ public class NotificationActivity extends AppCompatActivity {
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
@@ -394,8 +378,6 @@ public class NotificationActivity extends AppCompatActivity {
                 HttpGet httpGet = new HttpGet(url);
                 HttpResponse httpResponse = httpClient.execute(httpGet);
                 httpEntity = httpResponse.getEntity();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -409,7 +391,7 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String feed) {
-            if (feed.equals("waiting")) {
+            if (feed.equals(getString(R.string.waiting))) {
                 sendRespond.setVisibility(View.VISIBLE);
             }
             Status.setText(feed);
@@ -426,8 +408,6 @@ public class NotificationActivity extends AppCompatActivity {
                 HttpGet httpGet = new HttpGet(url);
                 HttpResponse httpResponse = httpClient.execute(httpGet);
                 httpEntity = httpResponse.getEntity();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -441,16 +421,15 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(final String feed) {
-            Status.setText("closed");
-            MyBackgroundService myBackgroundService= new MyBackgroundService();
+            Status.setText(R.string.closed);
             Date currentTime = Calendar.getInstance().getTime();
             Map<String, Object> notificationMessage = new HashMap<>();
             notificationMessage.put("message", Message);
             notificationMessage.put("from", mCurrentID);
             notificationMessage.put("user_name", mCurrentName);
             notificationMessage.put("domain", Domain + " (Response)");
-            notificationMessage.put("longtitude", myBackgroundService.longtitude);
-            notificationMessage.put("latitude", myBackgroundService.latitude);
+            notificationMessage.put("longtitude", MyBackgroundService.longtitude);
+            notificationMessage.put("latitude", MyBackgroundService.latitude);
             notificationMessage.put("requestID", request_id);
             notificationMessage.put("type", "response");
             notificationMessage.put("date", currentTime);
@@ -459,7 +438,7 @@ public class NotificationActivity extends AppCompatActivity {
                 public void onSuccess(DocumentReference documentReference) {
                     sendRespond.setVisibility(View.INVISIBLE);
                     progressDialog.hide();
-                    Toast.makeText(NotificationActivity.this, "Respond Sent ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NotificationActivity.this, R.string.respond_sent, Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

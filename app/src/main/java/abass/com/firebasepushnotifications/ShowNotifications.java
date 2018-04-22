@@ -2,10 +2,8 @@ package abass.com.firebasepushnotifications;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +22,6 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -32,13 +29,10 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import abass.com.firebasepushnotifications.Request.LoginActivity;
 import abass.com.firebasepushnotifications.Request.MyNotification;
 import abass.com.firebasepushnotifications.Request.NotificationsRecyclerAdapter;
@@ -51,7 +45,6 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
     private String mCurrentID;
-    private Context context;
     private List<MyNotification> notificationsList_Displayed;
     private List<MyNotification> notificationsList_Blood_Request;
     private List<MyNotification> notificationsList_Help_Request;
@@ -86,7 +79,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
 
         /*  Start Spinner Code */
 
-        Sorting_Spiner = (Spinner) findViewById(R.id.sorting_spinner);
+        Sorting_Spiner = findViewById(R.id.sorting_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sorting_method, android.R.layout.simple_spinner_item);
@@ -99,9 +92,9 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
 
         Sorting_Spiner.setOnItemSelectedListener(this);
 
-        Request_check = (CheckBox) findViewById(R.id.request);
-        Blood_check = (CheckBox) findViewById(R.id.blood);
-        Responces_check = (CheckBox) findViewById(R.id.response);
+        Request_check = findViewById(R.id.request);
+        Blood_check = findViewById(R.id.blood);
+        Responces_check = findViewById(R.id.response);
 
         Request_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -124,18 +117,19 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
             }
         });
 
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar = findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle("Notifications");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getTitle());
 
         mFirestore = FirebaseFirestore.getInstance();
 
-        mNotificationsListView = (RecyclerView) findViewById(R.id.notifications_l);
+        mNotificationsListView =findViewById(R.id.notifications_l);
 
         notificationsList_Displayed = new ArrayList<>();
         notificationsList_Help_Request = new ArrayList<>();
@@ -227,8 +221,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
                     if (doc.getType() == DocumentChange.Type.ADDED) {
                         String Notification_Id = doc.getDocument().getId();
                         MyNotification notifications = doc.getDocument().toObject(MyNotification.class).withId(Notification_Id);
-                        MyBackgroundService myBackgroundService = new MyBackgroundService();
-                        double Dist = distance(Double.parseDouble(myBackgroundService.latitude), Double.parseDouble(myBackgroundService.longtitude), Double.parseDouble(notifications.getLatitude()), Double.parseDouble(notifications.getLongtitude()));
+                        double Dist = distance(Double.parseDouble(MyBackgroundService.latitude), Double.parseDouble(MyBackgroundService.longtitude), Double.parseDouble(notifications.getLatitude()), Double.parseDouble(notifications.getLongtitude()));
                         notifications.setDistance(Dist);
                         if (notifications.getType().equals("Request")) {
                             if (notifications.getDomain().equals("تبرع بالدم")) {
@@ -253,7 +246,6 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     }
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {
-        // haversine great circle distance approximation, returns meters
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
                 + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))
@@ -275,22 +267,24 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     }
 
     public void Sort_The_Data(String Selected_sort){
-        if (Selected_sort.equals("Select Sorting Method")) {
-            Toast.makeText(this, "Please Choose Sorting Method", Toast.LENGTH_SHORT).show();
-        } else if (Selected_sort.equals("Ascending by Distance")) {
-            Toast.makeText(this, "Sorting Ascending by Distance", Toast.LENGTH_SHORT).show();
-            Collections.sort(notificationsList_Displayed, new Custom_Distace_Comparator());
-        } else if (Selected_sort.equals("Descending by Distance")) {
-            Toast.makeText(this, "Sorting Descending by Distance", Toast.LENGTH_SHORT).show();
-            Collections.sort(notificationsList_Displayed, new Custom_Distace_Comparator());
-            Collections.reverse(notificationsList_Displayed);
-        } else if (Selected_sort.equals("Ascending by Time")) {
-            Toast.makeText(this, "Sorting Ascending by Distance", Toast.LENGTH_SHORT).show();
-            Collections.sort(notificationsList_Displayed, new Custom_Date_Comparator());
-        } else if (Selected_sort.equals("Descending by Time")) {
-            Toast.makeText(this, "Sorting Descending by Time", Toast.LENGTH_SHORT).show();
-            Collections.sort(notificationsList_Displayed, new Custom_Date_Comparator());
-            Collections.reverse(notificationsList_Displayed);
+        switch (Selected_sort) {
+            case "Select Sorting Method":
+                Toast.makeText(this, R.string.choose_sort_method, Toast.LENGTH_SHORT).show();
+                break;
+            case "Ascending by Distance":
+                Collections.sort(notificationsList_Displayed, new Custom_Distace_Comparator());
+                break;
+            case "Descending by Distance":
+                Collections.sort(notificationsList_Displayed, new Custom_Distace_Comparator());
+                Collections.reverse(notificationsList_Displayed);
+                break;
+            case "Ascending by Time":
+                Collections.sort(notificationsList_Displayed, new Custom_Date_Comparator());
+                break;
+            case "Descending by Time":
+                Collections.sort(notificationsList_Displayed, new Custom_Date_Comparator());
+                Collections.reverse(notificationsList_Displayed);
+                break;
         }
         notificationsRecyclerAdapter.notifyDataSetChanged();
     }
@@ -304,13 +298,6 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public class Custom_Distace_Comparator implements Comparator<MyNotification> {

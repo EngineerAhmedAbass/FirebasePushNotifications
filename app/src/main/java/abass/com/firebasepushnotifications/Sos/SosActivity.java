@@ -1,6 +1,5 @@
 package abass.com.firebasepushnotifications.Sos;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,13 +17,10 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
 import abass.com.firebasepushnotifications.Home;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.SettingsActivity;
@@ -33,20 +29,20 @@ import abass.com.firebasepushnotifications.ShowNotifications;
 public class SosActivity extends AppCompatActivity{
     public Switch sos_switch;
     public boolean sos_flag;
-    private Toolbar toolbar;
     public ArrayList<String> Names;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sos);
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        Toolbar toolbar = findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle("Notifications");
+        setTitle("SOS");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        TextView mTitle = toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getTitle());
         loadData();
 //--------------------------------------------------------------------------------------------------------------------------
@@ -76,13 +72,12 @@ public class SosActivity extends AppCompatActivity{
                         Send_SOS_Message.class);
                 if (sos_switch.isChecked()) {
                     if (Names.size() < 1) {
-                        Toast.makeText(SosActivity.this, "Please Add contacts first!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SosActivity.this, R.string.add_contact_first, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(SosActivity.this, "Going to Send SOS Message!", Toast.LENGTH_SHORT).show();
                         startActivity(intent);
                     }
                 } else {
-                    Toast.makeText(SosActivity.this, "Please Activate SOS Message First!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SosActivity.this, R.string.activate_sos, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -92,10 +87,9 @@ public class SosActivity extends AppCompatActivity{
                 Intent intent = new Intent(SosActivity.this, contacts.class);
 
                 if (sos_switch.isChecked()) {
-                    Toast.makeText(SosActivity.this, "Going to Edit Contacts!", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                 } else {
-                    Toast.makeText(SosActivity.this, "Please Activate SOS Message First!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SosActivity.this, R.string.activate_sos, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -149,7 +143,7 @@ public class SosActivity extends AppCompatActivity{
         String json = gson.toJson(Names);
         editor.putString("names",json);
         editor.putBoolean("sos_flag",sos_flag);
-        editor.commit();
+        editor.apply();
         Log.e("SOS","------------ OnSaveData SOSActivity ---------------------- " + json+" "+sos_flag);
     }
     public void loadData()

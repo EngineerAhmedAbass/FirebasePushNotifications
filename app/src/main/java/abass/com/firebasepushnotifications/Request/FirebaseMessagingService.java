@@ -10,13 +10,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-
 import com.google.firebase.messaging.RemoteMessage;
-
 import java.util.Date;
-import java.util.Random;
 import java.util.Vector;
-
 import abass.com.firebasepushnotifications.R;
 
 /**
@@ -25,7 +21,7 @@ import abass.com.firebasepushnotifications.R;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
     NotificationManager mNotifyMgr;
-    public Vector<NotificationManager> mNotificationsMgr = new Vector<NotificationManager>();
+    public Vector<NotificationManager> mNotificationsMgr = new Vector<>();
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -33,7 +29,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String MessageTitle = remoteMessage.getNotification().getTitle();
         String MessageBody = remoteMessage.getNotification().getBody();
 
-        String click_action = remoteMessage.getNotification().getClickAction();
         String dataMessage = remoteMessage.getData().get("message");
         String dataFrom = remoteMessage.getData().get("from_user_id");
         String latitude = remoteMessage.getData().get("latitude");

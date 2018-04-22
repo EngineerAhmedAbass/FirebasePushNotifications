@@ -22,14 +22,11 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Random;
-
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.SettingsActivity;
 import abass.com.firebasepushnotifications.ShowNotifications;
@@ -41,7 +38,6 @@ public class Send_SOS_Message extends AppCompatActivity {
     public ArrayList<String> Numbers = new ArrayList<>();
     public boolean sos_switch;
     public TextView nameView;
-    private Toolbar toolbar;
     public TextView phoneView;
 
     @Override
@@ -51,13 +47,14 @@ public class Send_SOS_Message extends AppCompatActivity {
         buttonSend =  findViewById(R.id.buttonSend);
         RelativeLayout parent_Relative_layout = findViewById(R.id.parent_Relative_layout2);
 
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        Toolbar toolbar = findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle("Notifications");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        TextView mTitle = toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getTitle());
 
        loadData();
@@ -107,12 +104,12 @@ public class Send_SOS_Message extends AppCompatActivity {
                     for (int i=0; i<Numbers.size();i++) {
                         String temp = Numbers.get(i);
                         sms.sendTextMessage(temp, null, smss, pi, null);
-                        Toast.makeText(getApplicationContext(), "SMS Sent!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.sms_sent, Toast.LENGTH_LONG).show();
                     }
                     startActivity(iiintent);
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(),
-                            "SMS faild, please try again later!",
+                            R.string.sms_failed,
                             Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }

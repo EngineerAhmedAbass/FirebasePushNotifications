@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,7 +15,7 @@
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
         tools:context="abass.com.firebasepushnotifications.Request.NotificationActivity">
@@ -28,12 +29,13 @@
             android:gravity="center"
             android:paddingBottom="10dp"
             android:layout_gravity="center"
-            android:text="Status" />
+            android:text="@string/status" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="RtlHardcoded">
 
             <TextView
                 android:id="@+id/text1"
@@ -44,7 +46,7 @@
                 android:fontFamily="@font/nunito_semibold"
                 android:gravity="right"
                 android:paddingTop="10dp"
-                android:text="الطلب من "
+                android:text="@string/request_from"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -58,7 +60,7 @@
                 android:fontFamily="@font/nunito_semibold"
                 android:gravity="right"
                 android:paddingTop="10dp"
-                android:text="اسم الراسل"
+                android:text="@string/sender_name"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -68,7 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded">
 
             <TextView
                 android:id="@+id/text2"
@@ -79,7 +82,7 @@
                 android:fontFamily="@font/nunito_semibold"
                 android:gravity="right"
                 android:paddingTop="10dp"
-                android:text="مجال الطلب "
+                android:text="@string/help_domain"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -93,7 +96,7 @@
                 android:fontFamily="@font/nunito_semibold"
                 android:gravity="right"
                 android:paddingTop="10dp"
-                android:text="المجال"
+                android:text="@string/domain"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -104,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="الوصف"
+            android:text="@string/description"
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -116,7 +119,7 @@
             android:fontFamily="@font/nunito_semibold"
             android:gravity="center"
             android:paddingTop="10dp"
-            android:text="العنوان"
+            android:text="@string/address"
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -124,7 +127,7 @@
             android:id="@+id/respondButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Respond"
+            android:text="@string/respond"
             android:visibility="invisible"/>
     </LinearLayout>
 

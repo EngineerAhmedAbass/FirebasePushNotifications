@@ -10,7 +10,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -22,14 +21,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -50,14 +46,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import abass.com.firebasepushnotifications.Home;
 import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
-
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -68,15 +61,14 @@ public class RegisterActivity extends AppCompatActivity {
     int day, month, year;
     String Myname, myemail, myPassword, Myphone, MyCity, MyStreet, MyNID, longtitude, latitude;
     LocationManager locationManager;
-    private EditText fullname, email, password, phone, city, street, nid;
-    private Button mRegBtn, mLoginPageBtn;
-    private ProgressBar mregisterprogressbar;
+    private EditText fullname;
+    private EditText email;
+    private EditText password;
+    private EditText phone;
+    private EditText city;
+    private EditText nid;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
-    private LocationRequest mLocationRequest;
-    private long UPDATE_INTERVAL = 5 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 1000; /* 2 sec */
-    private FusedLocationProviderClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,14 +78,14 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
 
-        datePicker = (DatePicker) findViewById(R.id.DOB);
-        fullname = (EditText) findViewById(R.id.fullname);
-        email = (EditText) findViewById(R.id.email);
-        password = (EditText) findViewById(R.id.password);
-        phone = (EditText) findViewById(R.id.Phone);
-        city = (EditText) findViewById(R.id.city);
-        street = (EditText) findViewById(R.id.street);
-        nid = (EditText) findViewById(R.id.NID);
+        datePicker = findViewById(R.id.DOB);
+        fullname = findViewById(R.id.full_name);
+        email =  findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        phone =  findViewById(R.id.Phone);
+        city =  findViewById(R.id.city);
+        EditText street = findViewById(R.id.street);
+        nid = findViewById(R.id.NID);
 
         mGoogleApiClient = new GoogleApiClient.Builder(RegisterActivity.this)
                 .addApi(LocationServices.API)
@@ -104,16 +96,15 @@ public class RegisterActivity extends AppCompatActivity {
             if (isNetworkAvailable()) {
                 startLocationUpdates();
             } else {
-                Toast.makeText(RegisterActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(RegisterActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.location_disabled, Toast.LENGTH_SHORT).show();
             showSettingDialog();
         }
 
-        mRegBtn = (Button) findViewById(R.id.btnRegister);
-        mLoginPageBtn = (Button) findViewById(R.id.btnLinkToLoginScreen);
-        mregisterprogressbar = (ProgressBar) findViewById(R.id.registerprogressbar);
+        Button mRegBtn =  findViewById(R.id.btnRegister);
+        Button mLoginPageBtn =findViewById(R.id.btnLinkToLoginScreen);
 
         mLoginPageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,10 +120,10 @@ public class RegisterActivity extends AppCompatActivity {
                     if (isNetworkAvailable()) {
                         Register();
                     } else {
-                        Toast.makeText(RegisterActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(RegisterActivity.this, "Location Is Disabled.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, R.string.location_disabled, Toast.LENGTH_SHORT).show();
                     showSettingDialog();
                 }
             }
@@ -142,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void Register() {
         if (longtitude == null || latitude == null) {
-            Toast.makeText(RegisterActivity.this, "Something Went Wrong with your location Please Try Again...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             return;
         }
         Myname = fullname.getText().toString();
@@ -161,12 +152,10 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        ProgressDialog.show(RegisterActivity.this, "Registering", "Please Wait until Registering completes ");
+                        ProgressDialog.show(RegisterActivity.this, getString(R.string.registering), getString(R.string.wait_till_register_complete));
                         String User_id = mAuth.getCurrentUser().getUid();
-                        MyBackgroundService myBackgroundService = new MyBackgroundService();
-                        myBackgroundService.mCurrentID = User_id;
+                        MyBackgroundService.mCurrentID = User_id;
                         String Token_id = FirebaseInstanceId.getInstance().getToken();
-
                         Map<String, Object> userMap = new HashMap<>();
                         userMap.put("name", Myname);
                         userMap.put("email", myemail);
@@ -188,6 +177,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(Myname)
                                         .build();
+                                assert user != null;
                                 user.updateProfile(profileUpdates)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -199,7 +189,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
                                 SharedPreferences.Editor editor = settings.edit();
                                 editor.putString("example_text",Myname);
-                                editor.commit();
+                                editor.apply();
                                 SendToMain();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -209,7 +199,6 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        mregisterprogressbar.setVisibility(View.INVISIBLE);
                         Toast.makeText(RegisterActivity.this, "Error : " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -220,19 +209,19 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean ValidateData() {
         if (Myname.equals("")) {
-            Toast.makeText(RegisterActivity.this, "Error : You Must Enter a Name ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.must_enter_name, Toast.LENGTH_SHORT).show();
             return false;
         } else if (myemail.equals("")) {
-            Toast.makeText(RegisterActivity.this, "Error : You Must Enter an Email ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.must_enter_email, Toast.LENGTH_SHORT).show();
             return false;
         } else if (myPassword.equals("")) {
-            Toast.makeText(RegisterActivity.this, "Error : You Must Enter a Password ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.must_enter_password, Toast.LENGTH_SHORT).show();
             return false;
         } else if (MyNID.equals("")) {
-            Toast.makeText(RegisterActivity.this, "Error : You Must Enter Your National ID ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.must_enter_NID, Toast.LENGTH_SHORT).show();
             return false;
         } else if ((MyNID.length() != 14)) {
-            Toast.makeText(RegisterActivity.this, "Error : You Must Enter A Valid National ID ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.must_enter_valid_NID, Toast.LENGTH_SHORT).show();
             return false;
         }
         int NIDYear = Integer.parseInt(MyNID.substring(0, 1));
@@ -246,11 +235,11 @@ public class RegisterActivity extends AppCompatActivity {
             NIDBYear += 2000;
         }
         if ((year >= 2000 && NIDYear != 3) || (year < 2000 && NIDYear != 2) || (year != NIDBYear) || (month != NIDMonth) || (day != NIDDay) || (City > 35 && City != 88)) {
-            Toast.makeText(RegisterActivity.this, "Error : Invalid National ID ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.invalid_NID, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (year > 2001) {
-            Toast.makeText(RegisterActivity.this, "Error : You Are to young to Register ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, R.string.young_for_register, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -260,9 +249,11 @@ public class RegisterActivity extends AppCompatActivity {
     protected void startLocationUpdates() {
 
         // Create the location request to start receiving updates
-        mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        long UPDATE_INTERVAL = 5 * 1000;
         mLocationRequest.setInterval(UPDATE_INTERVAL);
+        long FASTEST_INTERVAL = 1000;
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
         // Create LocationSettingsRequest object using location request
@@ -301,7 +292,6 @@ public class RegisterActivity extends AppCompatActivity {
         longtitude = Double.toString(location.getLongitude());
         latitude = Double.toString(location.getLatitude());
         // You can now create a LatLng Object for use with maps
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
     }
 
     private void SendToMain() {
@@ -325,7 +315,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onResult(LocationSettingsResult result) {
                 final Status status = result.getStatus();
-                final LocationSettingsStates state = result.getLocationSettingsStates();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
                         // All location settings are satisfied. The client can initialize location
@@ -362,16 +351,16 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.e("Settings", "Result OK");
                         if (isNetworkAvailable()) {
                             if (ActivityCompat.checkSelfPermission(RegisterActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                Toast.makeText(RegisterActivity.this, "Sorry Permission Denied .", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             startLocationUpdates();
                         } else {
-                            Toast.makeText(RegisterActivity.this, "No Internet.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case RESULT_CANCELED:
-                        Toast.makeText(RegisterActivity.this, "Location Disabled ...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, R.string.location_disabled, Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
@@ -384,6 +373,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (locationManager == null)
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         try {
+            assert locationManager != null;
             gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception ex) {
             //do nothing...
@@ -395,6 +385,7 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }

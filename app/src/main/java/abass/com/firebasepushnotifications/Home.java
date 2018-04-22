@@ -33,7 +33,6 @@ public class Home extends AppCompatActivity {
     public Button SOS_BTN;
     public Button Places_BTN;
     public Button First_Aid_BTN;
-    private Toolbar toolbar;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
 
@@ -41,15 +40,13 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-
         mAuth = FirebaseAuth.getInstance();
         Help_Request_BTN = findViewById(R.id.help_request_Btn);
         Blood_Donor_BTN = findViewById(R.id.Blood_BTN);
         SOS_BTN = findViewById(R.id.SOS_BTN);
         Places_BTN = findViewById(R.id.Places_BTN);
         First_Aid_BTN = findViewById(R.id.First_Aid_BTN);
-        toolbar =  findViewById(R.id.app_bar);
+        Toolbar toolbar = findViewById(R.id.app_bar);
         TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(R.string.home);
         setSupportActionBar(toolbar);
@@ -139,7 +136,7 @@ public class Home extends AppCompatActivity {
         }
         else
         {
-            Toast.makeText(getApplicationContext(), "Check your Internet connection!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG).show();
         }
     }
     private boolean isNetworkAvailable() {

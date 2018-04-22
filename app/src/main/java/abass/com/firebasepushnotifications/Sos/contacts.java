@@ -17,10 +17,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,7 +83,7 @@ public class contacts extends Activity{
     public void onAddField(View v) {
         if(count>=3)
         {
-            Toast.makeText(getApplicationContext(),"Sorry you can't add more than 3 Contacts!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.add_3_contacts,Toast.LENGTH_SHORT).show();
         }
         else {
             pickContact();
@@ -109,7 +107,7 @@ public class contacts extends Activity{
         }
         count--;
         saveData();
-        Toast.makeText(getApplicationContext(),"Contact deleted successfully! ",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.contact_deleted_success,Toast.LENGTH_SHORT).show();
     }
     public void pickContact()
     {
@@ -208,7 +206,7 @@ public class contacts extends Activity{
                     Numbers.add(phoneNo.toString());
                     Log.e("SOS", Names+" "+Numbers+" "+count);
                     count++;
-                    Toast.makeText(this, "Contact added successfully! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.contact_added_success, Toast.LENGTH_SHORT).show();
                     saveData();
                 }
 

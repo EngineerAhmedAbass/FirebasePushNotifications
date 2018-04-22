@@ -11,7 +11,6 @@
         android:id="@+id/app_bar"
         />
 
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -27,8 +26,9 @@
             android:textStyle="bold"
             android:drawableTop="@drawable/help"
             android:padding="25dp"
-            android:text="Request Help"
-            android:textSize="18sp" />
+            android:text="@string/request_help"
+            android:textSize="18sp"
+            tools:ignore="NestedWeights" />
 
         <Button
             android:id="@+id/Blood_BTN"
@@ -38,7 +38,7 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/bloodtransfusion1"
             android:padding="25dp"
-            android:text="Request Blood"
+            android:text="@string/request_blood"
             android:textSize="18sp"/>
     </LinearLayout>
 
@@ -57,8 +57,9 @@
             android:textStyle="bold"
             android:drawableTop="@drawable/sos1"
             android:padding="25dp"
-            android:text="SOS Message"
-            android:textSize="18sp" />
+            android:text="@string/sos_message"
+            android:textSize="18sp"
+            tools:ignore="NestedWeights" />
     </LinearLayout>
 
     <LinearLayout
@@ -76,8 +77,9 @@
             android:textStyle="bold"
             android:drawableTop="@drawable/placeholder1"
             android:padding="25dp"
-            android:text="Places"
-            android:textSize="18sp"/>
+            android:text="@string/places"
+            android:textSize="18sp"
+            tools:ignore="NestedWeights" />
 
         <Button
             android:id="@+id/First_Aid_BTN"
@@ -87,7 +89,7 @@
             android:textStyle="bold"
             android:drawableTop="@drawable/medicine"
             android:padding="25dp"
-            android:text="First Aid Tips"
+            android:text="@string/first_aid_tips"
             android:textSize="18sp"/>
     </LinearLayout>
 </LinearLayout>

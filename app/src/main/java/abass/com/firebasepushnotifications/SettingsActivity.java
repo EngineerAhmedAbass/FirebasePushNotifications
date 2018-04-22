@@ -222,6 +222,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(Name)
                                 .build();
+                        assert user != null;
                         user.updateProfile(profileUpdates)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -241,20 +242,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                                 });
                         return true;
                     } else {
-                        Toast.makeText(getActivity(), "Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.no_internet, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 }
             });
         }
 
-        private void ChangeUserName(final String Myname) {
-
-        }
 
         private boolean isNetworkAvailable(Context context) {
             ConnectivityManager connectivityManager
                     = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            assert connectivityManager != null;
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             return activeNetworkInfo != null && activeNetworkInfo.isConnected();
         }

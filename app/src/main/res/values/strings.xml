@@ -8,11 +8,11 @@
     <string name="settings_name">Settings</string>
     <string name="Notification">Notification</string>
     <string-array name="Requests_Domains">
-        <item>قلب</item>
-        <item>حرق</item>
-        <item>ضغط وسكر</item>
-        <item>غيبوبة</item>
-        <item>اسعافات اولية</item>
+        <item>Heart</item>
+        <item>Burns</item>
+        <item>Pressure and Sugar</item>
+        <item>Coma</item>
+        <item>First Aid</item>
     </string-array>
     <string-array name="blood_types">
         <item>A</item>
@@ -96,11 +96,90 @@
     <string name="sos_deactivate">Deactivate SOS Message!</string>
     <string name="sos_activate">Activate SOS Message!</string>
     <string name="name">Name:</string>
-    <string name="phone_number">Phone Number:</string>
+    <string name="phone_number">Phone Number</string>
     <string name="remove">Remove</string>
     <string name="notifications_admin_channel_name">Es3fny_Channel</string>
     <string name="notifications_admin_channel_description">This Channel Used In Notification Of Es3fny App</string>
     <string name="home">Home</string>
+    <string name="blood_type">blood type</string>
+    <string name="describe_the_patient_state">Describe the Request Information</string>
+    <string name="send_request">Send Request</string>
+    <string name="help_domain">Help Domain</string>
+    <string name="request_help">Request Help</string>
+    <string name="request_blood">Request Blood</string>
+    <string name="sos_message">SOS Message</string>
+    <string name="places">Places</string>
+    <string name="first_aid_tips">First Aid Tips</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="skip">Skip</string>
+    <string name="go_to_register">Go To Registration</string>
+    <string name="hospital">Hospital</string>
+    <string name="pharmacy">Pharmacy</string>
+    <string name="police">Police</string>
+    <string name="within_3_km">within 3 KM</string>
+    <string name="find">Find</string>
+    <string name="status">Status</string>
+    <string name="request_from">Request From</string>
+    <string name="sender_name">Sender Name</string>
+    <string name="domain">Domain</string>
+    <string name="description">Description</string>
+    <string name="address">Address</string>
+    <string name="respond">Respond</string>
+    <string name="full_name">Full Name</string>
+    <string name="date_of_birth">Date Of Birth</string>
+    <string name="city">City</string>
+    <string name="street">Street</string>
+    <string name="national_id">National ID</string>
+    <string name="register">Register</string>
+    <string name="go_to_login">go to login</string>
+    <string name="help_request">Help Request</string>
+    <string name="donor">Blood Donor</string>
+    <string name="responces">Responces</string>
+    <string name="toolbar_title">Toolbar Title</string>
+    <string name="distance">Distance</string>
+    <string name="user_name">User Name</string>
+    <string name="blood_request_success">Blood Donation Request Sent</string>
+    <string name="permission_denied">Sorry Permission Denied .</string>
+    <string name="location_enabled">Location Enabled .</string>
+    <string name="no_internet">No Internet Connection.</string>
+    <string name="location_disabled">Location Disabled…</string>
+    <string name="requesting">Requesting</string>
+    <string name="please_wait_till_help_request">Please Wait till Help Request Completes</string>
+    <string name="enter_help_request_message">Please Enter Help Request Message</string>
+    <string name="please_wait_till_blood_request">Please Wait till Blood Request Completes</string>
+    <string name="open_location_first">Please Open Location First</string>
+    <string name="enter_email">Error : You Must Enter Your Email</string>
+    <string name="enter_password">Error :  You Must Enter Your Password</string>
+    <string name="welcome">Welcome</string>
+    <string name="the_location">The Location</string>
+    <string name="response">response</string>
+    <string name="respond_message">I\'m willing to help</string>
+    <string name="waiting">waiting</string>
+    <string name="closed">closed</string>
+    <string name="respond_sent">Respond Sent</string>
+    <string name="km">Km</string>
+    <string name="loading">يتم التحميل</string>
+    <string name="wait_till_notification_loads">Please Wait Till Notification Loads</string>
+    <string name="something_went_wrong">Something Went Wrong with your location Please Try Again…</string>
+    <string name="registering">يتم التسجيل</string>
+    <string name="wait_till_register_complete">Please Wait until Registering completes</string>
+    <string name="must_enter_name">Error : You Must Enter a Name</string>
+    <string name="must_enter_email">Error : You Must Enter an Email</string>
+    <string name="must_enter_password">Error : You Must Enter a Password</string>
+    <string name="must_enter_NID">Error : You Must Enter Your National ID</string>
+    <string name="must_enter_valid_NID">Error : You Must Enter A Valid National ID</string>
+    <string name="invalid_NID">Error : Invalid National ID</string>
+    <string name="young_for_register">Error : You must be greater than 19 years</string>
+    <string name="choose_sort_method">Please Choose Sorting Method</string>
+    <string name="activate_sos">Please Activate SOS Message First!</string>
+    <string name="add_contact_first">Please Add contacts first!</string>
+    <string name="sms_sent">SOS Message Sent!</string>
+    <string name="sms_failed">SMS faild, please try again later!</string>
+    <string name="add_3_contacts">Sorry you can\'t add more than 3 Contacts!</string>
+    <string name="contact_deleted_success">Contact deleted successfully!</string>
+    <string name="contact_added_success">Contact added successfully!</string>
     <!-- **************************************** -->
 
 </resources>

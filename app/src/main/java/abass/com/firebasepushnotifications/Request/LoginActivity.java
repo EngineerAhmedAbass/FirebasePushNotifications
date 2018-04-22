@@ -12,23 +12,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.support.v4.widget.ContentLoadingProgressBar;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.karan.churi.PermissionManager.PermissionManager;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import abass.com.firebasepushnotifications.Home;
 import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
@@ -37,13 +31,10 @@ public class  LoginActivity extends AppCompatActivity {
 
     private EditText mEmail;
     private EditText mPassword;
-    private Button mLoginBtn;
-    private Button mRegPageBtn;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private android.support.v4.widget.ContentLoadingProgressBar loginProgBar;
     PermissionManager permissionManager;
-    MyBackgroundService myBackgroundService=new MyBackgroundService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +44,11 @@ public class  LoginActivity extends AppCompatActivity {
         };
         permissionManager.checkAndRequestPermissions(this);
 
-        mEmail = (EditText) findViewById(R.id.edemail);
-        mPassword = (EditText) findViewById(R.id.edpassword);
-        mLoginBtn = (Button) findViewById(R.id.btnLogin);
-        mRegPageBtn = (Button) findViewById(R.id.btnLinkToRegisterScreen);
-        loginProgBar =(android.support.v4.widget.ContentLoadingProgressBar) findViewById(R.id.login_progress);
+        mEmail =  findViewById(R.id.edemail);
+        mPassword = findViewById(R.id.edpassword);
+        Button mLoginBtn = findViewById(R.id.btnLogin);
+        Button mRegPageBtn = findViewById(R.id.btnLinkToRegisterScreen);
+        loginProgBar = findViewById(R.id.login_progress);
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
@@ -78,13 +69,13 @@ public class  LoginActivity extends AppCompatActivity {
                 String Password = mPassword.getText().toString();
                 if(email.equals("")){
                     loginProgBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(LoginActivity.this,"Error : You Must Enter Your Email",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.enter_email,Toast.LENGTH_SHORT).show();
                 }else if (Password.equals("")){
                     loginProgBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(LoginActivity.this,"Error :  You Must Enter Your Password",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.enter_password,Toast.LENGTH_SHORT).show();
                 }else if(!isNetworkAvailable()){
                     loginProgBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(LoginActivity.this,"Error :  Check Your Internet Connection",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,R.string.no_internet,Toast.LENGTH_SHORT).show();
 
                 }else{
                 mAuth.signInWithEmailAndPassword(email,Password)
@@ -96,14 +87,14 @@ public class  LoginActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     String token_Id = FirebaseInstanceId.getInstance().getToken();
                                     String current_Id = mAuth.getCurrentUser().getUid();
-                                    myBackgroundService.mCurrentID=current_Id;
+                                    MyBackgroundService.mCurrentID =current_Id;
                                     String mCurrentName = mAuth.getCurrentUser().getDisplayName();
 
-                                    Toast.makeText(LoginActivity.this,"Welcome "+ mCurrentName,Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this,getString(R.string.welcome)+ mCurrentName,Toast.LENGTH_SHORT).show();
                                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                     SharedPreferences.Editor editor = settings.edit();
                                     editor.putString("example_text",mCurrentName);
-                                    editor.commit();
+                                    editor.apply();
 
                                     Map<String, Object> tokenMap = new HashMap<>();
                                     tokenMap.put("token_id",token_Id);

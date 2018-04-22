@@ -13,29 +13,20 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import abass.com.firebasepushnotifications.Maps.AppController;
-import abass.com.firebasepushnotifications.Request.LoginActivity;
-
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 
@@ -46,11 +37,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     public boolean Updated;
     LocationManager locationManager;
     Handler handler = new Handler();
-    private LocationRequest mLocationRequest;
-    private long UPDATE_INTERVAL = 5 * 60 * 1000;  /* 5 Minutes */
-    private long FASTEST_INTERVAL = 1 * 05 * 1000; /* 5 Seconds */
     private FirebaseAuth mAuth;
-    private FirebaseFirestore mFirestore;
 
     public MyBackgroundService() {
     }
@@ -96,7 +83,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         editor.putString("longtitude",longtitude);
         editor.putString("latitude",latitude);
         editor.putBoolean("Updated",Updated);
-        editor.commit();
+        editor.apply();
     }
 
     public void scheduleSendLocation() {
@@ -108,9 +95,9 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
                     Log.e(TAG, "User ID is ==> " + mCurrentID);
                 }
                 changeLocation();
-                handler.postDelayed(this, 01 * 60 * 1000);
+                handler.postDelayed(this, 60 * 1000);
             }
-        }, 01 * 60 * 1000);
+        }, 60 * 1000);
     }
 
     public void changeLocation() {
@@ -125,7 +112,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
 
     private void UpdateCurrentLocation() {
         if (mAuth.getCurrentUser() != null) {
-            mFirestore = FirebaseFirestore.getInstance();
+            FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
             mCurrentID = mAuth.getCurrentUser().getUid();
             mCurrentID = mAuth.getCurrentUser().getUid();
             Map<String, Object> UpdatedLocation = new HashMap<>();
@@ -143,28 +130,15 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public boolean isLocationServiceEnabled() {
-        boolean gps_enabled = false;
-
-        if (locationManager == null)
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        try {
-            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ex) {
-            //do nothing...
-        }
-
-        return gps_enabled;
     }
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         Log.e(TAG, "Connection Changed.....");
-        if (isConnected && Updated == false) {
+        if (isConnected && !Updated) {
             Log.e(TAG, "Location Updated In DataBase.....");
             UpdateCurrentLocation();
         }
@@ -174,9 +148,11 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     protected void startLocationUpdates() {
 
         // Create the location request to start receiving updates
-        mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        long UPDATE_INTERVAL = 5 * 60 * 1000;
         mLocationRequest.setInterval(UPDATE_INTERVAL);
+        long FASTEST_INTERVAL = 5 * 1000;
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
         // Create LocationSettingsRequest object using location request
@@ -217,7 +193,6 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         latitude = Double.toString(location.getLatitude());
         Log.e(TAG, "New Location ... " + longtitude + " " + latitude);
         // You can now create a LatLng Object for use with maps
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
     }
 
 }
