@@ -40,6 +40,7 @@ public class Home extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+        System.exit(0);
     }
 
     @Override
