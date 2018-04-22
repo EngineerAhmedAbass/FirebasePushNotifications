@@ -7,9 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -26,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import abass.com.firebasepushnotifications.R;
+import abass.com.firebasepushnotifications.SettingsActivity;
+import abass.com.firebasepushnotifications.ShowNotifications;
 
 public class Send_SOS_Message extends AppCompatActivity {
     Button buttonSend;
@@ -34,6 +41,7 @@ public class Send_SOS_Message extends AppCompatActivity {
     public ArrayList<String> Numbers = new ArrayList<>();
     public boolean sos_switch;
     public TextView nameView;
+    private Toolbar toolbar;
     public TextView phoneView;
 
     @Override
@@ -42,6 +50,15 @@ public class Send_SOS_Message extends AppCompatActivity {
         setContentView(R.layout.activity_send__sos__message);
         buttonSend =  findViewById(R.id.buttonSend);
         RelativeLayout parent_Relative_layout = findViewById(R.id.parent_Relative_layout2);
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        setTitle("Notifications");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        mTitle.setText(getTitle());
 
        loadData();
 //------------------------------------------------------------------------------------------------------------------------------------------------
@@ -103,6 +120,32 @@ public class Send_SOS_Message extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.notification:
+                Intent GoToNotifications = new Intent(this, ShowNotifications.class);
+                startActivity(GoToNotifications);
+                break;
+            case R.id.settings:
+                Intent settings = new Intent(this, SettingsActivity.class);
+                startActivity(settings);
+                break;
+            default:
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     public void onBackPressed() {

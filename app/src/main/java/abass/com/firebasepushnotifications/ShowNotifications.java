@@ -132,6 +132,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getTitle());
+
         mFirestore = FirebaseFirestore.getInstance();
 
         mNotificationsListView = (RecyclerView) findViewById(R.id.notifications_l);

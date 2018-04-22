@@ -26,11 +26,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.jar.Attributes;
 
 import abass.com.firebasepushnotifications.R;
 
-public class contacts extends Activity {
+public class contacts extends Activity{
 
     private RelativeLayout parent_Relative_layout;
     public TextView nameView;
@@ -253,6 +252,4 @@ public class contacts extends Activity {
         }
         Log.e("SOS","------------ OnLoadData Contacts ---------------------- "+Names +" "+Numbers+" "+count);
     }
-
-
 }
