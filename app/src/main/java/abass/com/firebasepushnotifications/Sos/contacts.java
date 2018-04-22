@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.jar.Attributes;
 
 import abass.com.firebasepushnotifications.R;
 
@@ -135,6 +137,7 @@ public class contacts extends Activity {
      */
     @SuppressLint("Recycle")
     private void contactPicked(Intent data) {
+        Log.e("SOS","------------ On contactPicked ----------------------");
         Cursor cursor;
         try {
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -199,12 +202,14 @@ public class contacts extends Activity {
                 // Set the value to the textviews
 
                 if (name != null) {
+
                     nameView.setText(name);
                     Names.add(name);
                     phoneView.setText(phoneNo.toString());
                     Numbers.add(phoneNo.toString());
+                    Log.e("SOS", Names+" "+Numbers+" "+count);
                     count++;
-                    Toast.makeText(getApplicationContext(), "Contact added successfully! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Contact added successfully! ", Toast.LENGTH_SHORT).show();
                     saveData();
                 }
 
@@ -216,7 +221,8 @@ public class contacts extends Activity {
 
     public void saveData()
     {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Log.e("SOS","------------ OnSaveData Contacts ----------------------");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(Names);
@@ -225,11 +231,12 @@ public class contacts extends Activity {
         editor.putString("numbers",json2);
         editor.putInt("count",Names.size());
         editor.putBoolean("sos_flag",sos_flag);
-        editor.apply();
+        editor.commit();
+        Log.e("SOS","------------ OnSaveData Contacts ---------------------- " + json+" "+json2+" "+sos_flag);
     }
     public void loadData()
     {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("names",null);
         String json2 = sharedPreferences.getString("numbers",null);
@@ -238,13 +245,13 @@ public class contacts extends Activity {
         Type type = new TypeToken<ArrayList<String>>(){}.getType();
         Names = gson.fromJson(json,type);
         Numbers = gson.fromJson(json2,type);
-        if (Names == null)
+        if (Names == null | Numbers == null)
         {
             Names = new ArrayList<>();
             Numbers = new ArrayList<>();
             count =0;
         }
-
+        Log.e("SOS","------------ OnLoadData Contacts ---------------------- "+Names +" "+Numbers+" "+count);
     }
 
 

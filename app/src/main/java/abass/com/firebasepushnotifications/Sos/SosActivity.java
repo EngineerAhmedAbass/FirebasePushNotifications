@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -41,6 +43,7 @@ public class SosActivity extends Activity {
         }
         sos_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sos_flag = isChecked;
                 if (sos_switch.isChecked()) {
                     sos_switch.setText(R.string.sos_deactivate);
                 } else {
@@ -83,25 +86,33 @@ public class SosActivity extends Activity {
 
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        loadData();
+    }
+
+    @Override
     public void onBackPressed() {
         saveData();
         Intent intent = new Intent(SosActivity.this, Home.class);
         startActivity(intent);
+        finish();
     }
 
     public void saveData()
     {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(Names);
         editor.putString("names",json);
         editor.putBoolean("sos_flag",sos_flag);
-        editor.apply();
+        editor.commit();
+        Log.e("SOS","------------ OnSaveData SOSActivity ---------------------- " + json+" "+sos_flag);
     }
     public void loadData()
     {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("names",null);
         sos_flag = sharedPreferences.getBoolean("sos_flag",false);
@@ -111,6 +122,6 @@ public class SosActivity extends Activity {
         {
             Names = new ArrayList<>();
         }
-
+        Log.e("SOS","------------ OnLoadData Sos ---------------------- "+Names +" "+sos_flag);
     }
 }
