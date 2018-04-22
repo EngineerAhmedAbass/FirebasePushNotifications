@@ -23,6 +23,8 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:background="@drawable/rounded_button"
+            android:layout_margin="7dp"
             android:textStyle="bold"
             android:drawableTop="@drawable/help"
             android:padding="25dp"
@@ -39,6 +41,8 @@
             android:drawableTop="@drawable/bloodtransfusion1"
             android:padding="25dp"
             android:text="@string/request_blood"
+            android:background="@drawable/rounded_button"
+            android:layout_margin="7dp"
             android:textSize="18sp"/>
     </LinearLayout>
 
@@ -57,6 +61,8 @@
             android:textStyle="bold"
             android:drawableTop="@drawable/sos1"
             android:padding="25dp"
+            android:background="@drawable/rounded_button"
+            android:layout_margin="7dp"
             android:text="@string/sos_message"
             android:textSize="18sp"
             tools:ignore="NestedWeights" />
@@ -77,6 +83,8 @@
             android:textStyle="bold"
             android:drawableTop="@drawable/placeholder1"
             android:padding="25dp"
+            android:background="@drawable/rounded_button"
+            android:layout_margin="7dp"
             android:text="@string/places"
             android:textSize="18sp"
             tools:ignore="NestedWeights" />
@@ -89,6 +97,8 @@
             android:textStyle="bold"
             android:drawableTop="@drawable/medicine"
             android:padding="25dp"
+            android:background="@drawable/rounded_button"
+            android:layout_margin="7dp"
             android:text="@string/first_aid_tips"
             android:textSize="18sp"/>
     </LinearLayout>

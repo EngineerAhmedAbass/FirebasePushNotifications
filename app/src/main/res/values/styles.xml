@@ -6,11 +6,11 @@
     </style>
 
     <style name="CustomToolbar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/primaryLightColor</item>
     </style>
 
     <style name="CustomPopupToolbar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/primaryLightColor</item>
         <item name="overlapAnchor">false</item>
         <item name="android:dropDownVerticalOffset">-4dp</item>
     </style>

@@ -228,7 +228,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         Toast.LENGTH_LONG).show();
             } else if (result.getString(AppConfig.STATUS).equalsIgnoreCase(AppConfig.ZERO_RESULTS)) {
-                Toast.makeText(getBaseContext(), "No " + data + " found in 5KM radius!!!",
+                Toast.makeText(getBaseContext(), "No Places found in " + Distance + " radius!!!",
 
                         Toast.LENGTH_LONG).show();
             }
