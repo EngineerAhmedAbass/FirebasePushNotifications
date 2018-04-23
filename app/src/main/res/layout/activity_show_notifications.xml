@@ -56,7 +56,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
+            android:background="@drawable/rounded_border"
+            android:layout_margin="15dp"
+            android:padding="7dp"
             android:gravity="center">
+
 
         </Spinner>
         <android.support.v7.widget.RecyclerView

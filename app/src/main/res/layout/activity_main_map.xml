@@ -72,6 +72,8 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:padding="15dp"
                 android:thumbTint="@color/wallet_holo_blue_light"
                 android:layout_weight="1"
                 android:max="10"
@@ -101,6 +103,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:text="@string/find"
+        android:background="@drawable/rounded_button"
         android:textSize="20sp" />
 
 

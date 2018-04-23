@@ -16,4 +16,8 @@
         android:title="@string/log_out"
         app:showAsAction="never">
     </item>
+    <item
+        android:id="@+id/Language"
+        android:title="@string/language">
+    </item>
 </menu>

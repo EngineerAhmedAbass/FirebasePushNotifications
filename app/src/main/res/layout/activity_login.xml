@@ -8,10 +8,6 @@
         android:focusableInTouchMode="true"
         android:padding="10dp">
 
-    <include
-        layout="@layout/my_action_bar"
-        android:id="@+id/app_bar"
-        />
         <android.support.v4.widget.ContentLoadingProgressBar
             android:id="@+id/login_progress"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"

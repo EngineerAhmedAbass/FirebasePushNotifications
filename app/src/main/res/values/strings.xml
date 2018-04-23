@@ -163,6 +163,7 @@
     <string name="loading">Loading</string>
     <string name="wait_till_notification_loads">Please Wait Till Notification Loads</string>
     <string name="something_went_wrong">Something Went Wrong with your location Please Try Again…</string>
+    <string name="registering">Registering</string>
     <string name="wait_till_register_complete">Please Wait until Registering completes</string>
     <string name="must_enter_name">Error : You Must Enter a Name</string>
     <string name="must_enter_email">Error : You Must Enter an Email</string>
@@ -179,8 +180,10 @@
     <string name="add_3_contacts">Sorry you can\'t add more than 3 Contacts!</string>
     <string name="contact_deleted_success">Contact deleted successfully!</string>
     <string name="contact_added_success">Contact added successfully!</string>
-    <string name="registering">Registering</string>
-    <string name="back_to_exit">Please click BACK again to exit</string>
+    <string name="back_to_exit">Press again to exit</string>
+    <string name="description_title">Description</string>
+    <string name="address_title">Address</string>
+    <string name="language">عربي</string>
     <!-- **************************************** -->
 
 </resources>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import abass.com.firebasepushnotifications.Maps.MainMap;
 import abass.com.firebasepushnotifications.Request.HelpRequest;
@@ -135,7 +137,7 @@ public class Home extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        String load = "";
         switch (item.getItemId())
         {
             case R.id.notification:
@@ -149,6 +151,19 @@ public class Home extends AppCompatActivity {
             case R.id.log_out:
                 Log_Out();
                 break;
+            case R.id.Language:
+                if (item.getTitle().equals("English")){
+                    load = "en";
+                }else if (item.getTitle().equals("عربي")){
+                    load = "ar";
+                }
+                Locale locale = new Locale(load);
+                Locale.setDefault(locale);
+                Configuration config = new Configuration();
+                config.locale = locale;
+                getResources().updateConfiguration(config,getResources().getDisplayMetrics());
+                finish();
+                startActivity(getIntent());
             default:
 
 

@@ -181,6 +181,9 @@
     <string name="activate_sos">برجاء تفعيل رسالة الاستغاثة اولا</string>
     <string name="loading">يتم التحميل</string>
     <string name="back_to_exit">للخروج اضغط مرة اخرى</string>
+    <string name="description_title">التفاصيل</string>
+    <string name="address_title">العنوان</string>
+    <string name="language">Englishُ</string>
     <!-- **************************************** -->
 
 </resources>

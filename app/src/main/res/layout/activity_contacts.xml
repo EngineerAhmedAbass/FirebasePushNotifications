@@ -4,17 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_gravity="center"
     tools:context="abass.com.firebasepushnotifications.Sos.contacts">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
         android:id="@+id/buttons">
 
         <Button
             android:id="@+id/add_field_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:background="@drawable/rounded_button"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:onClick="onAddField"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
