@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -58,6 +59,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 import abass.com.firebasepushnotifications.Home;
@@ -168,7 +170,7 @@ public class HelpRequest extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        String load = "";
         switch (item.getItemId()) {
             case R.id.notification:
                 Intent GoToNotifications = new Intent(this, ShowNotifications.class);
@@ -178,6 +180,19 @@ public class HelpRequest extends AppCompatActivity {
                 Intent settings = new Intent(this, SettingsActivity.class);
                 startActivity(settings);
                 break;
+            case R.id.Language:
+                if (item.getTitle().equals("English")){
+                    load = "en";
+                }else if (item.getTitle().equals("عربي")){
+                    load = "ar";
+                }
+                Locale locale = new Locale(load);
+                Locale.setDefault(locale);
+                Configuration config = new Configuration();
+                config.locale = locale;
+                getResources().updateConfiguration(config,getResources().getDisplayMetrics());
+                finish();
+                startActivity(getIntent());
             default:
 
 

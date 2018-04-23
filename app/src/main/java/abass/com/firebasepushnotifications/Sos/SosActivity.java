@@ -2,6 +2,7 @@ package abass.com.firebasepushnotifications.Sos;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
@@ -21,6 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Locale;
+
 import abass.com.firebasepushnotifications.Home;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.SettingsActivity;
@@ -105,7 +108,7 @@ public class SosActivity extends AppCompatActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        String load = "";
         switch (item.getItemId()) {
             case R.id.notification:
                 Intent GoToNotifications = new Intent(this, ShowNotifications.class);
@@ -115,6 +118,19 @@ public class SosActivity extends AppCompatActivity{
                 Intent settings = new Intent(this, SettingsActivity.class);
                 startActivity(settings);
                 break;
+            case R.id.Language:
+                if (item.getTitle().equals("English")){
+                    load = "en";
+                }else if (item.getTitle().equals("عربي")){
+                    load = "ar";
+                }
+                Locale locale = new Locale(load);
+                Locale.setDefault(locale);
+                Configuration config = new Configuration();
+                config.locale = locale;
+                getResources().updateConfiguration(config,getResources().getDisplayMetrics());
+                finish();
+                startActivity(getIntent());
             default:
 
         }
