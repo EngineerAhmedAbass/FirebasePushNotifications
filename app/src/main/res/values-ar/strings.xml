@@ -150,10 +150,9 @@
     <string name="closed">تم اغلاق الطلب</string>
     <string name="respond_sent">تم ارسال الاستجابة</string>
     <string name="km">كم</string>
-    <string name="loading">Loading</string>
     <string name="wait_till_notification_loads">برجاء الانتظار حتى يتم تحميل الاشعار</string>
     <string name="something_went_wrong">حدث خطا فى تحديد الموقع برجاء المحاولة مرة اخرى</string>
-    <string name="registering">Registering</string>
+    <string name="registering">يتم التسجيل</string>
     <string name="wait_till_register_complete">برجاء الانتظار حتى يكتمل التسجيل</string>
     <string name="must_enter_name">يجب ادخال الاسم</string>
     <string name="must_enter_email">يجب ادخال البريد الالكترونى</string>
@@ -180,6 +179,8 @@
     <string name="enter_email">يجب كتابة البريد الالكترونى</string>
     <string name="choose_sort_method">برجاء اختيار طريقة الترتيب</string>
     <string name="activate_sos">برجاء تفعيل رسالة الاستغاثة اولا</string>
+    <string name="loading">يتم التحميل</string>
+    <string name="back_to_exit">للخروج اضغط مرة اخرى</string>
     <!-- **************************************** -->
 
 </resources>

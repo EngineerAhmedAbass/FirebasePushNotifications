@@ -1,9 +1,6 @@
 package abass.com.firebasepushnotifications;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,8 +35,6 @@ import abass.com.firebasepushnotifications.Request.MyNotification;
 import abass.com.firebasepushnotifications.Request.NotificationsRecyclerAdapter;
 
 public class ShowNotifications extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    private RecyclerView mNotificationsListView;
-    private Toolbar toolbar;
     private Spinner Sorting_Spiner;
     private CheckBox Request_check, Blood_check, Responces_check;
     private FirebaseFirestore mFirestore;
@@ -74,8 +69,6 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         Log.e("Test", "............. OnCreate .......");
         setContentView(R.layout.activity_show_notifications);
-
-
 
         /*  Start Spinner Code */
 
@@ -117,7 +110,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
             }
         });
 
-        toolbar = findViewById(R.id.app_bar);
+        Toolbar toolbar = findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -129,7 +122,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
 
         mFirestore = FirebaseFirestore.getInstance();
 
-        mNotificationsListView =findViewById(R.id.notifications_l);
+        RecyclerView mNotificationsListView = findViewById(R.id.notifications_l);
 
         notificationsList_Displayed = new ArrayList<>();
         notificationsList_Help_Request = new ArrayList<>();
@@ -269,19 +262,24 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     public void Sort_The_Data(String Selected_sort){
         switch (Selected_sort) {
             case "Select Sorting Method":
+            case "طريقة الترتيب":
                 Toast.makeText(this, R.string.choose_sort_method, Toast.LENGTH_SHORT).show();
                 break;
             case "Ascending by Distance":
+            case "من الاقرب الى الابعد":
                 Collections.sort(notificationsList_Displayed, new Custom_Distace_Comparator());
                 break;
             case "Descending by Distance":
+            case"من الابعد الى الاقرب":
                 Collections.sort(notificationsList_Displayed, new Custom_Distace_Comparator());
                 Collections.reverse(notificationsList_Displayed);
                 break;
             case "Ascending by Time":
+            case"من الاقدم الى الاحدث":
                 Collections.sort(notificationsList_Displayed, new Custom_Date_Comparator());
                 break;
             case "Descending by Time":
+            case "من الاحدث الى الاقدم":
                 Collections.sort(notificationsList_Displayed, new Custom_Date_Comparator());
                 Collections.reverse(notificationsList_Displayed);
                 break;

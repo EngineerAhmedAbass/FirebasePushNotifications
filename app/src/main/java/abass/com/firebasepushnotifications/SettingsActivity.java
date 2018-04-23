@@ -40,6 +40,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -286,6 +287,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
+            Preference p = findPreference("notifications_new_message_ringtone");
+            p.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    String New_Value = o.toString();
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("the_notification_ringtone",New_Value);
+                    Log.e("Test Notification ",New_Value);
+                    editor.apply();
+                    Ringtone ringtone = RingtoneManager.getRingtone(
+                            preference.getContext(), Uri.parse(New_Value));
+                    String name = ringtone.getTitle(preference.getContext());
+                    preference.setSummary(name);
+                    return true;
+                }
+            });
         }
 
 
