@@ -1,6 +1,5 @@
 package abass.com.firebasepushnotifications.Maps;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -18,7 +17,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -37,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import abass.com.firebasepushnotifications.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
@@ -73,8 +72,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             showLocationSettings();
-        }else{
-            showCurrentLocation();
         }
     }
 
@@ -118,7 +115,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Location location = MyBackgroundService.mCurrentlocation;
+            onLocationChanged(location);
+        }
         showCurrentLocation();
     }
 

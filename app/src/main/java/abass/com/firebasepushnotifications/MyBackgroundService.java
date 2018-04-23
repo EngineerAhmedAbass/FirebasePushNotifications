@@ -24,6 +24,9 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import abass.com.firebasepushnotifications.Maps.AppController;
@@ -34,6 +37,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     private static final String TAG = "MyBackgroundService";
     static public String longtitude, latitude;
     static public String mCurrentID;
+    static public Location mCurrentlocation;
     public boolean Updated;
     LocationManager locationManager;
     Handler handler = new Handler();
@@ -51,7 +55,6 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "Service is On.....");
-
         scheduleSendLocation();
         AppController.getInstance().setConnectivityListener(this);
         super.onStartCommand(intent, flags, startId);
@@ -65,10 +68,18 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-            mCurrentID=settings.getString("mCurrentID","Shit");
-            longtitude = settings.getString("longtitude","Shit");
-            latitude=settings.getString("latitude","Shit");
-            Updated = settings.getBoolean("Updated",false);
+            Gson gson = new Gson();
+            String json = settings.getString("mCurrentlocation", null);
+            Type type = new TypeToken<Location>() {
+            }.getType();
+            mCurrentlocation = gson.fromJson(json, type);
+            mCurrentID = settings.getString("mCurrentID", "Shit");
+            longtitude = settings.getString("longtitude", "Shit");
+            latitude = settings.getString("latitude", "Shit");
+            Updated = settings.getBoolean("Updated", false);
+            if (mCurrentlocation != null) {
+                Log.e("Current Location ", mCurrentlocation.getLatitude() + " " + mCurrentlocation.getLongitude());
+            }
         }
         startLocationUpdates();
     }
@@ -76,13 +87,17 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        Log.e("Test","............. onTaskRemoved .......");
+        Log.e("Test", "............. onTaskRemoved .......");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("mCurrentID",mCurrentID);
-        editor.putString("longtitude",longtitude);
-        editor.putString("latitude",latitude);
-        editor.putBoolean("Updated",Updated);
+        Gson gson = new Gson();
+        String json = gson.toJson(mCurrentlocation);
+        editor.putString("mCurrentlocation", json);
+        editor.putString("mCurrentID", mCurrentID);
+        editor.putString("longtitude", longtitude);
+        editor.putString("latitude", latitude);
+        editor.putBoolean("Updated", Updated);
+        Log.e(TAG, "----------- OnSave ----- " + mCurrentlocation.getLatitude() + " " + mCurrentlocation.getLongitude());
         editor.apply();
     }
 
@@ -188,6 +203,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
 
     public void onLocationChanged(Location location) {
         Log.e(TAG, "onLocationChanged...");
+        mCurrentlocation = location;
         // New location has now been determined
         longtitude = Double.toString(location.getLongitude());
         latitude = Double.toString(location.getLatitude());
