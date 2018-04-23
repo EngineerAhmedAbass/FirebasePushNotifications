@@ -130,8 +130,6 @@ public class SosActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         saveData();
-        Intent intent = new Intent(SosActivity.this, Home.class);
-        startActivity(intent);
         finish();
     }
 
