@@ -152,7 +152,7 @@
     <string name="open_location_first">Please Open Location First</string>
     <string name="enter_email">Error : You Must Enter Your Email</string>
     <string name="enter_password">Error :  You Must Enter Your Password</string>
-    <string name="welcome">Welcome</string>
+    <string name="welcome">Welcome </string>
     <string name="the_location">The Location</string>
     <string name="response">response</string>
     <string name="respond_message">I\'m willing to help</string>
@@ -184,6 +184,7 @@
     <string name="description_title">Description</string>
     <string name="address_title">Address</string>
     <string name="language">عربي</string>
+    <string name="es3fny_logo" translatable="false">Es3fny Logo</string>
     <!-- **************************************** -->
 
 </resources>
