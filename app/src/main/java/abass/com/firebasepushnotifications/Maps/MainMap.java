@@ -14,16 +14,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
-
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.SettingsActivity;
 import abass.com.firebasepushnotifications.ShowNotifications;
@@ -176,6 +172,7 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
                 getResources().updateConfiguration(config,getResources().getDisplayMetrics());
                 finish();
                 startActivity(getIntent());
+
             default:
 
 
