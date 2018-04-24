@@ -37,11 +37,11 @@
                 <Spinner
                     android:id="@+id/Blood_type_Spinner"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="47dp"
                     android:layout_alignParentEnd="true"
                     android:textAlignment="center"
                     android:paddingTop="10dp"
-                    android:layout_toStartOf="@+id/text1"
+                    android:layout_toEndOf="@+id/text1"
                     />
 
             </RelativeLayout>
