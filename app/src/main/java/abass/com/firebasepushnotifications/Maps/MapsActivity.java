@@ -35,7 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import abass.com.firebasepushnotifications.MyBackgroundService;
+import abass.com.firebasepushnotifications.Main.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {

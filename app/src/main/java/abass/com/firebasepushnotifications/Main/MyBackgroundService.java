@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Main;
 
 import android.app.Service;
 import android.content.Context;

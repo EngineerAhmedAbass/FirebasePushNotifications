@@ -1,8 +1,6 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Main;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -29,6 +27,7 @@ import java.util.Map;
 
 import abass.com.firebasepushnotifications.First_Aid.MainActivity;
 import abass.com.firebasepushnotifications.Maps.MainMap;
+import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Request.HelpRequest;
 import abass.com.firebasepushnotifications.Request.LoginActivity;
 import abass.com.firebasepushnotifications.Request.bloodDonationRequest;

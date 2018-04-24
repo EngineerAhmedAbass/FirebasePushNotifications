@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import abass.com.firebasepushnotifications.R;
-import abass.com.firebasepushnotifications.SettingsActivity;
-import abass.com.firebasepushnotifications.ShowNotifications;
+import abass.com.firebasepushnotifications.Main.SettingsActivity;
+import abass.com.firebasepushnotifications.Main.ShowNotifications;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;

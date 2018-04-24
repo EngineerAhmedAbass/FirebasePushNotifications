@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Main;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Request.LoginActivity;
 import abass.com.firebasepushnotifications.Request.MyNotification;
 import abass.com.firebasepushnotifications.Request.NotificationsRecyclerAdapter;

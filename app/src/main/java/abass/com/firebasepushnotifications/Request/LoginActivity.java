@@ -23,8 +23,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.karan.churi.PermissionManager.PermissionManager;
 import java.util.HashMap;
 import java.util.Map;
-import abass.com.firebasepushnotifications.Home;
-import abass.com.firebasepushnotifications.MyBackgroundService;
+import abass.com.firebasepushnotifications.Main.Home;
+import abass.com.firebasepushnotifications.Main.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 
 public class  LoginActivity extends AppCompatActivity {

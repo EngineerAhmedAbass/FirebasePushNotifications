@@ -52,7 +52,7 @@
 
         <activity android:name=".Request.NotificationActivity"
                   android:screenOrientation="portrait"
-                  android:parentActivityName=".ShowNotifications">
+                  android:parentActivityName=".Main.ShowNotifications">
             <intent-filter>
                 <action android:name="abass.com.firebasepushnotifications.TARGETNOTIFICATION" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -60,7 +60,7 @@
         </activity>
         <activity  android:name=".Request.HelpRequest"
             android:screenOrientation="portrait"
-            android:parentActivityName=".Home"
+            android:parentActivityName=".Main.Home"
             />
         <activity android:name=".Maps.MapsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -69,9 +69,9 @@
             android:parentActivityName=".Maps.MainMap"/>
         <activity  android:name=".Maps.MainMap"
             android:screenOrientation="portrait"
-            android:parentActivityName=".Home" />
+            android:parentActivityName=".Main.Home" />
 
-        <activity android:name=".Home"
+        <activity android:name=".Main.Home"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -81,7 +81,7 @@
         </activity>
 
         <receiver
-            android:name=".ConnectivityReceiver"
+            android:name=".Main.ConnectivityReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -89,25 +89,25 @@
         </receiver>
 
         <service
-            android:name=".MyBackgroundService"
+            android:name=".Main.MyBackgroundService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity  android:name=".ShowNotifications"
+        <activity  android:name=".Main.ShowNotifications"
             android:screenOrientation="portrait"
-            android:parentActivityName=".Home" />
-        <activity  android:name=".SettingsActivity"
+            android:parentActivityName=".Main.Home" />
+        <activity  android:name=".Main.SettingsActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".Home"
+            android:parentActivityName=".Main.Home"
             />
         <activity  android:name=".Request.bloodDonationRequest"
             android:screenOrientation="portrait"
-            android:parentActivityName=".Home"
+            android:parentActivityName=".Main.Home"
             >
         </activity>
         <activity android:name=".Sos.SosActivity"
-                  android:parentActivityName=".Home"
+                  android:parentActivityName=".Main.Home"
                   android:screenOrientation="portrait"/>
         <activity android:name=".Sos.Send_SOS_Message"
             android:parentActivityName=".Sos.SosActivity"
@@ -118,7 +118,7 @@
 
         <activity
             android:name=".First_Aid.MainActivity"
-            android:parentActivityName=".Home"
+            android:parentActivityName=".Main.Home"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">

@@ -24,10 +24,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import abass.com.firebasepushnotifications.Home;
 import abass.com.firebasepushnotifications.R;
-import abass.com.firebasepushnotifications.SettingsActivity;
-import abass.com.firebasepushnotifications.ShowNotifications;
+import abass.com.firebasepushnotifications.Main.SettingsActivity;
+import abass.com.firebasepushnotifications.Main.ShowNotifications;
 
 public class SosActivity extends AppCompatActivity{
     public Switch sos_switch;

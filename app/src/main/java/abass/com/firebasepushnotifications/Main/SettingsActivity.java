@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications;
+package abass.com.firebasepushnotifications.Main;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,25 +12,17 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,13 +32,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import abass.com.firebasepushnotifications.Request.LoginActivity;
+import abass.com.firebasepushnotifications.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

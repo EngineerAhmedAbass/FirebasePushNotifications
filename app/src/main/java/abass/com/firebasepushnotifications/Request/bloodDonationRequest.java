@@ -32,7 +32,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -52,7 +51,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -67,11 +65,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
-import abass.com.firebasepushnotifications.Home;
-import abass.com.firebasepushnotifications.MyBackgroundService;
+import abass.com.firebasepushnotifications.Main.Home;
+import abass.com.firebasepushnotifications.Main.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
-import abass.com.firebasepushnotifications.SettingsActivity;
-import abass.com.firebasepushnotifications.ShowNotifications;
+import abass.com.firebasepushnotifications.Main.SettingsActivity;
+import abass.com.firebasepushnotifications.Main.ShowNotifications;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
