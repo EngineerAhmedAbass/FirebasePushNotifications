@@ -26,6 +26,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import abass.com.firebasepushnotifications.First_Aid.MainActivity;
 import abass.com.firebasepushnotifications.Maps.MainMap;
 import abass.com.firebasepushnotifications.Request.HelpRequest;
 import abass.com.firebasepushnotifications.Request.LoginActivity;
@@ -123,7 +125,8 @@ public class Home extends AppCompatActivity {
         First_Aid_BTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Home.this, "Go To First Aid.", Toast.LENGTH_SHORT).show();
+                Intent FirstAidIntnet = new Intent(Home.this, MainActivity.class);
+                startActivity(FirstAidIntnet);
             }
         });
     }

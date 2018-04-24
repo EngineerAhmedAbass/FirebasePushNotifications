@@ -33,7 +33,6 @@ public class  LoginActivity extends AppCompatActivity {
     private EditText mPassword;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
-    private android.support.v4.widget.ContentLoadingProgressBar loginProgBar;
     PermissionManager permissionManager;
 
     @Override
@@ -48,7 +47,6 @@ public class  LoginActivity extends AppCompatActivity {
         mPassword = findViewById(R.id.edpassword);
         Button mLoginBtn = findViewById(R.id.btnLogin);
         Button mRegPageBtn = findViewById(R.id.btnLinkToRegisterScreen);
-        loginProgBar = findViewById(R.id.login_progress);
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
@@ -64,17 +62,13 @@ public class  LoginActivity extends AppCompatActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginProgBar.setVisibility(View.VISIBLE);
                 String email = mEmail.getText().toString();
                 String Password = mPassword.getText().toString();
                 if(email.equals("")){
-                    loginProgBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(LoginActivity.this, R.string.enter_email,Toast.LENGTH_SHORT).show();
                 }else if (Password.equals("")){
-                    loginProgBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(LoginActivity.this, R.string.enter_password,Toast.LENGTH_SHORT).show();
                 }else if(!isNetworkAvailable()){
-                    loginProgBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(LoginActivity.this,R.string.no_internet,Toast.LENGTH_SHORT).show();
 
                 }else{
@@ -105,7 +99,6 @@ public class  LoginActivity extends AppCompatActivity {
                                         }
                                     });
                                 } else {
-                                    loginProgBar.setVisibility(View.INVISIBLE);
                                     // If sign in fails, display a message to the user.
                                     Toast.makeText(LoginActivity.this,"Error : "+task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                                 }
@@ -118,7 +111,6 @@ public class  LoginActivity extends AppCompatActivity {
 }
 
     private void SendToMain() {
-        loginProgBar.setVisibility(View.INVISIBLE);
         Intent intent = new Intent(LoginActivity.this, Home.class);
         startActivity(intent);
         finish();

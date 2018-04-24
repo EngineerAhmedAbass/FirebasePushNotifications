@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#BDBDBD"
+    tools:context=".First_Aid.EMERGENCY"
+    >
+
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
+            android:paddingBottom="60dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="337dp"
+                android:layout_height="34dp"
+                android:layout_marginTop="8dp"
+                android:background="#ffff"
+                android:fontFamily="monospace"
+                android:text="اختار الحالة"
+                android:textAlignment="center"
+                android:textSize="23sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ImageButton01"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/burn" />
+
+                <ImageButton
+                    android:id="@+id/ImageButton02"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/amputation" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ImageButton03"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/asthma" />
+
+                <ImageButton
+                    android:id="@+id/ImageButton04"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/bleeding" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ImageButton05"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/choking" />
+
+                <ImageButton
+                    android:id="@+id/ImageButton06"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/bite" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ImageButton07"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/baby_choking" />
+
+                <ImageButton
+                    android:id="@+id/ImageButton08"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/chestpain" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ImageButton09"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/fever" />
+
+                <ImageButton
+                    android:id="@+id/ImageButton10"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/broken" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ImageButton11"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/bruises" />
+
+                <ImageButton
+                    android:id="@+id/ImageButton12"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/nose" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ImageButton13"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/drowning" />
+
+                <ImageButton
+                    android:id="@+id/ImageButton14"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/snake" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ImageButton15"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/sting" />
+
+                <ImageButton
+                    android:id="@+id/ImageButton16"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/stroke" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ImageButton17"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/finting" />
+
+                <ImageButton
+                    android:id="@+id/ImageButton18"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/epilepsy" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ImageButton19"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/no_breath" />
+
+                <ImageButton
+                    android:id="@+id/ImageButton20"
+                    android:layout_width="167dp"
+                    android:layout_height="95dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/poison" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
