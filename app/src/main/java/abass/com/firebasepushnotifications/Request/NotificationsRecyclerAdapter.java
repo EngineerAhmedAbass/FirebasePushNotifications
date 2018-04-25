@@ -80,7 +80,8 @@ public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<Notificat
     private void GoToNotifications(MyNotification notification) {
         Intent intent = new Intent(context, NotificationActivity.class);
         intent.putExtra("message", notification.getMessage());
-        intent.putExtra("from_user_id", notification.getUser_name());
+        intent.putExtra("from_name", notification.getUser_name());
+        intent.putExtra("from_id",notification.getFrom());
         intent.putExtra("latitude", notification.getLatitude());
         intent.putExtra("longtitude", notification.getLongtitude());
         intent.putExtra("domain", notification.getDomain());

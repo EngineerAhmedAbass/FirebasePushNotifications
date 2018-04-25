@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications.Request;
+package abass.com.firebasepushnotifications.Main;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -46,8 +46,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.HashMap;
 import java.util.Map;
-import abass.com.firebasepushnotifications.Main.Home;
-import abass.com.firebasepushnotifications.Main.MyBackgroundService;
+
 import abass.com.firebasepushnotifications.R;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;

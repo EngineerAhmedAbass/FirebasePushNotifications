@@ -35,9 +35,9 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Request.LoginActivity"
+        <activity android:name=".Main.LoginActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Request.RegisterActivity"
+        <activity android:name=".Main.RegisterActivity"
             android:screenOrientation="portrait"/>
 
         <service android:name=".Request.FirebaseMessagingService">
@@ -72,6 +72,7 @@
             android:parentActivityName=".Main.Home" />
 
         <activity android:name=".Main.Home"
+            android:configChanges="locale|orientation"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

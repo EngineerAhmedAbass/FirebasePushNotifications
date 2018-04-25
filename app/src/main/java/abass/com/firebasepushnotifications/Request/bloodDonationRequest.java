@@ -9,7 +9,6 @@ import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -49,15 +48,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,6 +56,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import abass.com.firebasepushnotifications.Main.Home;
+import abass.com.firebasepushnotifications.Main.LoginActivity;
 import abass.com.firebasepushnotifications.Main.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Main.SettingsActivity;

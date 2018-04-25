@@ -1,4 +1,4 @@
-package abass.com.firebasepushnotifications.Request;
+package abass.com.firebasepushnotifications.Main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,8 +23,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.karan.churi.PermissionManager.PermissionManager;
 import java.util.HashMap;
 import java.util.Map;
-import abass.com.firebasepushnotifications.Main.Home;
-import abass.com.firebasepushnotifications.Main.MyBackgroundService;
+
 import abass.com.firebasepushnotifications.R;
 
 public class  LoginActivity extends AppCompatActivity {

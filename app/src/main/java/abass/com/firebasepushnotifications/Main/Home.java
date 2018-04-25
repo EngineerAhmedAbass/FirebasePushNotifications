@@ -2,13 +2,17 @@ package abass.com.firebasepushnotifications.Main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +33,6 @@ import abass.com.firebasepushnotifications.First_Aid.MainActivity;
 import abass.com.firebasepushnotifications.Maps.MainMap;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Request.HelpRequest;
-import abass.com.firebasepushnotifications.Request.LoginActivity;
 import abass.com.firebasepushnotifications.Request.bloodDonationRequest;
 import abass.com.firebasepushnotifications.Sos.SosActivity;
 
@@ -80,6 +83,7 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SetLocal();
         setContentView(R.layout.activity_home);
         mAuth = FirebaseAuth.getInstance();
         Help_Request_BTN = findViewById(R.id.help_request_Btn);
@@ -159,6 +163,10 @@ public class Home extends AppCompatActivity {
                 }else if (item.getTitle().equals("عربي")){
                     load = "ar";
                 }
+                SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+                editor.putString("Language",load);
+                editor.apply();
                 Locale locale = new Locale(load);
                 Locale.setDefault(locale);
                 Configuration config = new Configuration();
@@ -167,10 +175,18 @@ public class Home extends AppCompatActivity {
                 finish();
                 startActivity(getIntent());
             default:
-
-
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void SetLocal(){
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        String load = settings.getString("Language", "en");
+        Locale locale = new Locale(load);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getResources().updateConfiguration(config,getResources().getDisplayMetrics());
     }
 
     private void Log_Out() {
@@ -203,6 +219,7 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        //LoadLanguage();
         FirebaseUser CurrentUser = mAuth.getCurrentUser();
         if (CurrentUser == null) {
             sendToLogin();
