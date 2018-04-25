@@ -13,6 +13,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,6 +22,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
+
 import abass.com.firebasepushnotifications.R;
 
 /**
@@ -28,8 +30,9 @@ import abass.com.firebasepushnotifications.R;
  */
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
-    NotificationManager mNotifyMgr;
     public Vector<NotificationManager> mNotificationsMgr = new Vector<>();
+    NotificationManager mNotifyMgr;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -50,18 +53,23 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         }
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String stringValue = sharedPreferences.getString("the_notification_ringtone",null);
-        Uri defaultSoundUri = Uri.parse(stringValue);
+        String stringValue = sharedPreferences.getString("the_notification_ringtone", null);
+        Uri defaultSoundUri;
+        if (stringValue == null) {
+            defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        } else {
+            defaultSoundUri = Uri.parse(stringValue);
+        }
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
                 .setSmallIcon(R.mipmap.lunch)
                 .setAutoCancel(true)
                 .setContentTitle(MessageTitle)
                 .setContentText(MessageBody)
                 .setSound(defaultSoundUri)
-                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        long  mNotification_id =  new Date().getTime();
+        long mNotification_id = new Date().getTime();
         Intent intent = new Intent(this, NotificationActivity.class);
         intent.putExtra("message", dataMessage);
         intent.putExtra("from_user_id", dataFrom);
@@ -70,7 +78,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         intent.putExtra("domain", Domain);
         intent.putExtra("request_id", RequestID);
         intent.putExtra("type", type);
-        intent.setAction("abass.com.firebasepushnotifications"+mNotification_id);
+        intent.setAction("abass.com.firebasepushnotifications" + mNotification_id);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -79,7 +87,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationsMgr.add(mNotifyMgr);
-        mNotificationsMgr.lastElement().notify((int)mNotification_id,mBuilder.build());
+        mNotificationsMgr.lastElement().notify((int) mNotification_id, mBuilder.build());
         //mNotifyMgr.notify(mNotification_id, mBuilder.build());
     }
 

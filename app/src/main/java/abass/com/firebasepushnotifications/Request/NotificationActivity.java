@@ -163,7 +163,11 @@ public class NotificationActivity extends AppCompatActivity {
                 showSettingDialog();
             }
 
-            new GetStatus().execute(Integer.parseInt(request_id));
+
+
+
+            //new GetStatus().execute(Integer.parseInt(request_id));
+
             sendRespond.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -242,20 +246,19 @@ public class NotificationActivity extends AppCompatActivity {
         } else {
             mfirestore = FirebaseFirestore.getInstance();
             mCurrentID = mAuth.getUid();
-            mfirestore.collection("Users").document(mCurrentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            mCurrentName = mAuth.getCurrentUser().getDisplayName();
+            mfirestore.collection("Requests").document(request_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    mCurrentName = documentSnapshot.get("name").toString();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(NotificationActivity.this, "Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    String status = documentSnapshot.get("status").toString();
+                    if (status.equals(getString(R.string.waiting))) {
+                        sendRespond.setVisibility(View.VISIBLE);
+                    }
+                    Status.setText(status);
                 }
             });
         }
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();

@@ -236,7 +236,7 @@ public class HelpRequest extends AppCompatActivity {
                         if(temp_user.getLatitude() == null || temp_user.getLongtitude() == null  ){
                             continue;
                         }
-                        double Dist = distance(Double.parseDouble(myBackgroundService.latitude), Double.parseDouble(myBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
+                        double Dist = distance(Double.parseDouble(MyBackgroundService.latitude), Double.parseDouble(MyBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
                         if (Dist > 10) {
                             continue;
                         }
@@ -246,7 +246,54 @@ public class HelpRequest extends AppCompatActivity {
                 }
             }
         });
-        new GetRequestID().execute(SentUsers);
+        //*******************************************************************************//
+        Map<String, Object> RequestMessage = new HashMap<>();
+        Date currentTime = Calendar.getInstance().getTime();
+        RequestMessage.put("message", Message);
+        RequestMessage.put("from", mCurrentID);
+        RequestMessage.put("status","waiting");
+        RequestMessage.put("longtitude", MyBackgroundService.longtitude);
+        RequestMessage.put("latitude", MyBackgroundService.latitude);
+        RequestMessage.put("date", currentTime);
+        mfirestore.collection("Requests").add(RequestMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                String RequestID = documentReference.getId();
+                for (int i = 0; i < SentUsers.size(); i++) {
+                    Map<String, Object> notificationMessage = new HashMap<>();
+                    Date currentTime = Calendar.getInstance().getTime();
+                    notificationMessage.put("message", Message);
+                    notificationMessage.put("from", mCurrentID);
+                    notificationMessage.put("user_name", mCurrentName);
+                    notificationMessage.put("domain", Domain);
+                    notificationMessage.put("longtitude", MyBackgroundService.longtitude);
+                    notificationMessage.put("latitude", MyBackgroundService.latitude);
+                    notificationMessage.put("requestID", RequestID);
+                    notificationMessage.put("type", "Request");
+                    notificationMessage.put("date", currentTime);
+                    mfirestore.collection("Users/" + SentUsers.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.hide();
+                            SendRequestBtn.setClickable(true);
+                            Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                progressDialog.hide();
+                SendRequestBtn.setClickable(true);
+                Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
+                GoToHome();
+            }
+        });
+
+
+        //*******************************************************************************//
+        //new GetRequestID().execute(SentUsers);
     }
 
     private void GoToHome() {
@@ -279,7 +326,6 @@ public class HelpRequest extends AppCompatActivity {
             @Override
             public void onResult(LocationSettingsResult result) {
                 final Status status = result.getStatus();
-                final LocationSettingsStates state = result.getLocationSettingsStates();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
                         // All location settings are satisfied. The client can initialize location
@@ -338,6 +384,7 @@ public class HelpRequest extends AppCompatActivity {
         if (locationManager == null)
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         try {
+            assert locationManager != null;
             gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception ex) {
             //do nothing...
@@ -349,6 +396,7 @@ public class HelpRequest extends AppCompatActivity {
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
@@ -415,8 +463,8 @@ public class HelpRequest extends AppCompatActivity {
                 notificationMessage.put("from", mCurrentID);
                 notificationMessage.put("user_name", mCurrentName);
                 notificationMessage.put("domain", Domain);
-                notificationMessage.put("longtitude", myBackgroundService.longtitude);
-                notificationMessage.put("latitude", myBackgroundService.latitude);
+                notificationMessage.put("longtitude", MyBackgroundService.longtitude);
+                notificationMessage.put("latitude", MyBackgroundService.latitude);
                 notificationMessage.put("requestID", RequestID);
                 notificationMessage.put("type", "Request");
                 notificationMessage.put("date", currentTime);
