@@ -252,71 +252,53 @@ public class bloodDonationRequest extends AppCompatActivity {
                 }
             }
         });
-        new bloodDonationRequest.GetRequestID().execute(SentUsers);
 
-    }
-
-    class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
-        Vector<String> user_ids;
-
-        protected String doInBackground(Vector<String>... strings) {
-            String url=null;
-            try {
-                url = "http://refadatours.com/android/addRequest.php?message=" + URLEncoder.encode(Message, "UTF-8") +"&senderID="+mCurrentID;
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+        Map<String, Object> RequestMessage = new HashMap<>();
+        Date currentTime = Calendar.getInstance().getTime();
+        RequestMessage.put("message", Message);
+        RequestMessage.put("from", mCurrentID);
+        RequestMessage.put("status","waiting");
+        RequestMessage.put("longtitude", MyBackgroundService.longtitude);
+        RequestMessage.put("latitude", MyBackgroundService.latitude);
+        RequestMessage.put("date", currentTime);
+        mfirestore.collection("Requests").add(RequestMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                String RequestID = documentReference.getId();
+                for (int i = 0; i < SentUsers.size(); i++) {
+                    Map<String, Object> notificationMessage = new HashMap<>();
+                    Date currentTime = Calendar.getInstance().getTime();
+                    notificationMessage.put("message", Message);
+                    notificationMessage.put("from", mCurrentID);
+                    notificationMessage.put("user_name", mCurrentName);
+                    notificationMessage.put("domain", "تبرع بالدم");
+                    notificationMessage.put("longtitude", MyBackgroundService.longtitude);
+                    notificationMessage.put("latitude", MyBackgroundService.latitude);
+                    notificationMessage.put("requestID", RequestID);
+                    notificationMessage.put("type", "Request");
+                    notificationMessage.put("date", currentTime);
+                    mfirestore.collection("Users/" + SentUsers.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.hide();
+                            SendRequestBtn.setClickable(true);
+                            Toast.makeText(bloodDonationRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                progressDialog.hide();
+                SendRequestBtn.setClickable(true);
+                Toast.makeText(bloodDonationRequest.this, R.string.blood_request_success, Toast.LENGTH_SHORT).show();
+                GoToHome();
             }
-            user_ids = strings[0];
-            HttpEntity httpEntity = null;
-            try {
-                DefaultHttpClient httpClient = new DefaultHttpClient();  // Default HttpClient
-                HttpGet httpGet = new HttpGet(url);
-                HttpResponse httpResponse = httpClient.execute(httpGet);
-                httpEntity = httpResponse.getEntity();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String entityResponse = null;
-            try {
-                entityResponse = EntityUtils.toString(httpEntity);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return entityResponse;
-        }
+        });
 
-        protected void onPostExecute(String RequestID) {
-            for (int i = 0; i < user_ids.size(); i++) {
-                Map<String, Object> notificationMessage = new HashMap<>();
-                Date currentTime = Calendar.getInstance().getTime();
-                notificationMessage.put("message", Message);
-                notificationMessage.put("from", mCurrentID);
-                notificationMessage.put("user_name", mCurrentName);
-                notificationMessage.put("domain", "تبرع بالدم");
-                notificationMessage.put("longtitude", MyBackgroundService.longtitude);
-                notificationMessage.put("latitude", MyBackgroundService.latitude);
-                notificationMessage.put("requestID", RequestID);
-                notificationMessage.put("type", "Request");
-                notificationMessage.put("date", currentTime);
+        //new bloodDonationRequest.GetRequestID().execute(SentUsers);
 
-                mfirestore.collection("Users/" + user_ids.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.hide();
-                        SendRequestBtn.setClickable(true);
-                        Toast.makeText(bloodDonationRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-            progressDialog.hide();
-            SendRequestBtn.setClickable(true);
-            Toast.makeText(bloodDonationRequest.this, R.string.blood_request_success, Toast.LENGTH_SHORT).show();
-            GoToHome();
-        }
     }
     private void GoToHome() {
         Intent HomeIntent = new Intent(this, Home.class);
@@ -406,6 +388,7 @@ public class bloodDonationRequest extends AppCompatActivity {
         if(locationManager ==null)
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         try{
+            assert locationManager != null;
             gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         }catch(Exception ex){
             //do nothing...
@@ -416,6 +399,7 @@ public class bloodDonationRequest extends AppCompatActivity {
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }

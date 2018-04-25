@@ -286,7 +286,7 @@ public class HelpRequest extends AppCompatActivity {
                 }
                 progressDialog.hide();
                 SendRequestBtn.setClickable(true);
-                Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HelpRequest.this, R.string.help_request_sent, Toast.LENGTH_SHORT).show();
                 GoToHome();
             }
         });

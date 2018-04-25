@@ -184,6 +184,7 @@
     <string name="description_title">التفاصيل</string>
     <string name="address_title">العنوان</string>
     <string name="language">Englishُ</string>
+    <string name="help_request_sent">تم ارسال طلب المساعدة</string>
     <!-- **************************************** -->
 
 </resources>
