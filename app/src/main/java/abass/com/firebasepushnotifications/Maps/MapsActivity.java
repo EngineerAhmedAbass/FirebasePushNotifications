@@ -49,6 +49,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -224,13 +230,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.addMarker(markerOptions);
                 }
 
-                Toast.makeText(getBaseContext(), jsonArray.length() + " " + data + " found!",
-
-                        Toast.LENGTH_LONG).show();
             } else if (result.getString(AppConfig.STATUS).equalsIgnoreCase(AppConfig.ZERO_RESULTS)) {
                 Toast.makeText(getBaseContext(), "No Places found in " + Distance + " radius!!!",
 
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
