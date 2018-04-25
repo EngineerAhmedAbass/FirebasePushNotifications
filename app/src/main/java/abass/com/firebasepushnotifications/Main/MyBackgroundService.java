@@ -164,9 +164,9 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         // Create the location request to start receiving updates
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        long UPDATE_INTERVAL = 5 * 60 * 1000;
+        long UPDATE_INTERVAL = 15 * 60 * 1000;
         mLocationRequest.setInterval(UPDATE_INTERVAL);
-        long FASTEST_INTERVAL = 5 * 1000;
+        long FASTEST_INTERVAL = 5 * 60 * 1000;
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
         // Create LocationSettingsRequest object using location request
