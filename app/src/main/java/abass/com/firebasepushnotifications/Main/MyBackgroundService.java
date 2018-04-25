@@ -97,7 +97,6 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
         editor.putString("longtitude", longtitude);
         editor.putString("latitude", latitude);
         editor.putBoolean("Updated", Updated);
-        Log.e(TAG, "----------- OnSave ----- " + mCurrentlocation.getLatitude() + " " + mCurrentlocation.getLongitude());
         editor.apply();
     }
 
