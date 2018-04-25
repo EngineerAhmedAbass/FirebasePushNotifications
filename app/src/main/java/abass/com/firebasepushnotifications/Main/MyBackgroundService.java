@@ -73,9 +73,9 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
             Type type = new TypeToken<Location>() {
             }.getType();
             mCurrentlocation = gson.fromJson(json, type);
-            mCurrentID = settings.getString("mCurrentID", "Shit");
-            longtitude = settings.getString("longtitude", "Shit");
-            latitude = settings.getString("latitude", "Shit");
+            mCurrentID = settings.getString("mCurrentID", "null");
+            longtitude = settings.getString("longtitude", "null");
+            latitude = settings.getString("latitude", "null");
             Updated = settings.getBoolean("Updated", false);
             if (mCurrentlocation != null) {
                 Log.e("Current Location ", mCurrentlocation.getLatitude() + " " + mCurrentlocation.getLongitude());
