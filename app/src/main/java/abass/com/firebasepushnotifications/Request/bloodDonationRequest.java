@@ -235,10 +235,10 @@ public class bloodDonationRequest extends AppCompatActivity {
                             continue;
                         }
                         double Dist = distance(Double.parseDouble(MyBackgroundService.latitude), Double.parseDouble(MyBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
-                        if (Dist > 10) {
-                            continue;
+                        if (Dist < 10) {
+                            Log.e("Distance ","To "+temp_user.getName()+" "+Dist);
+                            SentUsers.add(user_id);
                         }
-                        SentUsers.add(user_id);
                     }
                 }
             }
