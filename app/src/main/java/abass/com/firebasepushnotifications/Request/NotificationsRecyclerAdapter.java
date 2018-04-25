@@ -99,7 +99,7 @@ public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<Notificat
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
-                return false;
+                return true;
             }
         });
     }
