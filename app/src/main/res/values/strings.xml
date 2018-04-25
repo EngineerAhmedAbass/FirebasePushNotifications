@@ -290,4 +290,5 @@
     <string name="chest_pain">الم في الصدر</string>
     <string name="help_request_sent">The Help Request Sent</string>
     <string name="notification_deleted">Notification Deleted Successfully.</string>
+    <string name="no_users">No Users Close To You</string>
 </resources>
