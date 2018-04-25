@@ -185,6 +185,7 @@
     <string name="address_title">العنوان</string>
     <string name="language">Englishُ</string>
     <string name="help_request_sent">تم ارسال طلب المساعدة</string>
+    <string name="notification_deleted">تم مسح الاشعار</string>
     <!-- **************************************** -->
 
 </resources>
