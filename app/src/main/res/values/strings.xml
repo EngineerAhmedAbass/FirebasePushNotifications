@@ -176,7 +176,7 @@
     <string name="activate_sos">Please Activate SOS Message First!</string>
     <string name="add_contact_first">Please Add contacts first!</string>
     <string name="sms_sent">SOS Message Sent!</string>
-    <string name="sms_failed">SMS faild, please try again later!</string>
+    <string name="sms_failed">SMS failed, please try again later!</string>
     <string name="add_3_contacts">Sorry you can\'t add more than 3 Contacts!</string>
     <string name="contact_deleted_success">Contact deleted successfully!</string>
     <string name="contact_added_success">Contact added successfully!</string>
@@ -288,4 +288,16 @@
     <string name="fever">الحمة</string>
     <string name="keep_clean">أخبر الشخص أن يحافظ على الجرح نظيفًا وجافًا. يجب تغيير علي الجرح كل يومين أو ثلاثة أيام</string>
     <string name="chest_pain">الم في الصدر</string>
+    <string name="asthma">الربو</string>
+    <string name="choose_situation">اختار الحالة</string>
+    <string name="nose_bleed">نزيف الانف</string>
+    <string name="pinsh_nose">اطلب من الشخص أن يقرص أنفه فوق فتحة الأنف بابهامه و السبابه و أخبره أن يتنفس من خلال الفم</string>
+    <string name="continute_binch">واصل قرص لمدة من 10 إلى 15 دقيقة. وسوف يتوقف نزيف الأنف</string>
+    <string name="nose_bleed_transport">إذا استمر النزف بعد 20 دقيقة ؛ أو كان النزيف ناتجًا عن لكمة في الأنف أو الرأس ؛ أو عن طريق السقوط أو حادث , إذا كان النزيف ثقيلًا أو عندما يأخذ الشخص دواء يعمل علي سيولة الدم ، أو اصبح الشخص شاحبًا أو نائمًا أو فقد وعيه: اطلب المساعدة الطبية العاجلة</string>
+    <string name="safe_from_drowning">تأكد من أنك لست في خطر الغرق</string>
+    <string name="rope_help">حاول إلقاء حبل أو شيء ما للشخص الذي يمكنه التمسك به</string>
+    <string name="get_victim_out">أزل الضحية من الماء ، لكن لا تضع نفسك في خطر عند القيام بذلك</string>
+    <string name="get_the_water_out">عند انقاذه ، لا تحاول اخراج المياه من رئاتي الضحية</string>
+    <string name="recovery_position">إذا كان الشخص يتنفس ، ضعه في وضع الامان</string>
+    <string name="no_breathe">إذا كان الشخص لا يتنفس ، ابدأ في إعطاء الإنعاش القلبي الرئوي(CPR) على الفور</string>
 </resources>

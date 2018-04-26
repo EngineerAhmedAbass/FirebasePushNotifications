@@ -2,9 +2,9 @@ package abass.com.firebasepushnotifications.First_Aid;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,23 +13,23 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Main.SettingsActivity;
 import abass.com.firebasepushnotifications.Main.ShowNotifications;
+import abass.com.firebasepushnotifications.R;
 
-public class dog_bite extends AppCompatActivity {
+public class nose_bleed extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dog_bite);
+        setContentView(R.layout.activity_nose_bleed);
 
         Toolbar toolbar =  findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.dog_bite);
+        setTitle(getString(R.string.nose_bleed));
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);

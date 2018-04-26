@@ -29,7 +29,7 @@ public class asthma extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.request_help);
+        setTitle(getString(R.string.asthma));
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);

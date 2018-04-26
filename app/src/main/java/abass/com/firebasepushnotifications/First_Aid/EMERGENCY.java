@@ -107,7 +107,32 @@ public class EMERGENCY extends Fragment {
             }
         });
 
+        ImageButton nose = view.findViewById(R.id.ImageButton12);
+        nose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                opennose();
+            }
+        });
+        ImageButton drowning = view.findViewById(R.id.ImageButton13);
+        drowning.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                opendrowning();
+            }
+        });
+
         return view;
+    }
+
+    private void opendrowning() {
+        Intent intent = new Intent(EMERGENCY.this.getActivity(), drowning.class);
+        startActivity(intent);
+    }
+
+    private void opennose() {
+        Intent intent = new Intent(EMERGENCY.this.getActivity(), nose_bleed.class);
+        startActivity(intent);
     }
 
     private void opencuts() {

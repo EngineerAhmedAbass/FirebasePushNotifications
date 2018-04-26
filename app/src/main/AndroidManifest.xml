@@ -28,17 +28,19 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
-
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Request.LoginActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Request.RegisterActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Request.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Request.RegisterActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".Request.FirebaseMessagingService">
             <intent-filter>
@@ -50,28 +52,32 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name=".Request.NotificationActivity"
-                  android:screenOrientation="portrait"
-                  android:parentActivityName=".Main.ShowNotifications">
+        <activity
+            android:name=".Request.NotificationActivity"
+            android:parentActivityName=".Main.ShowNotifications"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="abass.com.firebasepushnotifications.TARGETNOTIFICATION" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity  android:name=".Request.HelpRequest"
-            android:screenOrientation="portrait"
+        <activity
+            android:name=".Request.HelpRequest"
             android:parentActivityName=".Main.Home"
-            />
-        <activity android:name=".Maps.MapsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Maps.MapsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_maps"
-            android:theme="@style/FullscreenTheme"
-            android:parentActivityName=".Maps.MainMap"/>
-        <activity  android:name=".Maps.MainMap"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Main.Home" />
-
-        <activity android:name=".Main.Home"
+            android:parentActivityName=".Maps.MainMap"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".Maps.MainMap"
+            android:parentActivityName=".Main.Home"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Main.Home"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -93,36 +99,37 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity  android:name=".Main.ShowNotifications"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Main.Home" />
-        <activity  android:name=".Main.SettingsActivity"
-            android:screenOrientation="portrait"
+        <activity
+            android:name=".Main.ShowNotifications"
+            android:parentActivityName=".Main.Home"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Main.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Main.Home"
-            />
-        <activity  android:name=".Request.bloodDonationRequest"
-            android:screenOrientation="portrait"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Request.bloodDonationRequest"
             android:parentActivityName=".Main.Home"
-            >
-        </activity>
-        <activity android:name=".Sos.SosActivity"
-                  android:parentActivityName=".Main.Home"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".Sos.Send_SOS_Message"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Sos.SosActivity"
+            android:parentActivityName=".Main.Home"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Sos.Send_SOS_Message"
             android:parentActivityName=".Sos.SosActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Sos.contacts"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Sos.contacts"
             android:parentActivityName=".Sos.SosActivity"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".First_Aid.MainActivity"
-            android:parentActivityName=".Main.Home"
             android:label="@string/app_name"
+            android:parentActivityName=".Main.Home"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".First_Aid.Burn"
             android:parentActivityName=".First_Aid.MainActivity"
@@ -147,19 +154,32 @@
             android:name=".First_Aid.dog_bite"
             android:parentActivityName=".First_Aid.MainActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".First_Aid.baby_choking"
-            android:parentActivityName=".First_Aid.MainActivity"/>
-        <activity android:name=".First_Aid.chest_pain"
-            android:parentActivityName=".First_Aid.MainActivity"/>
-        <activity android:name=".First_Aid.fracture"
-            android:parentActivityName=".First_Aid.MainActivity"/>
-        <activity android:name=".First_Aid.fever"
-            android:parentActivityName=".First_Aid.MainActivity"/>
-        <activity android:name=".First_Aid.cuts"
-            android:parentActivityName=".First_Aid.MainActivity"></activity>
+        <activity
+            android:name=".First_Aid.baby_choking"
+            android:parentActivityName=".First_Aid.MainActivity" />
+        <activity
+            android:name=".First_Aid.chest_pain"
+            android:parentActivityName=".First_Aid.MainActivity" />
+        <activity
+            android:name=".First_Aid.fracture"
+            android:parentActivityName=".First_Aid.MainActivity" />
+        <activity
+            android:name=".First_Aid.fever"
+            android:parentActivityName=".First_Aid.MainActivity" />
+        <activity
+            android:name=".First_Aid.cuts"
+            android:parentActivityName=".First_Aid.MainActivity" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9392e2e8658c4a409ede6c637c1e3ee1d94f0482" />
+
+        <activity
+            android:name=".First_Aid.nose_bleed"
+            android:parentActivityName=".First_Aid.MainActivity" />
+        <activity
+            android:name=".First_Aid.drowning"
+            android:parentActivityName=".First_Aid.MainActivity"></activity>
     </application>
 
 </manifest>

@@ -29,7 +29,7 @@ public class cuts extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.request_help);
+        setTitle(R.string.cuts_bruises);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);
