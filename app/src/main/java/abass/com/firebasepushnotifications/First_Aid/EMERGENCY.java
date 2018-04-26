@@ -114,6 +114,7 @@ public class EMERGENCY extends Fragment {
                 opennose();
             }
         });
+
         ImageButton drowning = view.findViewById(R.id.ImageButton13);
         drowning.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +123,20 @@ public class EMERGENCY extends Fragment {
             }
         });
 
+        ImageButton snake = view.findViewById(R.id.ImageButton14);
+        snake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                opensnake();
+            }
+        });
+
         return view;
+    }
+
+    private void opensnake() {
+        Intent intent = new Intent(EMERGENCY.this.getActivity(), snake_bite.class);
+        startActivity(intent);
     }
 
     private void opendrowning() {

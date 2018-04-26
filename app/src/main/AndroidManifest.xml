@@ -179,6 +179,9 @@
             android:parentActivityName=".First_Aid.MainActivity" />
         <activity
             android:name=".First_Aid.drowning"
+            android:parentActivityName=".First_Aid.MainActivity" />
+        <activity
+            android:name=".First_Aid.snake_bite"
             android:parentActivityName=".First_Aid.MainActivity"></activity>
     </application>
 
