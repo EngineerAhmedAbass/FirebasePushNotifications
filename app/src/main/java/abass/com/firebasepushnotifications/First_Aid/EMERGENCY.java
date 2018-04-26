@@ -131,7 +131,20 @@ public class EMERGENCY extends Fragment {
             }
         });
 
+        ImageButton stings = view.findViewById(R.id.ImageButton15);
+        stings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openstings();
+            }
+        });
+
         return view;
+    }
+
+    private void openstings() {
+        Intent intent = new Intent(EMERGENCY.this.getActivity(), bee_wasp_sting.class);
+        startActivity(intent);
     }
 
     private void opensnake() {

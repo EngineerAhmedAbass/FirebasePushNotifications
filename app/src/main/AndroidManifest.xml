@@ -182,6 +182,9 @@
             android:parentActivityName=".First_Aid.MainActivity" />
         <activity
             android:name=".First_Aid.snake_bite"
+            android:parentActivityName=".First_Aid.MainActivity" />
+        <activity
+            android:name=".First_Aid.bee_wasp_sting"
             android:parentActivityName=".First_Aid.MainActivity"></activity>
     </application>
 
