@@ -295,6 +295,7 @@ public class NotificationActivity extends AppCompatActivity {
         if(Language_Changed){
             Intent intent = new Intent(this,ShowNotifications.class);
             startActivity(intent);
+            finish();
         }else{
             finish();
             startActivity(new Intent(this,getParent().getClass()));

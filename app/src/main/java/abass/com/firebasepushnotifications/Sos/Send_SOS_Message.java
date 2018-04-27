@@ -178,9 +178,8 @@ public class Send_SOS_Message extends AppCompatActivity {
             Intent intent = new Intent(this,SosActivity.class);
             intent.putExtra("Language_Changed",Language_Changed);
             startActivity(intent);
-        }else {
-            finish();
         }
+        finish();
     }
     public void loadData()
     {

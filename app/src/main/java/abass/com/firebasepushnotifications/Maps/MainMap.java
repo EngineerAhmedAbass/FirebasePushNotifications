@@ -208,6 +208,7 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
             Intent intent = new Intent(this,Home.class);
             startActivity(intent);
         }
+        finish();
     }
 
     public void onNothingSelected(AdapterView<?> arg0) {

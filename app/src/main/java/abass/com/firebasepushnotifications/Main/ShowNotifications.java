@@ -66,6 +66,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
             Intent intent = new Intent(this,Home.class);
             startActivity(intent);
         }
+        finish();
     }
 
     @Override
