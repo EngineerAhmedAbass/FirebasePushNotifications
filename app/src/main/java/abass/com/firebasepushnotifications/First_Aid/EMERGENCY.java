@@ -138,6 +138,7 @@ public class EMERGENCY extends Fragment {
                 openstings();
             }
         });
+
         ImageButton epilepsy = view.findViewById(R.id.ImageButton18);
         epilepsy.setOnClickListener(new View.OnClickListener() {
             @Override

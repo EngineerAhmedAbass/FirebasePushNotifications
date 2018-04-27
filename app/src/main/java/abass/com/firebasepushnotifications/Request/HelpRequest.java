@@ -246,6 +246,9 @@ public class HelpRequest extends AppCompatActivity {
                             Log.e("Distance ", "To " + temp_user.getName() + " " + Dist);
                             SentUsers.add(user_id);
                         }
+                        else{
+                            Log.e("Distance ", "To " + temp_user.getName() + " " + Dist);
+                        }
                     }
 
                 }
