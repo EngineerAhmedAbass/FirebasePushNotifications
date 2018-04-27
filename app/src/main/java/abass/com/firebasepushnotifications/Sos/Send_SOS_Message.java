@@ -175,8 +175,11 @@ public class Send_SOS_Message extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         if(Language_Changed){
-            Intent intent = new Intent(this,Home.class);
+            Intent intent = new Intent(this,SosActivity.class);
+            intent.putExtra("Language_Changed",Language_Changed);
             startActivity(intent);
+        }else {
+            finish();
         }
     }
     public void loadData()
