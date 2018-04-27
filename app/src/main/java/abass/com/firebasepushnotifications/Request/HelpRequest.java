@@ -93,14 +93,14 @@ public class HelpRequest extends AppCompatActivity {
     private String mCurrentName;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
-    private Vector<String> SentUsers ;
-    private boolean Language_Changed=false;
+    private Vector<String> SentUsers;
+    private boolean Language_Changed = false;
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(Language_Changed){
-            Intent intent = new Intent(this,Home.class);
+        if (Language_Changed) {
+            Intent intent = new Intent(this, Home.class);
             startActivity(intent);
         }
         finish();
@@ -111,8 +111,8 @@ public class HelpRequest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_request);
 
-        Language_Changed = getIntent().getBooleanExtra("Language_Changed",false);
-        SentUsers= new Vector<>();
+        Language_Changed = getIntent().getBooleanExtra("Language_Changed", false);
+        SentUsers = new Vector<>();
         requestPermission();
         /*  Start Spinner Code */
         spinner = findViewById(R.id.domain_spinner);
@@ -203,24 +203,24 @@ public class HelpRequest extends AppCompatActivity {
                 startActivity(settings);
                 break;
             case R.id.Language:
-                Language_Changed =true;
-                if (item.getTitle().equals("English")){
+                Language_Changed = true;
+                if (item.getTitle().equals("English")) {
                     load = "en";
-                }else if (item.getTitle().equals("عربي")){
+                } else if (item.getTitle().equals("عربي")) {
                     load = "ar";
                 }
                 SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = defaultSharedPreferences.edit();
-                editor.putString("Language",load);
+                editor.putString("Language", load);
                 editor.apply();
                 Locale locale = new Locale(load);
                 Locale.setDefault(locale);
                 Configuration config = new Configuration();
                 config.locale = locale;
-                getResources().updateConfiguration(config,getResources().getDisplayMetrics());
+                getResources().updateConfiguration(config, getResources().getDisplayMetrics());
                 finish();
                 Intent intent = getIntent();
-                intent.putExtra("Language_Changed",Language_Changed);
+                intent.putExtra("Language_Changed", Language_Changed);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(getIntent());
             default:
@@ -266,67 +266,67 @@ public class HelpRequest extends AppCompatActivity {
                         }
                         double Dist = distance(Double.parseDouble(MyBackgroundService.latitude), Double.parseDouble(MyBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
                         if (Dist < 10) {
-                            Log.e("Distance ", "To " + temp_user.getName() + " " + Dist);
+                            Log.e("In Distance ", "To " + temp_user.getName() + " " + Dist);
                             SentUsers.add(user_id);
-                        }
-                        else{
-                            Log.e("Distance ", "To " + temp_user.getName() + " " + Dist);
+                        } else {
+                            Log.e("Out Distance ", "To " + temp_user.getName() + " " + Dist);
                         }
                     }
 
                 }
-            }
-        });
-        if (SentUsers.size() == 0) {
-            progressDialog.hide();
-            SendRequestBtn.setClickable(true);
-            Toast.makeText(HelpRequest.this, R.string.no_users, Toast.LENGTH_SHORT).show();
-        } else {
-            //*******************************************************************************//
-            Map<String, Object> RequestMessage = new HashMap<>();
-            Date currentTime = Calendar.getInstance().getTime();
-            RequestMessage.put("message", Message);
-            RequestMessage.put("from", mCurrentID);
-            RequestMessage.put("status", "waiting");
-            RequestMessage.put("longtitude", MyBackgroundService.longtitude);
-            RequestMessage.put("latitude", MyBackgroundService.latitude);
-            RequestMessage.put("date", currentTime);
-            mfirestore.collection("Requests").add(RequestMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    String RequestID = documentReference.getId();
-                    for (int i = 0; i < SentUsers.size(); i++) {
-                        Map<String, Object> notificationMessage = new HashMap<>();
-                        Date currentTime = Calendar.getInstance().getTime();
-                        notificationMessage.put("message", Message);
-                        notificationMessage.put("from", mCurrentID);
-                        notificationMessage.put("user_name", mCurrentName);
-                        notificationMessage.put("domain", Domain);
-                        notificationMessage.put("longtitude", MyBackgroundService.longtitude);
-                        notificationMessage.put("latitude", MyBackgroundService.latitude);
-                        notificationMessage.put("requestID", RequestID);
-                        notificationMessage.put("type", "Request");
-                        notificationMessage.put("date", currentTime);
-                        mfirestore.collection("Users/" + SentUsers.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                progressDialog.hide();
-                                SendRequestBtn.setClickable(true);
-                                Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
+                if (SentUsers.isEmpty()) {
                     progressDialog.hide();
                     SendRequestBtn.setClickable(true);
-                    Toast.makeText(HelpRequest.this, R.string.help_request_sent, Toast.LENGTH_SHORT).show();
-                    GoToHome();
+                    Toast.makeText(HelpRequest.this, R.string.no_users, Toast.LENGTH_SHORT).show();
+                } else {
+                    //*******************************************************************************//
+                    Map<String, Object> RequestMessage = new HashMap<>();
+                    Date currentTime = Calendar.getInstance().getTime();
+                    RequestMessage.put("message", Message);
+                    RequestMessage.put("from", mCurrentID);
+                    RequestMessage.put("status", "waiting");
+                    RequestMessage.put("longtitude", MyBackgroundService.longtitude);
+                    RequestMessage.put("latitude", MyBackgroundService.latitude);
+                    RequestMessage.put("date", currentTime);
+                    mfirestore.collection("Requests").add(RequestMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            String RequestID = documentReference.getId();
+                            for (int i = 0; i < SentUsers.size(); i++) {
+                                Map<String, Object> notificationMessage = new HashMap<>();
+                                Date currentTime = Calendar.getInstance().getTime();
+                                notificationMessage.put("message", Message);
+                                notificationMessage.put("from", mCurrentID);
+                                notificationMessage.put("user_name", mCurrentName);
+                                notificationMessage.put("domain", Domain);
+                                notificationMessage.put("longtitude", MyBackgroundService.longtitude);
+                                notificationMessage.put("latitude", MyBackgroundService.latitude);
+                                notificationMessage.put("requestID", RequestID);
+                                notificationMessage.put("type", "Request");
+                                notificationMessage.put("date", currentTime);
+                                mfirestore.collection("Users/" + SentUsers.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.hide();
+                                        SendRequestBtn.setClickable(true);
+                                        Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                            progressDialog.hide();
+                            SendRequestBtn.setClickable(true);
+                            Toast.makeText(HelpRequest.this, R.string.help_request_sent, Toast.LENGTH_SHORT).show();
+                            GoToHome();
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
+
     }
 
     private void GoToHome() {
