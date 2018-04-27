@@ -1,7 +1,9 @@
 package abass.com.firebasepushnotifications.Request;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,6 +19,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
+
+import abass.com.firebasepushnotifications.Main.Home;
 import abass.com.firebasepushnotifications.R;
 
 /**
@@ -27,7 +31,7 @@ public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<Notificat
 
     private List<MyNotification> notificationsList;
     private Context context;
-
+    FirebaseFirestore db;
 
     public NotificationsRecyclerAdapter(Context context, List<MyNotification> notificationsList) {
         this.notificationsList = notificationsList;
@@ -47,8 +51,8 @@ public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<Notificat
         String Distance_Text = String.format("%.2f", notificationsList.get(position).getDistance())+context.getString(R.string.km);
         holder.Distance.setText(Distance_Text);
         final String Notification_Id = notificationsList.get(position).notificationId;
-        String Current_User_Id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final String Current_User_Id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(Current_User_Id).collection("Notifications").document(Notification_Id);
 
         holder.mview.setOnClickListener(new View.OnClickListener() {
@@ -69,18 +73,51 @@ public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<Notificat
                         });
                     } else {
                         progressDialog.hide();
-                        Toast.makeText(context, "Check Your Internet Connection.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.no_internet, Toast.LENGTH_SHORT).show();
                     }
             }
         });
+        holder.mview.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Are you sure you want to Delete This Notification?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if (isNetworkAvailable()) {
+                                    DeleteNotification(Notification_Id,Current_User_Id);
+                                } else {
+                                    Toast.makeText(context, R.string.no_internet, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+                return true;
+            }
+        });
+    }
 
-
+    private void DeleteNotification(String notification_id,String User_id) {
+        db.collection("Users").document(User_id).collection("Notifications").document(notification_id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(context, R.string.notification_deleted, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void GoToNotifications(MyNotification notification) {
         Intent intent = new Intent(context, NotificationActivity.class);
         intent.putExtra("message", notification.getMessage());
-        intent.putExtra("from_user_id", notification.getUser_name());
+        intent.putExtra("from_name", notification.getUser_name());
+        intent.putExtra("from_id",notification.getFrom());
         intent.putExtra("latitude", notification.getLatitude());
         intent.putExtra("longtitude", notification.getLongtitude());
         intent.putExtra("domain", notification.getDomain());

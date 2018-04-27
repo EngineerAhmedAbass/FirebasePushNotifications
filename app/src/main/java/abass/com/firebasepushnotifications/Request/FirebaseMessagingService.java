@@ -41,7 +41,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String MessageBody = remoteMessage.getNotification().getBody();
 
         String dataMessage = remoteMessage.getData().get("message");
-        String dataFrom = remoteMessage.getData().get("from_user_id");
+        String dataFrom = remoteMessage.getData().get("from_user_name");
+        String From_ID = remoteMessage.getData().get("from_user_id");
         String latitude = remoteMessage.getData().get("latitude");
         String longtitude = remoteMessage.getData().get("longtitude");
         String Domain = remoteMessage.getData().get("domain");
@@ -72,7 +73,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         long mNotification_id = new Date().getTime();
         Intent intent = new Intent(this, NotificationActivity.class);
         intent.putExtra("message", dataMessage);
-        intent.putExtra("from_user_id", dataFrom);
+        intent.putExtra("from_id",From_ID);
+        intent.putExtra("from_name", dataFrom);
         intent.putExtra("latitude", latitude);
         intent.putExtra("longtitude", longtitude);
         intent.putExtra("domain", Domain);

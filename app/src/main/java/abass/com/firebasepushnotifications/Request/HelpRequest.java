@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -35,7 +36,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,12 +47,14 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -62,17 +64,20 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
+
 import abass.com.firebasepushnotifications.Main.Home;
+import abass.com.firebasepushnotifications.Main.LoginActivity;
 import abass.com.firebasepushnotifications.Main.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Main.SettingsActivity;
 import abass.com.firebasepushnotifications.Main.ShowNotifications;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class HelpRequest extends AppCompatActivity {
-    ProgressDialog progressDialog;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     private static GoogleApiClient mGoogleApiClient;
+    ProgressDialog progressDialog;
     MyBackgroundService myBackgroundService;
     LocationManager locationManager;
     private Spinner spinner;
@@ -112,7 +117,7 @@ public class HelpRequest extends AppCompatActivity {
 
         requestText = findViewById(R.id.text_help);
         SendRequestBtn = findViewById(R.id.send_request);
-        Toolbar toolbar =  findViewById(R.id.app_bar);
+        Toolbar toolbar = findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -120,7 +125,7 @@ public class HelpRequest extends AppCompatActivity {
         setTitle(R.string.request_help);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);
+        TextView mTitle = toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getTitle());
 
         mAuth = FirebaseAuth.getInstance();
@@ -150,7 +155,7 @@ public class HelpRequest extends AppCompatActivity {
                         SendNotifications();
                     } else {
                         SendRequestBtn.setClickable(true);
-                        Toast.makeText(HelpRequest.this,  R.string.no_internet, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HelpRequest.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     SendRequestBtn.setClickable(true);
@@ -181,16 +186,16 @@ public class HelpRequest extends AppCompatActivity {
                 startActivity(settings);
                 break;
             case R.id.Language:
-                if (item.getTitle().equals("English")){
+                if (item.getTitle().equals("English")) {
                     load = "en";
-                }else if (item.getTitle().equals("عربي")){
+                } else if (item.getTitle().equals("عربي")) {
                     load = "ar";
                 }
                 Locale locale = new Locale(load);
                 Locale.setDefault(locale);
                 Configuration config = new Configuration();
                 config.locale = locale;
-                getResources().updateConfiguration(config,getResources().getDisplayMetrics());
+                getResources().updateConfiguration(config, getResources().getDisplayMetrics());
                 finish();
                 startActivity(getIntent());
             default:
@@ -233,65 +238,69 @@ public class HelpRequest extends AppCompatActivity {
                         if (temp_user.getToken_id() == null || user_id.equals(mCurrentID)) {
                             continue;
                         }
-                        if(temp_user.getLatitude() == null || temp_user.getLongtitude() == null  ){
+                        if (temp_user.getLatitude() == null || temp_user.getLongtitude() == null) {
                             continue;
                         }
                         double Dist = distance(Double.parseDouble(MyBackgroundService.latitude), Double.parseDouble(MyBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
-                        if (Dist > 10) {
-                            continue;
+                        if (Dist < 10) {
+                            Log.e("Distance ", "To " + temp_user.getName() + " " + Dist);
+                            SentUsers.add(user_id);
                         }
-                        SentUsers.add(user_id);
                     }
 
                 }
             }
         });
-        //*******************************************************************************//
-        Map<String, Object> RequestMessage = new HashMap<>();
-        Date currentTime = Calendar.getInstance().getTime();
-        RequestMessage.put("message", Message);
-        RequestMessage.put("from", mCurrentID);
-        RequestMessage.put("status","waiting");
-        RequestMessage.put("longtitude", MyBackgroundService.longtitude);
-        RequestMessage.put("latitude", MyBackgroundService.latitude);
-        RequestMessage.put("date", currentTime);
-        mfirestore.collection("Requests").add(RequestMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                String RequestID = documentReference.getId();
-                for (int i = 0; i < SentUsers.size(); i++) {
-                    Map<String, Object> notificationMessage = new HashMap<>();
-                    Date currentTime = Calendar.getInstance().getTime();
-                    notificationMessage.put("message", Message);
-                    notificationMessage.put("from", mCurrentID);
-                    notificationMessage.put("user_name", mCurrentName);
-                    notificationMessage.put("domain", Domain);
-                    notificationMessage.put("longtitude", MyBackgroundService.longtitude);
-                    notificationMessage.put("latitude", MyBackgroundService.latitude);
-                    notificationMessage.put("requestID", RequestID);
-                    notificationMessage.put("type", "Request");
-                    notificationMessage.put("date", currentTime);
-                    mfirestore.collection("Users/" + SentUsers.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.hide();
-                            SendRequestBtn.setClickable(true);
-                            Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+        if (SentUsers.size() == 0) {
+            progressDialog.hide();
+            SendRequestBtn.setClickable(true);
+            Toast.makeText(HelpRequest.this, R.string.no_users, Toast.LENGTH_SHORT).show();
+        } else {
+            //*******************************************************************************//
+            Map<String, Object> RequestMessage = new HashMap<>();
+            Date currentTime = Calendar.getInstance().getTime();
+            RequestMessage.put("message", Message);
+            RequestMessage.put("from", mCurrentID);
+            RequestMessage.put("status", "waiting");
+            RequestMessage.put("longtitude", MyBackgroundService.longtitude);
+            RequestMessage.put("latitude", MyBackgroundService.latitude);
+            RequestMessage.put("date", currentTime);
+            mfirestore.collection("Requests").add(RequestMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    String RequestID = documentReference.getId();
+                    for (int i = 0; i < SentUsers.size(); i++) {
+                        Map<String, Object> notificationMessage = new HashMap<>();
+                        Date currentTime = Calendar.getInstance().getTime();
+                        notificationMessage.put("message", Message);
+                        notificationMessage.put("from", mCurrentID);
+                        notificationMessage.put("user_name", mCurrentName);
+                        notificationMessage.put("domain", Domain);
+                        notificationMessage.put("longtitude", MyBackgroundService.longtitude);
+                        notificationMessage.put("latitude", MyBackgroundService.latitude);
+                        notificationMessage.put("requestID", RequestID);
+                        notificationMessage.put("type", "Request");
+                        notificationMessage.put("date", currentTime);
+                        mfirestore.collection("Users/" + SentUsers.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progressDialog.hide();
+                                SendRequestBtn.setClickable(true);
+                                Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    progressDialog.hide();
+                    SendRequestBtn.setClickable(true);
+                    Toast.makeText(HelpRequest.this, R.string.help_request_sent, Toast.LENGTH_SHORT).show();
+                    GoToHome();
                 }
-                progressDialog.hide();
-                SendRequestBtn.setClickable(true);
-                Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
-                GoToHome();
-            }
-        });
-
-
+            });
+        }
         //*******************************************************************************//
         //new GetRequestID().execute(SentUsers);
     }

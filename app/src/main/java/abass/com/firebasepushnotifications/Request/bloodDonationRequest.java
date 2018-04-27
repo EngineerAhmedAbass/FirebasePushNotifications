@@ -9,7 +9,6 @@ import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -49,15 +48,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,6 +56,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import abass.com.firebasepushnotifications.Main.Home;
+import abass.com.firebasepushnotifications.Main.LoginActivity;
 import abass.com.firebasepushnotifications.Main.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Main.SettingsActivity;
@@ -75,23 +66,19 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class bloodDonationRequest extends AppCompatActivity {
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private static GoogleApiClient mGoogleApiClient;
+    MyBackgroundService myBackgroundService;
+    ProgressDialog progressDialog;
+    LocationManager locationManager;
     private Spinner spinner;
     private EditText requestText;
     private Button SendRequestBtn;
-
     private String Message;
-
     private String mCurrentID;
     private String mCurrentName;
-    MyBackgroundService myBackgroundService;
-    ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
-
-    LocationManager locationManager;
-    private static GoogleApiClient mGoogleApiClient;
-    private static final int REQUEST_CHECK_SETTINGS = 0x1;
-
     private Vector<String> SentUsers = new Vector<>();
 
     @Override
@@ -123,7 +110,7 @@ public class bloodDonationRequest extends AppCompatActivity {
         setTitle(R.string.request_blood);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);
+        TextView mTitle = toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getTitle());
         mAuth = FirebaseAuth.getInstance();
 
@@ -173,15 +160,14 @@ public class bloodDonationRequest extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu,menu);
+        menuInflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         String load = "";
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.notification:
                 Intent GoToNotifications = new Intent(this, ShowNotifications.class);
                 startActivity(GoToNotifications);
@@ -191,16 +177,16 @@ public class bloodDonationRequest extends AppCompatActivity {
                 startActivity(settings);
                 break;
             case R.id.Language:
-                if (item.getTitle().equals("English")){
+                if (item.getTitle().equals("English")) {
                     load = "en";
-                }else if (item.getTitle().equals("عربي")){
+                } else if (item.getTitle().equals("عربي")) {
                     load = "ar";
                 }
                 Locale locale = new Locale(load);
                 Locale.setDefault(locale);
                 Configuration config = new Configuration();
                 config.locale = locale;
-                getResources().updateConfiguration(config,getResources().getDisplayMetrics());
+                getResources().updateConfiguration(config, getResources().getDisplayMetrics());
                 finish();
                 startActivity(getIntent());
             default:
@@ -227,8 +213,8 @@ public class bloodDonationRequest extends AppCompatActivity {
         mCurrentID = mAuth.getCurrentUser().getUid();
         Message = requestText.getText().toString();
         String btype = spinner.getSelectedItem().toString();
-        Message +=" \n ";
-        Message += btype + R.string.blood_type  ;
+        Message += " \n ";
+        Message += btype + " " + R.string.blood_type;
         mfirestore.collection("Users").addSnapshotListener(bloodDonationRequest.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -240,84 +226,72 @@ public class bloodDonationRequest extends AppCompatActivity {
                         if (temp_user.getToken_id() == null || user_id.equals(mCurrentID)) {
                             continue;
                         }
-                        if(temp_user.getLatitude() == null || temp_user.getLongtitude() == null  ){
+                        if (temp_user.getLatitude() == null || temp_user.getLongtitude() == null) {
                             continue;
                         }
                         double Dist = distance(Double.parseDouble(MyBackgroundService.latitude), Double.parseDouble(MyBackgroundService.longtitude), Double.parseDouble(temp_user.getLatitude()), Double.parseDouble(temp_user.getLongtitude()));
-                        if (Dist > 10) {
-                            continue;
+                        if (Dist < 10) {
+                            Log.e("Distance ", "To " + temp_user.getName() + " " + Dist);
+                            SentUsers.add(user_id);
                         }
-                        SentUsers.add(user_id);
                     }
                 }
             }
         });
-        new bloodDonationRequest.GetRequestID().execute(SentUsers);
 
-    }
-
-    class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
-        Vector<String> user_ids;
-
-        protected String doInBackground(Vector<String>... strings) {
-            String url=null;
-            try {
-                url = "http://refadatours.com/android/addRequest.php?message=" + URLEncoder.encode(Message, "UTF-8") +"&senderID="+mCurrentID;
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            user_ids = strings[0];
-            HttpEntity httpEntity = null;
-            try {
-                DefaultHttpClient httpClient = new DefaultHttpClient();  // Default HttpClient
-                HttpGet httpGet = new HttpGet(url);
-                HttpResponse httpResponse = httpClient.execute(httpGet);
-                httpEntity = httpResponse.getEntity();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String entityResponse = null;
-            try {
-                entityResponse = EntityUtils.toString(httpEntity);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return entityResponse;
-        }
-
-        protected void onPostExecute(String RequestID) {
-            for (int i = 0; i < user_ids.size(); i++) {
-                Map<String, Object> notificationMessage = new HashMap<>();
-                Date currentTime = Calendar.getInstance().getTime();
-                notificationMessage.put("message", Message);
-                notificationMessage.put("from", mCurrentID);
-                notificationMessage.put("user_name", mCurrentName);
-                notificationMessage.put("domain", "تبرع بالدم");
-                notificationMessage.put("longtitude", MyBackgroundService.longtitude);
-                notificationMessage.put("latitude", MyBackgroundService.latitude);
-                notificationMessage.put("requestID", RequestID);
-                notificationMessage.put("type", "Request");
-                notificationMessage.put("date", currentTime);
-
-                mfirestore.collection("Users/" + user_ids.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.hide();
-                        SendRequestBtn.setClickable(true);
-                        Toast.makeText(bloodDonationRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+        if (SentUsers.size() == 0) {
             progressDialog.hide();
             SendRequestBtn.setClickable(true);
-            Toast.makeText(bloodDonationRequest.this, R.string.blood_request_success, Toast.LENGTH_SHORT).show();
-            GoToHome();
+            Toast.makeText(this, R.string.no_users, Toast.LENGTH_SHORT).show();
+        } else {
+            Map<String, Object> RequestMessage = new HashMap<>();
+            Date currentTime = Calendar.getInstance().getTime();
+            RequestMessage.put("message", Message);
+            RequestMessage.put("from", mCurrentID);
+            RequestMessage.put("status", "waiting");
+            RequestMessage.put("longtitude", MyBackgroundService.longtitude);
+            RequestMessage.put("latitude", MyBackgroundService.latitude);
+            RequestMessage.put("date", currentTime);
+            mfirestore.collection("Requests").add(RequestMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    String RequestID = documentReference.getId();
+                    for (int i = 0; i < SentUsers.size(); i++) {
+                        Map<String, Object> notificationMessage = new HashMap<>();
+                        Date currentTime = Calendar.getInstance().getTime();
+                        notificationMessage.put("message", Message);
+                        notificationMessage.put("from", mCurrentID);
+                        notificationMessage.put("user_name", mCurrentName);
+                        notificationMessage.put("domain", "تبرع بالدم");
+                        notificationMessage.put("longtitude", MyBackgroundService.longtitude);
+                        notificationMessage.put("latitude", MyBackgroundService.latitude);
+                        notificationMessage.put("requestID", RequestID);
+                        notificationMessage.put("type", "Request");
+                        notificationMessage.put("date", currentTime);
+                        mfirestore.collection("Users/" + SentUsers.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progressDialog.hide();
+                                SendRequestBtn.setClickable(true);
+                                Toast.makeText(bloodDonationRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    progressDialog.hide();
+                    SendRequestBtn.setClickable(true);
+                    Toast.makeText(bloodDonationRequest.this, R.string.blood_request_success, Toast.LENGTH_SHORT).show();
+                    GoToHome();
+                }
+            });
         }
+        //new bloodDonationRequest.GetRequestID().execute(SentUsers);
+
     }
+
     private void GoToHome() {
         Intent HomeIntent = new Intent(this, Home.class);
         startActivity(HomeIntent);
@@ -329,8 +303,8 @@ public class bloodDonationRequest extends AppCompatActivity {
         finish();
     }
 
-    private void requestPermission(){
-        ActivityCompat.requestPermissions(bloodDonationRequest.this,new String[]{ACCESS_FINE_LOCATION},1);
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(bloodDonationRequest.this, new String[]{ACCESS_FINE_LOCATION}, 1);
     }
 
     private void showSettingDialog() {
@@ -383,13 +357,13 @@ public class bloodDonationRequest extends AppCompatActivity {
                 switch (resultCode) {
                     case RESULT_OK:
                         Log.e("Settings", "Result OK");
-                        if(isNetworkAvailable()){
-                            if (ActivityCompat.checkSelfPermission( bloodDonationRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        if (isNetworkAvailable()) {
+                            if (ActivityCompat.checkSelfPermission(bloodDonationRequest.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                 Toast.makeText(bloodDonationRequest.this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             Toast.makeText(bloodDonationRequest.this, R.string.location_enabled, Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
                             Toast.makeText(bloodDonationRequest.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -400,25 +374,30 @@ public class bloodDonationRequest extends AppCompatActivity {
                 break;
         }
     }
-    public boolean isLocationServiceEnabled(){
-        boolean gps_enabled= false;
 
-        if(locationManager ==null)
+    public boolean isLocationServiceEnabled() {
+        boolean gps_enabled = false;
+
+        if (locationManager == null)
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        try{
+        try {
+            assert locationManager != null;
             gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             //do nothing...
         }
 
-        return gps_enabled ;
+        return gps_enabled;
     }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
     private double distance(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
@@ -431,9 +410,11 @@ public class bloodDonationRequest extends AppCompatActivity {
         dist = dist / 1000;
         return (dist);
     }
+
     private double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
+
     private double rad2deg(double rad) {
         return (rad * 180.0 / Math.PI);
     }

@@ -1,6 +1,11 @@
 package abass.com.firebasepushnotifications.Main;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -26,18 +32,20 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import abass.com.firebasepushnotifications.R;
-import abass.com.firebasepushnotifications.Request.LoginActivity;
 import abass.com.firebasepushnotifications.Request.MyNotification;
 import abass.com.firebasepushnotifications.Request.NotificationsRecyclerAdapter;
 
 public class ShowNotifications extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private Spinner Sorting_Spiner;
+    android.support.v4.widget.SwipeRefreshLayout swipeRefreshLayout;
     private CheckBox Request_check, Blood_check, Responces_check;
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
@@ -72,6 +80,18 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         Log.e("Test", "............. OnCreate .......");
         setContentView(R.layout.activity_show_notifications);
 
+        swipeRefreshLayout = findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(isNetworkAvailable()){
+                    ReLoadNotifications();
+                    return;
+                }else{
+                    Toast.makeText(ShowNotifications.this, R.string.no_internet, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         /*  Start Spinner Code */
 
         Sorting_Spiner = findViewById(R.id.sorting_spinner);
@@ -119,7 +139,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle("Notifications");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);
+        TextView mTitle = toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getTitle());
 
         mFirestore = FirebaseFirestore.getInstance();
@@ -148,16 +168,27 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        String load = "";
         switch (item.getItemId()) {
             case R.id.notification:
-                Intent GoToNotifications = new Intent(this, ShowNotifications.class);
-                startActivity(GoToNotifications);
                 break;
             case R.id.settings:
                 Intent settings = new Intent(this, SettingsActivity.class);
                 startActivity(settings);
                 break;
+            case R.id.Language:
+                if (item.getTitle().equals("English")) {
+                    load = "en";
+                } else if (item.getTitle().equals("عربي")) {
+                    load = "ar";
+                }
+                Locale locale = new Locale(load);
+                Locale.setDefault(locale);
+                Configuration config = new Configuration();
+                config.locale = locale;
+                getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+                finish();
+                startActivity(getIntent());
             default:
 
         }
@@ -183,15 +214,16 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
             }
         }
         if ((Type.equals("Response") || Type.equals("Main"))) {
-            if(response) {
+            if (response) {
                 notificationsList_Displayed.addAll(notificationsList_Responces);
-            }else {
+            } else {
                 notificationsList_Displayed.removeAll(notificationsList_Responces);
             }
         }
         String Selected_sort = Sorting_Spiner.getSelectedItem().toString();
         Sort_The_Data(Selected_sort);
         notificationsRecyclerAdapter.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -205,6 +237,10 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
             mFirestore = FirebaseFirestore.getInstance();
             mCurrentID = mAuth.getUid();
         }
+        ReLoadNotifications();
+    }
+
+    private void ReLoadNotifications() {
         notificationsList_Blood_Request.clear();
         notificationsList_Help_Request.clear();
         notificationsList_Responces.clear();
@@ -232,7 +268,6 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
                 Chech_Filters("Main");
             }
         });
-
     }
 
     private void sendToLogin() {
@@ -261,7 +296,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         return (rad * 180.0 / Math.PI);
     }
 
-    public void Sort_The_Data(String Selected_sort){
+    public void Sort_The_Data(String Selected_sort) {
         switch (Selected_sort) {
             case "Select Sorting Method":
             case "طريقة الترتيب":
@@ -272,12 +307,12 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
                 Collections.sort(notificationsList_Displayed, new Custom_Distace_Comparator());
                 break;
             case "Descending by Distance":
-            case"من الابعد الى الاقرب":
+            case "من الابعد الى الاقرب":
                 Collections.sort(notificationsList_Displayed, new Custom_Distace_Comparator());
                 Collections.reverse(notificationsList_Displayed);
                 break;
             case "Ascending by Time":
-            case"من الاقدم الى الاحدث":
+            case "من الاقدم الى الاحدث":
                 Collections.sort(notificationsList_Displayed, new Custom_Date_Comparator());
                 break;
             case "Descending by Time":
@@ -318,5 +353,11 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         public int compare(MyNotification o1, MyNotification o2) {
             return o1.getDate().compareTo(o2.getDate());
         }
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

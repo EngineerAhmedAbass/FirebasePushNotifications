@@ -73,9 +73,9 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
             Type type = new TypeToken<Location>() {
             }.getType();
             mCurrentlocation = gson.fromJson(json, type);
-            mCurrentID = settings.getString("mCurrentID", "Shit");
-            longtitude = settings.getString("longtitude", "Shit");
-            latitude = settings.getString("latitude", "Shit");
+            mCurrentID = settings.getString("mCurrentID", "null");
+            longtitude = settings.getString("longtitude", "null");
+            latitude = settings.getString("latitude", "null");
             Updated = settings.getBoolean("Updated", false);
             if (mCurrentlocation != null) {
                 Log.e("Current Location ", mCurrentlocation.getLatitude() + " " + mCurrentlocation.getLongitude());
@@ -163,8 +163,8 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
 
         // Create the location request to start receiving updates
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        long UPDATE_INTERVAL = 5 * 60 * 1000;
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        long UPDATE_INTERVAL = 15 * 60 * 1000;
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         long FASTEST_INTERVAL = 5 * 1000;
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);

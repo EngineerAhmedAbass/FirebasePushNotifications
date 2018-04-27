@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -55,8 +56,10 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
+import abass.com.firebasepushnotifications.Main.LoginActivity;
 import abass.com.firebasepushnotifications.Main.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Main.SettingsActivity;
@@ -71,7 +74,8 @@ public class NotificationActivity extends AppCompatActivity {
     private static GoogleApiClient mGoogleApiClient;
     LocationManager locationManager;
     String dataMessage;
-    String dataFrom;
+    String From_Name;
+    String From_ID;
     String longtitude = null;
     String latitude = null;
     String Domain;
@@ -96,7 +100,8 @@ public class NotificationActivity extends AppCompatActivity {
         progressDialog.setTitle("Responding");
         progressDialog.setMessage("Please Wait till Response Completes");
         dataMessage = getIntent().getStringExtra("message");
-        dataFrom = getIntent().getStringExtra("from_user_id");
+        From_Name = getIntent().getStringExtra("from_name");
+        From_ID = getIntent().getStringExtra("from_id");
         longtitude = getIntent().getStringExtra("longtitude");
         latitude = getIntent().getStringExtra("latitude");
         Domain = getIntent().getStringExtra("domain");
@@ -148,7 +153,7 @@ public class NotificationActivity extends AppCompatActivity {
 
             }
         });
-        fromText.setText(dataFrom);
+        fromText.setText(From_Name);
         domainTxt.setText(Domain);
         messageTxt.setText(dataMessage);
         placeTxt.setText(R.string.the_location);
@@ -202,11 +207,10 @@ public class NotificationActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        String load = "";
         switch (item.getItemId()) {
             case R.id.notification:
-                Intent GoToNotifications = new Intent(NotificationActivity.this, ShowNotifications.class);
-                startActivity(GoToNotifications);
+                finish();
                 break;
             case R.id.settings:
                 Intent settings = new Intent(NotificationActivity.this, SettingsActivity.class);
@@ -215,6 +219,19 @@ public class NotificationActivity extends AppCompatActivity {
             case R.id.log_out:
                 Log_Out();
                 break;
+            case R.id.Language:
+                if (item.getTitle().equals("English")){
+                    load = "en";
+                }else if (item.getTitle().equals("عربي")){
+                    load = "ar";
+                }
+                Locale locale = new Locale(load);
+                Locale.setDefault(locale);
+                Configuration config = new Configuration();
+                config.locale = locale;
+                getResources().updateConfiguration(config,getResources().getDisplayMetrics());
+                finish();
+                startActivity(getIntent());
             default:
 
 
@@ -268,7 +285,42 @@ public class NotificationActivity extends AppCompatActivity {
     private void SendNotificationsRespond() {
         mfirestore = FirebaseFirestore.getInstance();
         Message = getString(R.string.respond_message);
-        new changeState().execute(Integer.parseInt(request_id));
+
+        Map<String, Object> RequestUpdate = new HashMap<>();
+        RequestUpdate.put("status","closed");
+        mfirestore.collection("Requests").document(request_id).update(RequestUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Status.setText(R.string.closed);
+                Date currentTime = Calendar.getInstance().getTime();
+                Map<String, Object> notificationMessage = new HashMap<>();
+                notificationMessage.put("message", Message);
+                notificationMessage.put("from", mCurrentID);
+                notificationMessage.put("user_name", mCurrentName);
+                notificationMessage.put("domain", Domain + " (Response)");
+                notificationMessage.put("longtitude", MyBackgroundService.longtitude);
+                notificationMessage.put("latitude", MyBackgroundService.latitude);
+                notificationMessage.put("requestID", request_id);
+                notificationMessage.put("type", "response");
+                notificationMessage.put("date", currentTime);
+                mfirestore.collection("Users/" + From_ID + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        sendRespond.setVisibility(View.INVISIBLE);
+                        progressDialog.hide();
+                        Toast.makeText(NotificationActivity.this, R.string.respond_sent, Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.hide();
+                        sendRespond.setClickable(true);
+                        Toast.makeText(NotificationActivity.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        //new changeState().execute(Integer.parseInt(request_id));
     }
 
     private void showSettingDialog() {
@@ -366,89 +418,5 @@ public class NotificationActivity extends AppCompatActivity {
         Intent intent = new Intent(NotificationActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    class GetStatus extends AsyncTask<Integer, Void, String> {
-
-        @Override
-        protected String doInBackground(Integer... integers) {
-            String url = "http://refadatours.com/android/getStatus.php?id=" + integers[0];
-            HttpEntity httpEntity = null;
-            try {
-                DefaultHttpClient httpClient = new DefaultHttpClient();  // Default HttpClient
-                HttpGet httpGet = new HttpGet(url);
-                HttpResponse httpResponse = httpClient.execute(httpGet);
-                httpEntity = httpResponse.getEntity();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String entityResponse = null;
-            try {
-                entityResponse = EntityUtils.toString(httpEntity);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return entityResponse;
-        }
-
-        protected void onPostExecute(String feed) {
-            if (feed.equals(getString(R.string.waiting))) {
-                sendRespond.setVisibility(View.VISIBLE);
-            }
-            Status.setText(feed);
-        }
-    }
-
-    class changeState extends AsyncTask<Integer, Void, String> {
-        @Override
-        protected String doInBackground(Integer... integers) {
-            String url = "http://refadatours.com/android/changeState.php?id=" + integers[0];
-            HttpEntity httpEntity = null;
-            try {
-                DefaultHttpClient httpClient = new DefaultHttpClient();  // Default HttpClient
-                HttpGet httpGet = new HttpGet(url);
-                HttpResponse httpResponse = httpClient.execute(httpGet);
-                httpEntity = httpResponse.getEntity();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String entityResponse = null;
-            try {
-                entityResponse = EntityUtils.toString(httpEntity);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return entityResponse;
-        }
-
-        protected void onPostExecute(final String feed) {
-            Status.setText(R.string.closed);
-            Date currentTime = Calendar.getInstance().getTime();
-            Map<String, Object> notificationMessage = new HashMap<>();
-            notificationMessage.put("message", Message);
-            notificationMessage.put("from", mCurrentID);
-            notificationMessage.put("user_name", mCurrentName);
-            notificationMessage.put("domain", Domain + " (Response)");
-            notificationMessage.put("longtitude", MyBackgroundService.longtitude);
-            notificationMessage.put("latitude", MyBackgroundService.latitude);
-            notificationMessage.put("requestID", request_id);
-            notificationMessage.put("type", "response");
-            notificationMessage.put("date", currentTime);
-            mfirestore.collection("Users/" + feed + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    sendRespond.setVisibility(View.INVISIBLE);
-                    progressDialog.hide();
-                    Toast.makeText(NotificationActivity.this, R.string.respond_sent, Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressDialog.hide();
-                    sendRespond.setClickable(true);
-                    Toast.makeText(NotificationActivity.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
     }
 }
