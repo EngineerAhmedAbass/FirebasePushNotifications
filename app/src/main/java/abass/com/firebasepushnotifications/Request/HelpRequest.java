@@ -93,7 +93,7 @@ public class HelpRequest extends AppCompatActivity {
     private String mCurrentName;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
-    private Vector<String> SentUsers = new Vector<>();
+    private Vector<String> SentUsers ;
     private boolean Language_Changed=false;
 
     @Override
@@ -112,7 +112,7 @@ public class HelpRequest extends AppCompatActivity {
         setContentView(R.layout.activity_help_request);
 
         Language_Changed = getIntent().getBooleanExtra("Language_Changed",false);
-
+        SentUsers= new Vector<>();
         requestPermission();
         /*  Start Spinner Code */
         spinner = findViewById(R.id.domain_spinner);
@@ -327,8 +327,6 @@ public class HelpRequest extends AppCompatActivity {
                 }
             });
         }
-        //*******************************************************************************//
-        //new GetRequestID().execute(SentUsers);
     }
 
     private void GoToHome() {
