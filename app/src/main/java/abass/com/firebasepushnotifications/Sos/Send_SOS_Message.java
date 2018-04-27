@@ -29,6 +29,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
+
+import abass.com.firebasepushnotifications.Main.Home;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Main.SettingsActivity;
 import abass.com.firebasepushnotifications.Main.ShowNotifications;
@@ -41,10 +43,15 @@ public class Send_SOS_Message extends AppCompatActivity {
     public boolean sos_switch;
     public TextView nameView;
     public TextView phoneView;
+    private boolean Language_Changed;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send__sos__message);
+
+        Language_Changed = getIntent().getBooleanExtra("Language_Changed",false);
+
         buttonSend =  findViewById(R.id.buttonSend);
         RelativeLayout parent_Relative_layout = findViewById(R.id.parent_Relative_layout2);
 
@@ -139,6 +146,7 @@ public class Send_SOS_Message extends AppCompatActivity {
                 startActivity(settings);
                 break;
             case R.id.Language:
+                Language_Changed =true;
                 if (item.getTitle().equals("English")){
                     load = "en";
                 }else if (item.getTitle().equals("عربي")){
@@ -154,18 +162,22 @@ public class Send_SOS_Message extends AppCompatActivity {
                 config.locale = locale;
                 getResources().updateConfiguration(config,getResources().getDisplayMetrics());
                 finish();
+                Intent intent = getIntent();
+                intent.putExtra("Language_Changed",Language_Changed);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(getIntent());
             default:
-
         }
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Send_SOS_Message.this, SosActivity.class);
-        startActivity(intent);
+        super.onBackPressed();
+        if(Language_Changed){
+            Intent intent = new Intent(this,Home.class);
+            startActivity(intent);
+        }
     }
     public void loadData()
     {

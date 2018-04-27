@@ -57,6 +57,16 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
     private List<MyNotification> notificationsList_Help_Request;
     private List<MyNotification> notificationsList_Responces;
     private NotificationsRecyclerAdapter notificationsRecyclerAdapter;
+    private boolean Language_Changed;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(Language_Changed){
+            Intent intent = new Intent(this,Home.class);
+            startActivity(intent);
+        }
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -81,6 +91,8 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         Log.e("Test", "............. OnCreate .......");
         setContentView(R.layout.activity_show_notifications);
+
+        Language_Changed = getIntent().getBooleanExtra("Language_Changed",false);
 
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -179,6 +191,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
                 startActivity(settings);
                 break;
             case R.id.Language:
+                Language_Changed =true;
                 if (item.getTitle().equals("English")){
                     load = "en";
                 }else if (item.getTitle().equals("عربي")){
@@ -194,6 +207,9 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
                 config.locale = locale;
                 getResources().updateConfiguration(config,getResources().getDisplayMetrics());
                 finish();
+                Intent intent = getIntent();
+                intent.putExtra("Language_Changed",Language_Changed);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(getIntent());
             default:
 
@@ -360,6 +376,7 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
             return o1.getDate().compareTo(o2.getDate());
         }
     }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -61,6 +61,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import abass.com.firebasepushnotifications.Main.Home;
 import abass.com.firebasepushnotifications.Main.LoginActivity;
 import abass.com.firebasepushnotifications.Main.MyBackgroundService;
 import abass.com.firebasepushnotifications.R;
@@ -93,11 +94,15 @@ public class NotificationActivity extends AppCompatActivity {
     private String mCurrentName;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
+    private boolean Language_Changed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+
+        Language_Changed = getIntent().getBooleanExtra("Language_Changed",false);
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Responding");
         progressDialog.setMessage("Please Wait till Response Completes");
@@ -221,6 +226,7 @@ public class NotificationActivity extends AppCompatActivity {
                 Log_Out();
                 break;
             case R.id.Language:
+                Language_Changed =true;
                 if (item.getTitle().equals("English")){
                     load = "en";
                 }else if (item.getTitle().equals("عربي")){
@@ -236,9 +242,11 @@ public class NotificationActivity extends AppCompatActivity {
                 config.locale = locale;
                 getResources().updateConfiguration(config,getResources().getDisplayMetrics());
                 finish();
+                Intent intent = getIntent();
+                intent.putExtra("Language_Changed",Language_Changed);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(getIntent());
             default:
-
 
         }
         return super.onOptionsItemSelected(item);
@@ -284,8 +292,13 @@ public class NotificationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
-        startActivity(new Intent(this,getParent().getClass()));
+        if(Language_Changed){
+            Intent intent = new Intent(this,ShowNotifications.class);
+            startActivity(intent);
+        }else{
+            finish();
+            startActivity(new Intent(this,getParent().getClass()));
+        }
     }
 
     private void SendNotificationsRespond() {

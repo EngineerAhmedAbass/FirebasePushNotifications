@@ -1,5 +1,7 @@
 package abass.com.firebasepushnotifications.Request;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -92,11 +94,23 @@ public class HelpRequest extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
     private Vector<String> SentUsers = new Vector<>();
+    private boolean Language_Changed=false;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(Language_Changed){
+            Intent intent = new Intent(this,Home.class);
+            startActivity(intent);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_request);
+
+        Language_Changed = getIntent().getBooleanExtra("Language_Changed",false);
 
         requestPermission();
         /*  Start Spinner Code */
@@ -188,6 +202,7 @@ public class HelpRequest extends AppCompatActivity {
                 startActivity(settings);
                 break;
             case R.id.Language:
+                Language_Changed =true;
                 if (item.getTitle().equals("English")){
                     load = "en";
                 }else if (item.getTitle().equals("عربي")){
@@ -203,10 +218,11 @@ public class HelpRequest extends AppCompatActivity {
                 config.locale = locale;
                 getResources().updateConfiguration(config,getResources().getDisplayMetrics());
                 finish();
+                Intent intent = getIntent();
+                intent.putExtra("Language_Changed",Language_Changed);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(getIntent());
             default:
-
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -439,71 +455,6 @@ public class HelpRequest extends AppCompatActivity {
 
     private double rad2deg(double rad) {
         return (rad * 180.0 / Math.PI);
-    }
-
-    class GetRequestID extends AsyncTask<Vector<String>, Void, String> {
-        Vector<String> user_ids;
-
-        protected String doInBackground(Vector<String>... strings) {
-            String url = null;
-            try {
-                url = "http://refadatours.com/android/addRequest.php?message=" + URLEncoder.encode(Message, "UTF-8") + "&senderID=" + mCurrentID;
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            user_ids = strings[0];
-            HttpEntity httpEntity = null;
-            try {
-                DefaultHttpClient httpClient = new DefaultHttpClient();  // Default HttpClient
-                HttpGet httpGet = new HttpGet(url);
-                HttpResponse httpResponse = httpClient.execute(httpGet);
-                httpEntity = httpResponse.getEntity();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String entityResponse = null;
-            try {
-                entityResponse = EntityUtils.toString(httpEntity);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return entityResponse;
-        }
-
-        protected void onPostExecute(String RequestID) {
-            Toast.makeText(HelpRequest.this, "Sender Name  " + mCurrentName, Toast.LENGTH_SHORT).show();
-            for (int i = 0; i < user_ids.size(); i++) {
-                Map<String, Object> notificationMessage = new HashMap<>();
-                Date currentTime = Calendar.getInstance().getTime();
-                notificationMessage.put("message", Message);
-                notificationMessage.put("from", mCurrentID);
-                notificationMessage.put("user_name", mCurrentName);
-                notificationMessage.put("domain", Domain);
-                notificationMessage.put("longtitude", MyBackgroundService.longtitude);
-                notificationMessage.put("latitude", MyBackgroundService.latitude);
-                notificationMessage.put("requestID", RequestID);
-                notificationMessage.put("type", "Request");
-                notificationMessage.put("date", currentTime);
-                mfirestore.collection("Users/" + user_ids.elementAt(i) + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.hide();
-                        SendRequestBtn.setClickable(true);
-                        Toast.makeText(HelpRequest.this, "Error :  " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-            progressDialog.hide();
-            SendRequestBtn.setClickable(true);
-            Toast.makeText(HelpRequest.this, "The Help Request Sent ", Toast.LENGTH_SHORT).show();
-            GoToHome();
-        }
     }
 
 }

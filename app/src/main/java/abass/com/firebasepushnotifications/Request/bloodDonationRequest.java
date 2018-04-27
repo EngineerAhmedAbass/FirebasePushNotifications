@@ -84,12 +84,14 @@ public class bloodDonationRequest extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mfirestore;
     private Vector<String> SentUsers = new Vector<>();
+    private boolean Language_Changed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blood_donation_request);
 
+        Language_Changed = getIntent().getBooleanExtra("Language_Changed",false);
 
         requestPermission();
         /*  Start Spinner Code */
@@ -181,6 +183,7 @@ public class bloodDonationRequest extends AppCompatActivity {
                 startActivity(settings);
                 break;
             case R.id.Language:
+                Language_Changed =true;
                 if (item.getTitle().equals("English")){
                     load = "en";
                 }else if (item.getTitle().equals("عربي")){
@@ -196,10 +199,22 @@ public class bloodDonationRequest extends AppCompatActivity {
                 config.locale = locale;
                 getResources().updateConfiguration(config,getResources().getDisplayMetrics());
                 finish();
+                Intent intent = getIntent();
+                intent.putExtra("Language_Changed",Language_Changed);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(getIntent());
             default:
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(Language_Changed){
+            Intent intent = new Intent(this,Home.class);
+            startActivity(intent);
+        }
     }
 
     @Override

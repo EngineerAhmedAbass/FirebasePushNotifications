@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import abass.com.firebasepushnotifications.Main.Home;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Main.SettingsActivity;
 import abass.com.firebasepushnotifications.Main.ShowNotifications;
@@ -32,11 +33,15 @@ public class SosActivity extends AppCompatActivity{
     public Switch sos_switch;
     public boolean sos_flag;
     public ArrayList<String> Names;
+    private boolean Language_Changed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sos);
+
+        Language_Changed = getIntent().getBooleanExtra("Language_Changed",false);
+
         Toolbar toolbar = findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -118,6 +123,7 @@ public class SosActivity extends AppCompatActivity{
                 startActivity(settings);
                 break;
             case R.id.Language:
+                Language_Changed =true;
                 if (item.getTitle().equals("English")){
                     load = "en";
                 }else if (item.getTitle().equals("عربي")){
@@ -132,7 +138,11 @@ public class SosActivity extends AppCompatActivity{
                 Configuration config = new Configuration();
                 config.locale = locale;
                 getResources().updateConfiguration(config,getResources().getDisplayMetrics());
+                saveData();
                 finish();
+                Intent intent = getIntent();
+                intent.putExtra("Language_Changed",Language_Changed);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(getIntent());
             default:
 
@@ -149,7 +159,10 @@ public class SosActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         saveData();
-        finish();
+        if(Language_Changed){
+            Intent intent = new Intent(this,Home.class);
+            startActivity(intent);
+        }
     }
 
     public void saveData()

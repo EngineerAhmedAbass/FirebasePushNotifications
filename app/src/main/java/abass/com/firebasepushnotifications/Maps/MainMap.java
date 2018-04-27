@@ -22,6 +22,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import abass.com.firebasepushnotifications.Main.Home;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Main.SettingsActivity;
 import abass.com.firebasepushnotifications.Main.ShowNotifications;
@@ -37,13 +39,14 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
     private CheckBox police ;
     private CheckBox pharmacy;
     private ArrayList<String> Selected_Date;
+    private boolean Language_Changed;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestPermission();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_map);
-
+        Language_Changed = getIntent().getBooleanExtra("Language_Changed",false);
         Selected_Date = new ArrayList<String>();
         // Spinner element
         //final Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -162,6 +165,7 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
                 startActivity(settings);
                 break;
             case R.id.Language:
+                Language_Changed =true;
                 if (item.getTitle().equals("English")){
                     load = "en";
                 }else if (item.getTitle().equals("عربي")){
@@ -177,9 +181,11 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
                 config.locale = locale;
                 getResources().updateConfiguration(config,getResources().getDisplayMetrics());
                 finish();
+                Intent intent = getIntent();
+                intent.putExtra("Language_Changed",Language_Changed);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(getIntent());
             default:
-
 
         }
         return super.onOptionsItemSelected(item);
@@ -193,6 +199,15 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
         // Showing selected spinner item
         //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(Language_Changed){
+            Intent intent = new Intent(this,Home.class);
+            startActivity(intent);
+        }
     }
 
     public void onNothingSelected(AdapterView<?> arg0) {
