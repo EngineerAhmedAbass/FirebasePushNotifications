@@ -31,6 +31,7 @@ public class fever extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.fever);
 
+
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getTitle());
