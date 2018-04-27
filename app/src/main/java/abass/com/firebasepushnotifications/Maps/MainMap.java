@@ -1,8 +1,10 @@
 package abass.com.firebasepushnotifications.Maps;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -165,6 +167,10 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
                 }else if (item.getTitle().equals("عربي")){
                     load = "ar";
                 }
+                SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+                editor.putString("Language",load);
+                editor.apply();
                 Locale locale = new Locale(load);
                 Locale.setDefault(locale);
                 Configuration config = new Configuration();
@@ -172,7 +178,6 @@ public class MainMap extends AppCompatActivity implements AdapterView.OnItemSele
                 getResources().updateConfiguration(config,getResources().getDisplayMetrics());
                 finish();
                 startActivity(getIntent());
-
             default:
 
 

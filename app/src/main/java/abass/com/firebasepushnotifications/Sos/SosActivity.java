@@ -123,6 +123,10 @@ public class SosActivity extends AppCompatActivity{
                 }else if (item.getTitle().equals("عربي")){
                     load = "ar";
                 }
+                SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+                editor.putString("Language",load);
+                editor.apply();
                 Locale locale = new Locale(load);
                 Locale.setDefault(locale);
                 Configuration config = new Configuration();

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.LocationManager;
@@ -11,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -204,7 +206,6 @@ public class NotificationActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         String load = "";
@@ -225,6 +226,10 @@ public class NotificationActivity extends AppCompatActivity {
                 }else if (item.getTitle().equals("عربي")){
                     load = "ar";
                 }
+                SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+                editor.putString("Language",load);
+                editor.apply();
                 Locale locale = new Locale(load);
                 Locale.setDefault(locale);
                 Configuration config = new Configuration();

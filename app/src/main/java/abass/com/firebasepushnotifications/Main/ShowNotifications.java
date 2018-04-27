@@ -2,9 +2,11 @@ package abass.com.firebasepushnotifications.Main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -177,16 +179,20 @@ public class ShowNotifications extends AppCompatActivity implements AdapterView.
                 startActivity(settings);
                 break;
             case R.id.Language:
-                if (item.getTitle().equals("English")) {
+                if (item.getTitle().equals("English")){
                     load = "en";
-                } else if (item.getTitle().equals("عربي")) {
+                }else if (item.getTitle().equals("عربي")){
                     load = "ar";
                 }
+                SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+                editor.putString("Language",load);
+                editor.apply();
                 Locale locale = new Locale(load);
                 Locale.setDefault(locale);
                 Configuration config = new Configuration();
                 config.locale = locale;
-                getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+                getResources().updateConfiguration(config,getResources().getDisplayMetrics());
                 finish();
                 startActivity(getIntent());
             default:

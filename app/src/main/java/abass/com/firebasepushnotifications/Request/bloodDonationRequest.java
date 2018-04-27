@@ -1,14 +1,18 @@
 package abass.com.firebasepushnotifications.Request;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -177,21 +181,23 @@ public class bloodDonationRequest extends AppCompatActivity {
                 startActivity(settings);
                 break;
             case R.id.Language:
-                if (item.getTitle().equals("English")) {
+                if (item.getTitle().equals("English")){
                     load = "en";
-                } else if (item.getTitle().equals("عربي")) {
+                }else if (item.getTitle().equals("عربي")){
                     load = "ar";
                 }
+                SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+                editor.putString("Language",load);
+                editor.apply();
                 Locale locale = new Locale(load);
                 Locale.setDefault(locale);
                 Configuration config = new Configuration();
                 config.locale = locale;
-                getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+                getResources().updateConfiguration(config,getResources().getDisplayMetrics());
                 finish();
                 startActivity(getIntent());
             default:
-
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -418,5 +424,12 @@ public class bloodDonationRequest extends AppCompatActivity {
     private double rad2deg(double rad) {
         return (rad * 180.0 / Math.PI);
     }
-
+    private void restartApp() {
+        Intent intent = new Intent(getApplicationContext(), bloodDonationRequest.class);
+        int mPendingIntentId = 100;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
+    }
 }
