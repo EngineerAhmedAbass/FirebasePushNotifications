@@ -200,25 +200,21 @@ public class EMERGENCY extends Fragment {
     public void Openburn() {
         Intent intent = new Intent(EMERGENCY.this.getActivity(), Burn.class);
         startActivity(intent);
-
     }
 
     private void openamputation() {
         Intent intent = new Intent(EMERGENCY.this.getActivity(), amputation.class);
         startActivity(intent);
-
     }
 
 
     private void openasthma() {
         Intent intent = new Intent(EMERGENCY.this.getActivity(), asthma.class);
         startActivity(intent);
-
     }
     private void openbleeding() {
         Intent intent = new Intent(EMERGENCY.this.getActivity(), bleeding.class);
         startActivity(intent);
-
     }
 
 }

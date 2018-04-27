@@ -70,7 +70,6 @@
         <activity  android:name=".Maps.MainMap"
             android:screenOrientation="portrait"
             android:parentActivityName=".Main.Home" />
-
         <activity android:name=".Main.Home"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -79,7 +78,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <receiver
             android:name=".Main.ConnectivityReceiver"
             android:enabled="true">
@@ -87,12 +85,10 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-
         <service
             android:name=".Main.MyBackgroundService"
             android:enabled="true"
             android:exported="true" />
-
         <activity  android:name=".Main.ShowNotifications"
             android:screenOrientation="portrait"
             android:parentActivityName=".Main.Home" />
@@ -123,28 +119,22 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity
-            android:name=".First_Aid.Burn"
+        <activity android:name=".First_Aid.Burn"
             android:parentActivityName=".First_Aid.MainActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".First_Aid.amputation"
+        <activity android:name=".First_Aid.amputation"
             android:parentActivityName=".First_Aid.MainActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".First_Aid.asthma"
+        <activity android:name=".First_Aid.asthma"
             android:parentActivityName=".First_Aid.MainActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".First_Aid.bleeding"
+        <activity android:name=".First_Aid.bleeding"
             android:parentActivityName=".First_Aid.MainActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".First_Aid.chocking"
+        <activity android:name=".First_Aid.chocking"
             android:parentActivityName=".First_Aid.MainActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".First_Aid.dog_bite"
+        <activity android:name=".First_Aid.dog_bite"
             android:parentActivityName=".First_Aid.MainActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".First_Aid.baby_choking"
@@ -157,6 +147,19 @@
             android:parentActivityName=".First_Aid.MainActivity"/>
         <activity android:name=".First_Aid.cuts"
             android:parentActivityName=".First_Aid.MainActivity"></activity>
+        <activity android:name=".First_Aid.bee_wasp_sting"
+            android:parentActivityName=".First_Aid.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".First_Aid.snake_bite"
+            android:parentActivityName=".First_Aid.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".First_Aid.drowning"
+            android:parentActivityName=".First_Aid.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".First_Aid.nose_bleed"
+            android:parentActivityName=".First_Aid.MainActivity"
+            android:screenOrientation="portrait"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9392e2e8658c4a409ede6c637c1e3ee1d94f0482" />

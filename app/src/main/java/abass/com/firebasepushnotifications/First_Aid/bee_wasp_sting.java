@@ -10,9 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
-
 import java.util.Locale;
-
 import abass.com.firebasepushnotifications.Main.SettingsActivity;
 import abass.com.firebasepushnotifications.Main.ShowNotifications;
 import abass.com.firebasepushnotifications.R;
