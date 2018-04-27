@@ -56,26 +56,6 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".Main.RegisterActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Request.NotificationActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Main.ShowNotifications">
-            <intent-filter>
-                <action android:name="abass.com.firebasepushnotifications.TARGETNOTIFICATION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity  android:name=".Request.HelpRequest"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Main.Home"
-            />
-        <activity android:name=".Maps.MapsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_maps"
-            android:theme="@style/FullscreenTheme"
-            android:parentActivityName=".Maps.MainMap"/>
-        <activity  android:name=".Maps.MainMap"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Main.Home" />
         <activity android:name=".Main.Home"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -84,19 +64,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity  android:name=".Main.ShowNotifications"
+        <activity android:name=".Main.ShowNotifications"
             android:screenOrientation="portrait"
             android:parentActivityName=".Main.Home" />
-        <activity  android:name=".Main.SettingsActivity"
+        <activity android:name=".Main.SettingsActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Main.Home"
             />
-        <activity  android:name=".Request.bloodDonationRequest"
+        <activity android:name=".Request.NotificationActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Main.ShowNotifications">
+            <intent-filter>
+                <action android:name="abass.com.firebasepushnotifications.TARGETNOTIFICATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Request.HelpRequest"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Main.Home"
+            />
+        <activity android:name=".Request.bloodDonationRequest"
             android:screenOrientation="portrait"
             android:parentActivityName=".Main.Home"
             >
         </activity>
+        <activity android:name=".Maps.MapsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_maps"
+            android:theme="@style/FullscreenTheme"
+            android:parentActivityName=".Maps.MainMap"/>
+        <activity android:name=".Maps.MainMap"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Main.Home" />
         <activity android:name=".Sos.SosActivity"
                   android:parentActivityName=".Main.Home"
                   android:screenOrientation="portrait"/>
