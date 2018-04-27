@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
@@ -26,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 import abass.com.firebasepushnotifications.R;
 import abass.com.firebasepushnotifications.Main.SettingsActivity;
@@ -39,7 +41,6 @@ public class Send_SOS_Message extends AppCompatActivity {
     public boolean sos_switch;
     public TextView nameView;
     public TextView phoneView;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +128,7 @@ public class Send_SOS_Message extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        String load="";
         switch (item.getItemId()) {
             case R.id.notification:
                 Intent GoToNotifications = new Intent(this, ShowNotifications.class);
@@ -137,6 +138,19 @@ public class Send_SOS_Message extends AppCompatActivity {
                 Intent settings = new Intent(this, SettingsActivity.class);
                 startActivity(settings);
                 break;
+            case R.id.Language:
+                if (item.getTitle().equals("English")){
+                    load = "en";
+                }else if (item.getTitle().equals("عربي")){
+                    load = "ar";
+                }
+                Locale locale = new Locale(load);
+                Locale.setDefault(locale);
+                Configuration config = new Configuration();
+                config.locale = locale;
+                getResources().updateConfiguration(config,getResources().getDisplayMetrics());
+                finish();
+                startActivity(getIntent());
             default:
 
         }

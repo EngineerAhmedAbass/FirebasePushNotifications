@@ -35,9 +35,9 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Request.LoginActivity"
+        <activity android:name=".Main.LoginActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Request.RegisterActivity"
+        <activity android:name=".Main.RegisterActivity"
             android:screenOrientation="portrait"/>
 
         <service android:name=".Request.FirebaseMessagingService">

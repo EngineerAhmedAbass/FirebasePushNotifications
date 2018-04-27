@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="abass.com.firebasepushnotifications.Request.bloodDonationRequest">
+    tools:context="abass.com.firebasepushnotifications.Request.bloodDonationRequest"
+    android:background="@color/white">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -81,7 +82,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="35dp"
                 android:background="@drawable/rounded_button"
-                android:text="@string/send_request"/>
+                android:text="@string/send_request"
+                android:textColor="#09f"/>
         </LinearLayout>
 
     </ScrollView>

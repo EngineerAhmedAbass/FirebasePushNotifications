@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="abass.com.firebasepushnotifications.Request.HelpRequest">
+    tools:context="abass.com.firebasepushnotifications.Request.HelpRequest"
+    android:background="@color/white">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -80,6 +81,7 @@
                 android:layout_width="138dp"
                 android:background="@drawable/rounded_button"
                 android:layout_height="wrap_content"
+                android:textColor="#09f"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="35dp"
                 android:text="@string/send_request"/>

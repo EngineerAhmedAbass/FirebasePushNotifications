@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center"
+    android:background="@color/white"
     tools:context="abass.com.firebasepushnotifications.Sos.contacts">
 
     <RelativeLayout
@@ -22,6 +23,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:onClick="onAddField"
+            android:textColor="#09f"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
             android:layout_centerHorizontal="true"

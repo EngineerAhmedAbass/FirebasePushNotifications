@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:layout_marginLeft="15dp"
+    android:orientation="horizontal"
+    android:background="@color/white">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -61,5 +63,6 @@
         android:layout_below="@+id/phoneLayout"
         android:background="@drawable/rounded_button"
         android:onClick="onDelete"
+        android:textColor="#09f"
         android:text="@string/remove" />
 </RelativeLayout>

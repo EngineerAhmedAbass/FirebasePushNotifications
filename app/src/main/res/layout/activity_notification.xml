@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <include
         layout="@layout/my_action_bar"
@@ -158,6 +159,7 @@
             android:text="@string/respond"
             android:layout_marginTop="7dp"
             android:background="@drawable/rounded_button"
+            android:textColor="#09f"
             android:layout_gravity="center"
             android:visibility="invisible"/>
     </LinearLayout>

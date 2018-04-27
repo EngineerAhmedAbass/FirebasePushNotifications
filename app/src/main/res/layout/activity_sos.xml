@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context="abass.com.firebasepushnotifications.Sos.SosActivity">
     <include
         layout="@layout/my_action_bar"
@@ -38,6 +39,7 @@
             android:layout_alignTop="@+id/send_sos_msg"
             android:background="@drawable/rounded_button"
             android:textSize="18dp"
+            android:textColor="#09f"
             android:text="@string/add_edit_contacts_btn" />
 
         <Button
@@ -50,6 +52,7 @@
             android:background="@drawable/rounded_button"
             android:layout_marginStart="30dp"
             android:textSize="18dp"
+            android:textColor="#09f"
             android:text="@string/send_sos_message_btn" />
 
         <TextView

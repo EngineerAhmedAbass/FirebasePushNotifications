@@ -143,11 +143,11 @@
             <Button
                 android:id="@+id/btnRegister"
                 android:layout_width="fill_parent"
-                android:layout_height="66dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
-                android:background="@drawable/input_button"
+                android:background="@drawable/rounded_button"
                 android:text="@string/register"
-                android:textColor="@color/white"
+                android:textColor="#09f"
                 />
 
             <!-- Link to Login Screen -->
@@ -156,11 +156,11 @@
                 android:id="@+id/btnLinkToLoginScreen"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dip"
-                android:background="@drawable/input_button"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/rounded_button"
                 android:text="@string/go_to_login"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="#09f"
                 android:textSize="15dp" />
         </LinearLayout>
 

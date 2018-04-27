@@ -171,6 +171,6 @@ public class SosActivity extends AppCompatActivity{
         {
             Names = new ArrayList<>();
         }
-        Log.e("SOS","------------ OnLoadData Sos ---------------------- "+Names +" "+sos_flag);
+        Log.e("SOS","------------ . Sos ---------------------- "+Names +" "+sos_flag);
     }
 }

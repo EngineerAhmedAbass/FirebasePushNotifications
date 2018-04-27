@@ -187,6 +187,8 @@
     <string name="help_request_sent">تم ارسال طلب المساعدة</string>
     <string name="notification_deleted">تم مسح الاشعار</string>
     <string name="no_users">عفوا لايوجد احد قريب للمساعدة</string>
+    <string name="first_aid_page">الاسعافات الاوليه</string>
+
     <!-- **************************************** -->
 
 </resources>

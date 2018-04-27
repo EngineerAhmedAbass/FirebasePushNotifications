@@ -280,6 +280,7 @@ public class NotificationActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+        startActivity(new Intent(this,getParent().getClass()));
     }
 
     private void SendNotificationsRespond() {
