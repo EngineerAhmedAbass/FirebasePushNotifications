@@ -325,4 +325,5 @@
     <string name="when_the_attack_stop">ضع الشخص في وضعة الآمن عند توقف الحاله</string>
     <string name="stay">ابقَ مع الشخص حتى يتحسن</string>
     <string name="no_feed">لا تعطي الشخص أي شيء للأكل أو الشراب</string>
+    <string name="no_users">there is no near users</string>
 </resources>
