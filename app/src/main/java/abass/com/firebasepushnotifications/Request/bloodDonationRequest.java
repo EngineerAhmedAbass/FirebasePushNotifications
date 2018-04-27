@@ -236,7 +236,7 @@ public class bloodDonationRequest extends AppCompatActivity {
         Message = requestText.getText().toString();
         String btype = spinner.getSelectedItem().toString();
         Message += " \n ";
-        Message += btype + " " + R.string.blood_type;
+        Message += btype;
         mfirestore.collection("Users").addSnapshotListener(bloodDonationRequest.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
