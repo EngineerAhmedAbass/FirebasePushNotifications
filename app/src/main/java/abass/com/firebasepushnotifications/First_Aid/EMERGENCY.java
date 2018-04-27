@@ -138,8 +138,20 @@ public class EMERGENCY extends Fragment {
                 openstings();
             }
         });
+        ImageButton epilepsy = view.findViewById(R.id.ImageButton18);
+        epilepsy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openepilepsy();
+            }
+        });
 
         return view;
+    }
+
+    private void openepilepsy() {
+        Intent intent = new Intent(EMERGENCY.this.getActivity(), epilepsy.class);
+        startActivity(intent);
     }
 
     private void openstings() {
@@ -200,21 +212,25 @@ public class EMERGENCY extends Fragment {
     public void Openburn() {
         Intent intent = new Intent(EMERGENCY.this.getActivity(), Burn.class);
         startActivity(intent);
+
     }
 
     private void openamputation() {
         Intent intent = new Intent(EMERGENCY.this.getActivity(), amputation.class);
         startActivity(intent);
+
     }
 
 
     private void openasthma() {
         Intent intent = new Intent(EMERGENCY.this.getActivity(), asthma.class);
         startActivity(intent);
+
     }
     private void openbleeding() {
         Intent intent = new Intent(EMERGENCY.this.getActivity(), bleeding.class);
         startActivity(intent);
+
     }
 
 }

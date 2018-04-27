@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".First_Aid.bleeding"
+    tools:context=".First_Aid.epilepsy"
     android:background="#BDBDBD">
 
     <LinearLayout
@@ -141,7 +141,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="10dp"
                     android:gravity="top"
-                    android:text="@string/shout"
+                    android:text="@string/remove_obejects"
                     android:textAlignment="gravity"
                     android:textColor="#000000"
                     android:textSize="28sp"
@@ -194,7 +194,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="10dp"
                     android:gravity="top"
-                    android:text="@string/blood_contact"
+                    android:text="@string/reassure_bystanders"
                     android:textAlignment="gravity"
                     android:textColor="#000000"
                     android:textSize="28sp"
@@ -205,28 +205,6 @@
                     tools:ignore="RtlHardcoded" />
             </android.support.constraint.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/img1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
-                tools:ignore="InvalidId,MissingConstraints">
-
-                <ImageView
-                    android:id="@+id/img1view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/hand_protect"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription" />
-
-            </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout4"
@@ -238,7 +216,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/img1">
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
 
                 <TextView
                     android:id="@+id/textView6"
@@ -267,7 +245,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="10dp"
                     android:gravity="top"
-                    android:text="@string/sit_lay"
+                    android:text="@string/dont_hold_down"
                     android:textAlignment="gravity"
                     android:textColor="#000000"
                     android:textSize="28sp"
@@ -319,7 +297,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="10dp"
                     android:gravity="top"
-                    android:text="@string/self_presure"
+                    android:text="@string/mushy"
                     android:textAlignment="gravity"
                     android:textColor="#000000"
                     android:textSize="28sp"
@@ -344,7 +322,7 @@
                     android:id="@+id/img2view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/selfperss"
+                    android:src="@drawable/use_bellow"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -392,7 +370,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="10dp"
                     android:gravity="top"
-                    android:text="@string/stop_bleeding"
+                    android:text="@string/free_breath"
                     android:textAlignment="gravity"
                     android:textColor="#000000"
                     android:textSize="28sp"
@@ -442,7 +420,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="10dp"
                     android:gravity="top"
-                    android:text="@string/bandage"
+                    android:text="@string/dont_finger"
                     android:textAlignment="gravity"
                     android:textColor="#000000"
                     android:textSize="28sp"
@@ -451,6 +429,29 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="RtlHardcoded" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/img3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout9"
+                tools:ignore="InvalidId,MissingConstraints">
+
+                <ImageView
+                    android:id="@+id/img3view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/stop_fingering"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -463,7 +464,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
+                app:layout_constraintTop_toBottomOf="@+id/img3">
 
                 <TextView
                     android:id="@+id/textView10"
@@ -492,7 +493,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="10dp"
                     android:gravity="top"
-                    android:text="@string/transport"
+                    android:text="@string/dont_use_stick"
                     android:textAlignment="gravity"
                     android:textColor="#000000"
                     android:textSize="28sp"
@@ -542,7 +543,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="10dp"
                     android:gravity="top"
-                    android:text="@string/wash_reminder"
+                    android:text="@string/when_the_attack_stop"
                     android:textAlignment="gravity"
                     android:textColor="#000000"
                     android:textSize="28sp"
@@ -553,6 +554,255 @@
                     tools:ignore="RtlHardcoded" />
             </android.support.constraint.ConstraintLayout>
 
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout11">
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginStart="2dp"
+                    android:gravity="top"
+                    android:text="@string/b10"
+                    android:textAlignment="gravity"
+                    android:textColor="#3F51B5"
+                    android:textSize="45sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.996"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="top"
+                    android:text="@string/stay"
+                    android:textAlignment="gravity"
+                    android:textColor="#000000"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/textView15"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlHardcoded" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout15">
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginStart="2dp"
+                    android:gravity="top"
+                    android:text="@string/b11"
+                    android:textAlignment="gravity"
+                    android:textColor="#3F51B5"
+                    android:textSize="45sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.996"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="top"
+                    android:text="@string/no_feed"
+                    android:textAlignment="gravity"
+                    android:textColor="#000000"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/textView16"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlHardcoded" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout16">
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginStart="2dp"
+                    android:gravity="top"
+                    android:text="@string/b15"
+                    android:textAlignment="gravity"
+                    android:textColor="#3F51B5"
+                    android:textSize="45sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.996"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="top"
+                    android:text="@string/wash_reminder"
+                    android:textAlignment="gravity"
+                    android:textColor="#000000"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/textView17"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlHardcoded" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout16">
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginStart="2dp"
+                    android:gravity="top"
+                    android:text="@string/b12"
+                    android:textAlignment="gravity"
+                    android:textColor="#3F51B5"
+                    android:textSize="45sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.996"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="top"
+                    android:text="@string/transport_person"
+                    android:textAlignment="gravity"
+                    android:textColor="#000000"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/textView12"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlHardcoded" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout12">
+
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginStart="2dp"
+                    android:gravity="top"
+                    android:text="@string/b13"
+                    android:textAlignment="gravity"
+                    android:textColor="#3F51B5"
+                    android:textSize="45sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.996"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="top"
+                    android:text="@string/wash_reminder"
+                    android:textAlignment="gravity"
+                    android:textColor="#000000"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/textView13"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlHardcoded" />
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
 

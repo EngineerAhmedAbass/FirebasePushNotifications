@@ -309,10 +309,20 @@
     <string name="transport_snake">رتب نقل عاجل إلى أقرب مركز للرعاية الصحية. يجب على الشخص ان لا يحرك الطرف بأكبر قدر ممكن</string>
     <string name="cpr_snake">استمر في مراقبة حالة الشخص. إذا توقف عن التنفس ابدء الإنعاش القلبي الرئوي(CPR). إذا فقد الوعي لكنه لا يزال يتنفس ، ضعه في وضع الامان</string>
     <string name="bee_wasp">لدغة ( نحلة، دبور)</string>
-    <string name="swarm">إذا كنت في المكان الذي يوجد فيه الدبور أو النحلة ، امشي مع الضحية بهدوء بعيدًا إلى منطقة أكثر أمانًا. إذا هُجمتم من سرب ، اهرب بأسرع ما يمكن ، وابحث عن مأوى (في داخل منزل ، في سيارة ، الخ ...)</string>
+    <string name="swarm">إذا كنت في المكان الذي يوجد فيه الدبور أو النحلة ، امشي مع الضحية بهدوء بعيدًا إلى منطقة أكثر أمانًا. إذا هُجمتم من سرب ، اهرب بأسرع ما يمكن ، وابحث عن مأوى (في داخل منزل ، في سيارة ، الخ …)</string>
     <string name="fingernail">استخدم ظفرك لإزالة لدغة النحلة</string>
     <string name="sting_wash">في نهاية المطاف اغسل اللدغة بالماء</string>
     <string name="ice_sting">إذا كان لديك ثلج متاح ، يمكنك استخدامه لتبرد اللدغة : لف الثلج في قطعة قماش حتى لا يلمس الثلج البشرة مباشرة. لا تضعها على اللدغة أكثر من 20 دقيقة</string>
     <string name="sting_reaction">راقب حالة الشخص.اسأل الشخص عن انواع الحساسية المعروفة لديه. بعض الناس قد يطورون رد فعل تحسسيه. يمكن أن يصبح هذا الوضع مهددًا للحياة بسرعة ويحتاج إلى مساعدة طبية فورية</string>
-    <string name="first_aid_page">First Aid</string>
+    <string name="epilepsy">صرع</string>
+    <string name="remove_obejects">إزل أي شيء يمكن أن يؤذي الشخص</string>
+    <string name="reassure_bystanders">طمأن المارة</string>
+    <string name="dont_hold_down">لا تحاول الامساك بالشخص او تقيدة</string>
+    <string name="mushy">إذا أمكن ، ضع شيئًا طري تحت رأس الشخص</string>
+    <string name="free_breath">تأكد من أن الشخص يستطيع التنفس بحرية عن طريق تخفيف الملابس الضيقة</string>
+    <string name="dont_finger">لا تضع إصبعك في فم الشخص!</string>
+    <string name="dont_use_stick">لا تضع عصا خشبية أو أي شيء آخر في فم الشخص</string>
+    <string name="when_the_attack_stop">ضع الشخص في وضعة الآمن عند توقف الحاله</string>
+    <string name="stay">ابقَ مع الشخص حتى يتحسن</string>
+    <string name="no_feed">لا تعطي الشخص أي شيء للأكل أو الشراب</string>
 </resources>

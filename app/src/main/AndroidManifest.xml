@@ -151,6 +151,9 @@
         <activity android:name=".First_Aid.nose_bleed"
             android:parentActivityName=".First_Aid.MainActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".First_Aid.epilepsy"
+            android:parentActivityName=".First_Aid.MainActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 
