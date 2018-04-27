@@ -163,6 +163,7 @@ public class SosActivity extends AppCompatActivity{
             Intent intent = new Intent(this,Home.class);
             startActivity(intent);
         }
+        finish();
     }
 
     public void saveData()
