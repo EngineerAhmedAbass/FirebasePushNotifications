@@ -25,34 +25,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
-
-        <meta-data
-            android:name="preloaded_fonts"
+        <meta-data android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        <meta-data android:name="io.fabric.ApiKey"
+            android:value="9392e2e8658c4a409ede6c637c1e3ee1d94f0482" />
 
-        <activity android:name=".Main.LoginActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Main.RegisterActivity"
-            android:screenOrientation="portrait"/>
+        <receiver android:name=".Main.ConnectivityReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
 
+        <service android:name=".Main.MyBackgroundService"
+            android:enabled="true"
+            android:exported="true" />
         <service android:name=".Request.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
-
+        <activity android:name=".Main.LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Main.RegisterActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Request.NotificationActivity"
-                  android:screenOrientation="portrait"
-                  android:parentActivityName=".Main.ShowNotifications">
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Main.ShowNotifications">
             <intent-filter>
                 <action android:name="abass.com.firebasepushnotifications.TARGETNOTIFICATION" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -78,17 +84,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver
-            android:name=".Main.ConnectivityReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-        <service
-            android:name=".Main.MyBackgroundService"
-            android:enabled="true"
-            android:exported="true" />
         <activity  android:name=".Main.ShowNotifications"
             android:screenOrientation="portrait"
             android:parentActivityName=".Main.Home" />
@@ -111,9 +106,7 @@
         <activity android:name=".Sos.contacts"
             android:parentActivityName=".Sos.SosActivity"
             android:screenOrientation="portrait"/>
-
-        <activity
-            android:name=".First_Aid.MainActivity"
+        <activity android:name=".First_Aid.MainActivity"
             android:parentActivityName=".Main.Home"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -160,9 +153,6 @@
             android:parentActivityName=".First_Aid.MainActivity"
             android:screenOrientation="portrait"/>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="9392e2e8658c4a409ede6c637c1e3ee1d94f0482" />
     </application>
 
 </manifest>
