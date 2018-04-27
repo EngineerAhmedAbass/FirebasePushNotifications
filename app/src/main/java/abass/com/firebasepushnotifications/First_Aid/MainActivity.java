@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.request_help);
+        setTitle(R.string.first_aid_page);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView mTitle =  toolbar.findViewById(R.id.toolbar_title);

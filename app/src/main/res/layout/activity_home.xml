@@ -95,7 +95,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:textStyle="bold"
-            android:drawableTop="@drawable/medicine"
+            android:drawableTop="@drawable/kit"
             android:padding="25dp"
             android:background="@drawable/rounded_button"
             android:layout_margin="7dp"
