@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="abass.com.firebasepushnotifications">
 
     <uses-permission android:name="com.androidmastermind.gplaces.permission.MAPS_RECEIVE" />
@@ -19,12 +20,12 @@
 
     <application
         android:name=".Maps.AppController"
-        android:allowBackup="true"
         android:icon="@mipmap/lunch"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning,InnerclassSeparator">
 
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -37,26 +38,34 @@
             android:value="9392e2e8658c4a409ede6c637c1e3ee1d94f0482" />
 
         <receiver android:name=".Main.ConnectivityReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    tools:ignore="BatteryLife" />
             </intent-filter>
         </receiver>
+
         <service android:name=".Main.MyBackgroundService"
             android:enabled="true"
-            android:exported="true" />
-        <service android:name=".Request.FirebaseMessagingService">
+            android:exported="true"
+            tools:ignore="ExportedService,InnerclassSeparator" />
+        <service android:name=".Request.FirebaseMessagingService"
+            tools:ignore="ExportedService,InnerclassSeparator">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <activity android:name=".Main.LoginActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".Main.RegisterActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".Main.Home"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,15 +74,18 @@
         </activity>
         <activity android:name=".Main.ShowNotifications"
             android:screenOrientation="portrait"
-            android:parentActivityName=".Main.Home" />
+            android:parentActivityName=".Main.Home"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".Main.SettingsActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Main.Home"
-            />
+            tools:ignore="InnerclassSeparator" />
+
         <activity android:name=".Request.NotificationActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".Main.ShowNotifications">
+            android:parentActivityName=".Main.ShowNotifications"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="abass.com.firebasepushnotifications.TARGETNOTIFICATION" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -82,78 +94,103 @@
         <activity android:name=".Request.HelpRequest"
             android:screenOrientation="portrait"
             android:parentActivityName=".Main.Home"
-            />
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".Request.bloodDonationRequest"
             android:screenOrientation="portrait"
             android:parentActivityName=".Main.Home"
-            >
+            tools:ignore="InnerclassSeparator">
         </activity>
+
         <activity android:name=".Maps.MapsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_maps"
             android:theme="@style/FullscreenTheme"
-            android:parentActivityName=".Maps.MainMap"/>
+            android:parentActivityName=".Maps.MainMap"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".Maps.MainMap"
             android:screenOrientation="portrait"
-            android:parentActivityName=".Main.Home" />
+            android:parentActivityName=".Main.Home"
+            tools:ignore="InnerclassSeparator" />
+
         <activity android:name=".Sos.SosActivity"
                   android:parentActivityName=".Main.Home"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".Sos.Send_SOS_Message"
             android:parentActivityName=".Sos.SosActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".Sos.contacts"
             android:parentActivityName=".Sos.SosActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
+
         <activity android:name=".First_Aid.MainActivity"
             android:parentActivityName=".Main.Home"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="InnerclassSeparator">
         </activity>
         <activity android:name=".First_Aid.Burn"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.amputation"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.asthma"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.bleeding"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.chocking"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.dog_bite"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.baby_choking"
-            android:parentActivityName=".First_Aid.MainActivity"/>
+            android:parentActivityName=".First_Aid.MainActivity"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.chest_pain"
-            android:parentActivityName=".First_Aid.MainActivity"/>
+            android:parentActivityName=".First_Aid.MainActivity"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.fracture"
-            android:parentActivityName=".First_Aid.MainActivity"/>
+            android:parentActivityName=".First_Aid.MainActivity"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.fever"
-            android:parentActivityName=".First_Aid.MainActivity"/>
+            android:parentActivityName=".First_Aid.MainActivity"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.cuts"
-            android:parentActivityName=".First_Aid.MainActivity"></activity>
+            android:parentActivityName=".First_Aid.MainActivity"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.bee_wasp_sting"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.snake_bite"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.drowning"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.nose_bleed"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
         <activity android:name=".First_Aid.epilepsy"
             android:parentActivityName=".First_Aid.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator" />
 
     </application>
 

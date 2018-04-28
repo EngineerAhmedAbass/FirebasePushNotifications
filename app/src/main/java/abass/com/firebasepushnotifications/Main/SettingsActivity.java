@@ -202,7 +202,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
             Preference p = findPreference("example_text");
             p.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -240,7 +239,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 }
             });
         }
-
 
         private boolean isNetworkAvailable(Context context) {
             ConnectivityManager connectivityManager

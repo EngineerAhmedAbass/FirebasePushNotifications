@@ -77,6 +77,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
             longtitude = settings.getString("longtitude", "null");
             latitude = settings.getString("latitude", "null");
             Updated = settings.getBoolean("Updated", false);
+            Log.e("Test",longtitude+" "+latitude);
             if (mCurrentlocation != null) {
                 Log.e("Current Location ", mCurrentlocation.getLatitude() + " " + mCurrentlocation.getLongitude());
             }
@@ -115,7 +116,7 @@ public class MyBackgroundService extends Service implements ConnectivityReceiver
     }
 
     public void changeLocation() {
-        if (isNetworkAvailable()) {
+        if (isNetworkAvailable()  ) {
             Log.e(TAG, longtitude + " " + latitude);
             UpdateCurrentLocation();
         } else {
