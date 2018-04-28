@@ -50,16 +50,6 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/describe_the_patient_state"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                />
-
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="258dp"

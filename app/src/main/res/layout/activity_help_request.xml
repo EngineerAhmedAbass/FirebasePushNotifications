@@ -51,17 +51,6 @@
                     tools:ignore="RtlHardcoded" />
 
             </RelativeLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/describe_the_patient_state"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                />
-
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="258dp"
@@ -74,7 +63,8 @@
                 android:id="@+id/text_help"
                 android:background="@drawable/textarea_bordered_rounded"
                 android:hint="@string/describe_the_patient_state"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"
+                android:inputType="text" />
 
             <Button
                 android:id="@+id/send_request"
