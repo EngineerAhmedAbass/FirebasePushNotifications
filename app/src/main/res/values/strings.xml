@@ -297,4 +297,6 @@
     <string name="help_request_sent">Help Request Sent</string>
     <string name="notification_deleted">Notification Deleted</string>
     <string name="first_aid_page">First Aid</string>
+    <string name="stroke" translatable="false">سكتة دماغية</string>
+    <string name="mouth_drop" translatable="false">اطلب من الشخص أن يبتسم أو يظهر أسنانه. تحقق مما إذا كان الفم ملتويا أو متدليًا في أحد الأركان</string>
 </resources>
